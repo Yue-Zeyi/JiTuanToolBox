@@ -1,0 +1,30 @@
+<view class="page tool-page ip-page">
+  <view class="page-head"><view class="tool-title"><text class="title">IP 地址查询</text><text class="desc">查看当前连接，解析地址类型</text></view><view class="tool-icon blue"><image src="/assets/icons/ip-query.svg" mode="aspectFit"/></view></view>
+  <view class="ip-modes"><button class="{{mode === 'current' ? 'active' : ''}}" data-mode="current" bindtap="selectMode">我的公网 IP</button><button class="{{mode === 'analyze' ? 'active' : ''}}" data-mode="analyze" bindtap="selectMode">地址解析</button></view>
+  <view wx:if="{{mode === 'current'}}">
+    <view class="ip-current-head"><text>当前网络</text><text wx:if="{{checkedTime}}">{{checkedTime}} 更新</text></view>
+    <view wx:if="{{!addresses.length}}" class="ip-empty"><image src="/assets/icons/ip-query.svg" mode="aspectFit"/><text>{{loading ? '正在查询连接地址' : '尚未查询'}}</text></view>
+    <view class="ip-address-row" wx:for="{{addresses}}" wx:key="version"><view class="ip-address-title"><text>{{item.version}}</text><button data-index="{{index}}" bindtap="copyAddress" aria-label="复制 {{item.version}} 地址"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view><text class="ip-address-value" selectable="true">{{item.normalized}}</text><text class="ip-address-type">{{item.rangeLabel}}</text></view>
+    <view wx:for="{{missingVersions}}" wx:key="*this" class="ip-missing"><view><text>{{item}}</text><text>本次连接未返回</text></view><text>不代表当前网络没有 {{item}}，可切换 Wi-Fi 或移动网络后重试。</text></view>
+    <button class="primary-btn ip-main-action" bindtap="queryCurrent" loading="{{loading}}" disabled="{{loading}}">{{loading ? '正在查询' : (addresses.length ? '刷新公网 IP' : '查询公网 IP')}}</button>
+    <text class="ip-hint">支持 IPv4 和 IPv6，仅显示微信本次连接提供的出口地址，不保证同时获取两种地址。IPv6 不能直接换算为公网 IPv4；切换网络或代理后地址可能变化，地址不等于精确位置。</text>
+  </view>
+  <view wx:else>
+    <view class="ip-input-head"><text>IPv4 / IPv6 地址</text><button bindtap="paste">粘贴</button></view>
+    <input class="ip-input" value="{{input}}" bindinput="onInput" placeholder="例如 192.168.1.1 或 2001:db8::1" maxlength="100" aria-label="待解析 IP 地址"/>
+    <view class="ip-input-actions"><button class="primary-btn" bindtap="analyze">解析地址</button><button class="secondary-btn" bindtap="clear">清空</button></view>
+    <view wx:if="{{analysis}}" class="ip-analysis">
+      <view class="ip-current-head"><text>解析结果</text><text>{{analysis.bits}} 位地址</text></view>
+      <text class="ip-analysis-ip" selectable="true">{{analysis.normalized}}</text>
+      <view class="ip-result-row"><text>协议版本</text><text>{{analysis.version}}</text></view>
+      <view class="ip-result-row"><text>地址类型</text><text>{{analysis.rangeLabel}}</text></view>
+      <view class="ip-result-block"><text>完整地址</text><text selectable="true">{{analysis.expanded}}</text></view>
+      <view class="ip-result-block"><text>网络字节序（十六进制）</text><text selectable="true">{{analysis.hex}}</text></view>
+      <view wx:if="{{analysis.mappedIPv4}}" class="ip-result-block"><text>映射 IPv4 · {{analysis.mappedRangeLabel}}</text><text selectable="true">{{analysis.mappedIPv4}}</text></view>
+      <button class="secondary-btn ip-copy-result" bindtap="copyAnalysis">复制解析结果</button>
+    </view>
+    <text class="ip-hint">仅解析地址格式和用途，不探测主机是否在线，也不查询归属地。</text>
+  </view>
+  <text wx:if="{{error}}" class="ip-error">{{error}}</text>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">公网查询经微信云端处理</text></view><text class="privacy-detail">输入地址在本地解析，查询结果不主动保存</text></view>
+</view>

@@ -1,0 +1,20 @@
+.date-calc-page { padding-bottom: 90rpx; }
+.date-calc-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9rpx; margin-top: 0; }
+.date-calc-mode { display: flex; align-items: center; justify-content: center; height: 64rpx; border: 1px solid #D8E3EF; border-radius: 10rpx; color: #667C94; background: #F9FBFD; font-size: 21rpx; }
+.date-calc-mode.active { border-color: #83B6A0; color: #228454; background: #EFF9F3; font-weight: 600; }
+.date-calc-panel, .date-calc-result { margin-top: 18rpx; padding: 24rpx; }
+.date-calc-field + .date-calc-field { margin-top: 20rpx; }
+.date-calc-field > text { display: block; margin-bottom: 9rpx; color: #718096; font-size: 22rpx; }
+.date-calc-picker, .date-calc-field input { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; width: 100%; height: 78rpx; padding: 0 16rpx; border: 1rpx solid #CBDCED; border-radius: 11rpx; color: #234666; background: #FFFFFF; font-size: 25rpx; }
+.date-calc-field input { display: block; font-family: Consolas, Monaco, monospace; }
+.date-calc-picker image { width: 24rpx; height: 24rpx; flex: 0 0 24rpx; }
+.date-calc-picker .placeholder { color: #9AA8BB; }
+.date-calc-note { display: block; margin-top: 15rpx; padding: 12rpx 14rpx; border-radius: 10rpx; color: #6E8B79; background: #F4FAF6; font-size: 20rpx; line-height: 1.55; }
+.date-calc-error { display: block; margin-top: 13rpx; color: #C84444; font-size: 22rpx; }
+.date-calc-main { width: 100%; height: 84rpx; margin-top: 18rpx; border-radius: 14rpx; }
+.date-calc-result-head { display: flex; align-items: center; justify-content: space-between; color: var(--jt-navy); font-size: 27rpx; font-weight: 700; }
+.date-calc-result-head button { display: flex; align-items: center; gap: 7rpx; min-height: 52rpx; color: #2F80ED; font-size: 21rpx; font-weight: 400; }
+.date-calc-result-head image { width: 26rpx; height: 26rpx; }
+.date-calc-result-head button[disabled] { opacity: .4; }
+.date-calc-result-text { display: block; min-height: 104rpx; margin-top: 16rpx; color: #234666; font-size: 25rpx; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.date-calc-clear { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 60rpx; margin-top: 16rpx; color: #2F80ED; font-size: 22rpx; }

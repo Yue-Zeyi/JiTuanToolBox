@@ -1,0 +1,45 @@
+<view class="page tool-page split-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">图片拆块</text><text class="desc">九宫格拆分图片，发布更有趣</text></view>
+    <view class="tool-icon purple"><image src="/assets/icons/split.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card upload-card split-upload" wx:if="{{state === 'empty' || state === 'processing'}}">
+    <view wx:if="{{file}}" class="split-selected">
+      <view class="split-preview" bindtap="previewImage"><image wx:if="{{!file.previewFailed}}" class="split-preview-image" src="{{file.path}}" mode="aspectFit" binderror="onPreviewError"/><view wx:else class="preview-failed"><image src="/assets/icons/image-broken.svg" mode="aspectFit"/><text>无法预览</text></view></view>
+      <view class="split-file-info"><text class="split-file-name">{{file.name}}</text><text class="split-file-meta">{{file.width}} × {{file.height}} px · {{file.sizeText}}</text><text class="split-file-hint">点击图片可查看原图</text></view>
+      <button class="ghost-btn split-change" bindtap="chooseImage">更换</button>
+    </view>
+    <view wx:else class="upload-dash" bindtap="chooseImage"><image class="upload-plus" src="/assets/icons/add.svg" mode="aspectFit"/><text class="upload-title">选择图片</text><view class="upload-tip"><text>支持 JPG、JPEG、PNG、BMP、WEBP、JFIF、JPE</text><text>单张不超过 20MB</text></view></view>
+  </view>
+
+  <view class="card panel split-panel" wx:if="{{state === 'empty' || state === 'processing'}}">
+    <view class="panel-section split-grid-section">
+      <view class="section-heading"><text class="panel-title">拆分方式</text><text class="section-caption">按网格平均切分</text></view>
+      <view class="split-preset-grid"><block wx:for="{{gridPresets}}" wx:key="key"><button class="split-preset {{preset === item.key ? 'active' : ''}}" data-preset="{{item.key}}" bindtap="setPreset"><text class="split-preset-title">{{item.title}}</text><text class="split-preset-desc">{{item.desc}}</text></button></block><button class="split-preset {{preset === 'custom' ? 'active' : ''}}" data-preset="custom" bindtap="setPreset"><text class="split-preset-title">自定义</text><text class="split-preset-desc">1–10 行列</text></button></view>
+      <view wx:if="{{preset === 'custom'}}" class="split-custom-row"><view class="split-custom-field"><text>行</text><view class="split-input-wrap"><input type="number" maxlength="2" value="{{customRows}}" bindinput="setCustomRows"/><text>行</text></view></view><text class="split-times">×</text><view class="split-custom-field"><text>列</text><view class="split-input-wrap"><input type="number" maxlength="2" value="{{customCols}}" bindinput="setCustomCols"/><text>列</text></view></view></view>
+      <text class="split-helper">当前：{{gridLabel}} · 从左到右、从上到下编号</text><text wx:if="{{error}}" class="split-error">{{error}}</text>
+    </view>
+    <view class="panel-section split-output-section">
+      <view class="section-heading"><text class="panel-label">输出格式</text><text class="section-caption">PNG 保留透明背景</text></view>
+      <view class="choice-row split-format-row"><button class="choice {{format === 'auto' ? 'active' : ''}}" data-format="auto" bindtap="setFormat">自动</button><button class="choice {{format === 'jpg' ? 'active' : ''}}" data-format="jpg" bindtap="setFormat">JPG</button><button class="choice {{format === 'png' ? 'active' : ''}}" data-format="png" bindtap="setFormat">PNG</button></view>
+      <view wx:if="{{format != 'png'}}" class="quality-row"><view class="quality-head"><text>JPG 质量</text><text class="slider-value">{{quality}}%</text></view><slider min="20" max="100" value="{{quality}}" activeColor="#2F80ED" backgroundColor="#DFE8F5" block-size="22" bindchanging="onQuality"/></view>
+    </view>
+  </view>
+
+  <button wx:if="{{state === 'empty' || state === 'processing'}}" class="primary-btn start-btn" bindtap="startSplit" disabled="{{state === 'processing'}}">{{state === 'processing' ? '正在拆分…' : '开始拆分图片'}}</button>
+  <canvas id="splitCanvas" type="2d" class="split-canvas"></canvas>
+
+  <view wx:if="{{state === 'processing'}}" class="card state-card"><image class="state-mark-icon loading" src="/assets/icons/loading.svg" mode="aspectFit"/><text class="state-title">正在拆分图片</text><text class="state-desc">{{currentPart}} · 已完成 {{progress}}%</text><progress class="compress-progress" percent="{{progress}}" activeColor="#2F80ED" backgroundColor="#E8EEF7" stroke-width="6"/><text class="progress-tip">正在按网格生成图片，请不要关闭页面</text></view>
+
+  <view wx:if="{{state === 'success'}}" class="card result-card split-result">
+    <view class="split-result-heading"><view><view class="eyebrow">处理完成</view><text class="split-result-title">图片已拆分</text></view></view>
+    <view class="split-summary"><view class="split-summary-main"><text class="split-summary-number">{{resultCount}}</text><text class="split-summary-label">张图片</text></view><view class="split-summary-divider"></view><view class="split-summary-copy"><text class="split-summary-grid">{{gridLabel}}</text><text class="split-summary-tip">已按顺序生成</text></view></view>
+    <view class="split-result-toolbar"><view><text class="split-result-section-title">拆分结果</text><text class="split-result-section-tip">点击缩略图可放大预览</text></view><button class="ghost-btn" bindtap="saveAll">全部保存</button></view>
+    <view class="split-result-grid"><block wx:for="{{results}}" wx:key="id" wx:for-index="index"><view class="split-result-item" data-index="{{index}}" bindtap="previewResult"><view class="split-result-thumb-wrap"><image class="split-result-thumb" src="{{item.outputPath}}" mode="aspectFit"/><text class="split-result-index">{{item.tileIndex}}</text></view><view class="split-result-item-foot"><view class="split-result-meta"><text class="split-result-size">{{item.width}} × {{item.height}} px</text><text class="split-result-file-size">{{item.sizeText || item.compressedText}}</text></view><button class="split-result-save" data-index="{{index}}" catchtap="saveResult">保存</button></view></view></block></view>
+    <view class="action-row"><button class="secondary-btn" bindtap="goHome">返回首页</button><button class="primary-btn" bindtap="chooseAgain">再次拆分</button></view>
+  </view>
+  <view wx:if="{{state === 'error'}}" class="card state-card"><image class="state-mark-icon error" src="/assets/icons/error.svg" mode="aspectFit"/><text class="state-title">拆分失败</text><text class="state-desc">{{error}}</text><view class="action-row"><button class="secondary-btn" bindtap="chooseAgain">重新选择</button><button class="primary-btn" bindtap="retry">再次尝试</button></view></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+  <canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+</view>

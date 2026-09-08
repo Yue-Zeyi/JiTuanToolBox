@@ -1,0 +1,40 @@
+<view class="directory-page" style="padding-bottom: {{keyboardHeight}}px;">
+  <view class="directory-search-area">
+    <view class="directory-search">
+      <image class="directory-search-icon" src="/assets/icons/search.svg" mode="aspectFit"/>
+      <input class="directory-search-input" value="{{query}}" bindinput="onSearchInput" bindconfirm="dismissKeyboard" bindkeyboardheightchange="onKeyboardHeightChange" placeholder="搜索工具名称或用途" placeholder-class="directory-search-placeholder" maxlength="60" confirm-type="search" adjust-position="{{false}}" aria-label="搜索工具名称或用途"/>
+      <button wx:if="{{query.length}}" class="directory-search-clear" bindtap="clearSearch" aria-label="清除搜索" hover-class="directory-control-hover"><image src="/assets/icons/search-clear.svg" mode="aspectFit"/></button>
+    </view>
+  </view>
+
+  <scroll-view wx:if="{{!isSearching}}" class="directory-tabs" scroll-x="{{true}}" show-scrollbar="{{false}}" scroll-into-view="tab-{{activeCategory}}">
+    <view class="directory-tabs-inner">
+      <button wx:for="{{categories}}" wx:key="key" id="tab-{{item.key}}" class="directory-tab {{activeCategory === item.key ? 'is-active' : ''}}" data-category="{{item.key}}" bindtap="selectCategory" aria-label="{{item.title}}{{activeCategory === item.key ? '，已选中' : ''}}" hover-class="directory-control-hover">{{item.title}}</button>
+    </view>
+  </scroll-view>
+
+  <scroll-view class="directory-list" scroll-y="{{true}}" scroll-top="{{scrollTop}}" bindscroll="onListScroll" bindtap="dismissKeyboard" show-scrollbar="{{false}}">
+    <view class="directory-content">
+      <view wx:for="{{groups}}" wx:for-item="group" wx:key="key" class="directory-group">
+        <view class="directory-group-head"><text class="directory-group-title">{{group.title}}</text><text class="directory-group-count">{{group.tools.length}} 个工具</text></view>
+        <view class="directory-grid">
+          <button wx:for="{{group.tools}}" wx:for-item="tool" wx:key="key" class="directory-tool card" data-key="{{tool.key}}" catchtap="openTool" hover-class="directory-tool-hover" aria-label="{{tool.title}}，{{tool.directoryDesc}}">
+            <view class="directory-tool-top">
+              <view class="tool-icon {{tool.tone}}"><image src="/assets/icons/{{tool.icon}}.svg" mode="aspectFit"/></view>
+              <image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/>
+            </view>
+            <text class="directory-tool-title">{{tool.title}}</text>
+            <text class="directory-tool-desc">{{tool.directoryDesc}}</text>
+          </button>
+        </view>
+      </view>
+      <view wx:if="{{emptyKind}}" class="directory-empty">
+        <image class="directory-empty-icon" src="/assets/icons/tools-empty.svg" mode="aspectFit"/>
+        <text class="directory-empty-title">{{emptyKind === 'search' ? '没有找到相关工具' : '该分类暂无工具'}}</text>
+        <text class="directory-empty-desc">{{emptyKind === 'search' ? '试试更简短的工具名称或用途' : '先看看其他实用工具吧'}}</text>
+        <button wx:if="{{emptyKind === 'search'}}" class="directory-empty-action" bindtap="clearSearch" hover-class="directory-control-hover">清空搜索</button>
+        <button wx:else class="directory-empty-action" bindtap="showAllCategories" hover-class="directory-control-hover">查看全部工具</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>

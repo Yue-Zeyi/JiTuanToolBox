@@ -1,0 +1,43 @@
+.top-title { flex: 1; }
+.top-title .title { display: block; font-size: 38rpx; font-weight: 700; }
+.top-title .desc { display: block; color: var(--jt-muted); font-size: 23rpx; margin-top: 6rpx; }
+
+.share-entry { width: 148rpx; height: 58rpx; flex: 0 0 148rpx; display: flex; align-items: center; justify-content: center; gap: 6rpx; border: 1rpx solid #CFE0F8; border-radius: 18rpx; color: var(--jt-primary); background: #EEF5FF; font-size: 22rpx; }
+.share-entry-icon { width: 28rpx; height: 28rpx; display: block; }
+
+.profile-card { position: relative; overflow: hidden; padding: 26rpx 24rpx 22rpx; background: linear-gradient(145deg, #FFFFFF 0%, #FCFDFF 58%, #F4F8FF 100%); }
+.profile-card-orb { position: absolute; width: 220rpx; height: 220rpx; right: -110rpx; top: -128rpx; border-radius: 50%; background: #EAF3FF; opacity: .86; }
+.profile-identity { position: relative; display: flex; align-items: center; }
+.profile-logo-shell { width: 88rpx; height: 88rpx; flex: 0 0 88rpx; display: flex; align-items: center; justify-content: center; border: 1rpx solid #DCEAFF; border-radius: 24rpx; background: #F1F6FF; box-shadow: 0 8rpx 18rpx rgba(47, 128, 237, .12); }
+.profile-brand-icon { width: 72rpx; height: 72rpx; display: block; }
+.profile-copy { flex: 1; min-width: 0; margin-left: 18rpx; display: flex; flex-direction: column; gap: 6rpx; }
+.profile-name { display: block; color: var(--jt-navy); font-size: 31rpx; font-weight: 700; letter-spacing: -.4rpx; }
+.profile-tagline { display: block; color: #70839D; font-size: 22rpx; }
+.profile-divider { position: relative; height: 1rpx; margin: 22rpx 0 16rpx; background: #EAF0F8; }
+.profile-privacy { position: relative; display: flex; align-items: flex-start; gap: 12rpx; padding: 14rpx 14rpx 13rpx; border: 1rpx solid #E1ECFB; border-radius: 16rpx; background: rgba(246, 250, 255, .92); }
+.profile-privacy-icon { width: 40rpx; height: 40rpx; flex: 0 0 40rpx; display: flex; align-items: center; justify-content: center; margin-top: 1rpx; border-radius: 12rpx; background: #E5F6EC; }
+.profile-privacy-icon image { width: 24rpx; height: 24rpx; display: block; opacity: .82; }
+.profile-privacy-copy { flex: 1; min-width: 0; }
+.profile-privacy-head { display: flex; align-items: center; gap: 8rpx; }
+.profile-privacy-title { color: #527A67; font-size: 21rpx; font-weight: 700; }
+.profile-privacy-badge { padding: 3rpx 8rpx; border-radius: 8rpx; color: #5B8C72; background: #E5F6EC; font-size: 17rpx; line-height: 1.2; }
+.profile-privacy-text { display: block; margin-top: 5rpx; color: #8092A9; font-size: 20rpx; font-weight: 400; line-height: 1.45; }
+
+.menu { margin-top: 24rpx; padding: 0 24rpx; }
+.menu-item { width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 92rpx; border-bottom: 1rpx solid #F0F3F8; text-align: left; font-size: 26rpx; }
+.menu-item:last-child { border-bottom: 0; }
+.menu-item .muted { font-size: 23rpx; }
+
+.feedback-card { margin-top: 24rpx; padding: 28rpx 24rpx 22rpx; }
+.feedback-top { display: flex; align-items: center; }
+.feedback-icon { width: 64rpx; height: 64rpx; flex: 0 0 64rpx; display: flex; align-items: center; justify-content: center; border-radius: 18rpx; background: linear-gradient(145deg, #5BA3FF, #2F80ED); }
+.feedback-icon image { width: 38rpx; height: 38rpx; display: block; }
+.feedback-copy { margin-left: 16rpx; min-width: 0; }
+.feedback-title { display: block; color: var(--jt-navy); font-size: 28rpx; font-weight: 700; }
+.feedback-desc { display: block; margin-top: 7rpx; color: var(--jt-muted); font-size: 21rpx; }
+.feedback-address { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 24rpx; padding: 18rpx 18rpx 18rpx 20rpx; border: 1rpx solid #E2ECFA; border-radius: 16rpx; background: #F8FBFF; }
+.address-copy { min-width: 0; display: flex; flex-direction: column; gap: 5rpx; }
+.address-label { color: #8A9AB0; font-size: 20rpx; }
+.feedback-email { display: block; color: var(--jt-primary); font-size: 25rpx; font-weight: 700; }
+.feedback-btn { flex: 0 0 auto; min-width: 148rpx; height: 60rpx; display: flex; align-items: center; justify-content: center; padding: 0 14rpx; border: 1rpx solid #CFE0F8; border-radius: 13rpx; color: var(--jt-primary); background: #EEF5FF; font-size: 22rpx; line-height: 1; text-align: center; white-space: nowrap; }
+.feedback-hint { display: block; margin-top: 14rpx; color: #94A3B8; font-size: 20rpx; line-height: 1.45; text-align: center; }

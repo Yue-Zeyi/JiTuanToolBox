@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>极团工具箱 · 全部工具设计稿</title>
+  <style>
+    :root { color-scheme: light; --blue:#2F80ED; --ink:#15233B; --muted:#718096; --line:#E8EEF7; --bg:#F7F9FC; }
+    * { box-sizing:border-box; letter-spacing:0; }
+    body { margin:0; background:#EAF0F5; color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible,input:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+    .board { max-width:1245px; margin:auto; padding:38px 24px 48px; }
+    .board-head { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
+    .logo { width:44px; height:44px; object-fit:contain; }
+    h1 { margin:0; font-size:24px; line-height:34px; font-weight:650; }
+    .board-head p { margin:5px 0 0; color:#64748B; font-size:13px; line-height:22px; }
+    .board-tag { margin-left:auto; color:#52657A; font-size:12px; white-space:nowrap; }
+    .screens { display:grid; grid-template-columns:repeat(3,minmax(0,375px)); justify-content:space-between; gap:24px; }
+    .screen-label { display:flex; align-items:center; gap:10px; margin:0 0 12px; font-size:14px; font-weight:600; }
+    .screen-label span { font-size:11px; color:#657991; font-weight:500; }
+    .phone { height:812px; width:100%; overflow:hidden; background:var(--bg); border:1px solid #DCE4ED; border-radius:8px; box-shadow:0 8px 28px #27496A0A; display:flex; flex-direction:column; }
+    .native { flex:none; background:#FFF; }
+    .status { height:35px; padding:12px 21px 0; display:flex; align-items:center; justify-content:space-between; font-size:12px; font-weight:650; }
+    .system-icons { width:61px; height:13px; }
+    .nav { height:49px; display:grid; grid-template-columns:90px 1fr 90px; align-items:center; text-align:center; }
+    .nav h2 { margin:0; font-size:16px; line-height:24px; font-weight:600; white-space:nowrap; }
+    .back { width:22px; height:22px; margin-left:15px; }
+    .capsule { margin-right:12px; width:78px; height:29px; border:1px solid #E5E7EB; border-radius:18px; padding:5px 10px; }
+    .search-area { background:#FFF; padding:8px 15px 15px; flex:none; }
+    .search { height:44px; display:flex; align-items:center; padding-left:12px; background:#F4F6F9; border:1px solid #EDF1F6; border-radius:8px; gap:8px; }
+    .search-icon { width:18px; height:18px; color:#8A99AB; flex:none; }
+    .search input { padding:0; border:0; background:transparent; width:100%; min-width:0; height:38px; outline:none; color:var(--ink); font-size:13px; }
+    .search input::placeholder { color:#8A99AB; }
+    .clear { width:40px; height:42px; border:0; background:none; flex:none; display:grid; place-items:center; color:#8A99AB; padding:0; }
+    .clear svg { width:16px; height:16px; }
+    .clear[hidden] { display:none; }
+    .directory { flex:1; min-height:0; display:flex; flex-direction:column; }
+    .categories { display:flex; flex:none; gap:2px; padding:0 12px; background:#FFF; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none; }
+    .categories[hidden] { display:none; }
+    .categories::-webkit-scrollbar { display:none; }
+    .category { position:relative; flex:1 0 44px; min-height:46px; padding:10px 6px 14px; border:0; background:none; color:#718096; font-size:14px; line-height:22px; white-space:nowrap; }
+    .category[aria-selected="true"] { color:#246DCF; font-weight:650; }
+    .category[aria-selected="true"]::after { content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:24px; height:3px; border-radius:3px 3px 0 0; background:var(--blue); }
+    .catalog { flex:1; min-width:0; min-height:0; padding:0 16px 20px; overflow-y:auto; scrollbar-width:none; }
+    .catalog::-webkit-scrollbar { display:none; }
+    .group-head { display:flex; justify-content:space-between; align-items:center; min-height:47px; gap:8px; }
+    .group-head h3 { margin:0; font-size:13px; line-height:20px; font-weight:650; }
+    .group-head span { color:#8A99AB; font-size:10px; white-space:nowrap; }
+    .tool-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .tool { min-width:0; min-height:112px; padding:12px; background:#FFF; border:1px solid var(--line); border-radius:8px; }
+    .tool-icon { display:grid; place-items:center; width:36px; height:36px; border-radius:10px; margin-bottom:8px; }
+    .tool-icon img { width:28px; height:28px; display:block; }
+    .blue { background:#4F95F1; } .green { background:#48C98A; } .orange { background:#F2A04F; } .purple { background:#8178E6; }
+    .tool h4 { font-size:14px; line-height:20px; margin:0; font-weight:600; overflow-wrap:anywhere; }
+    .tool p { font-size:11px; line-height:17px; margin:3px 0 0; color:var(--muted); overflow-wrap:anywhere; }
+    .safe { height:24px; flex:none; display:grid; place-items:center; background:var(--bg); }
+    .safe::after { content:""; height:4px; width:114px; background:#17202C; border-radius:3px; }
+    .empty { display:flex; flex-direction:column; align-items:center; padding:110px 10px 20px; text-align:center; }
+    .empty svg { width:62px; height:62px; margin-bottom:20px; }
+    .empty h3 { font-size:15px; line-height:24px; margin:0; font-weight:600; }
+    .empty p { color:#8391A4; font-size:12px; line-height:20px; margin:8px 0 20px; }
+    .reset-search { border:1px solid #D7E5FA; background:#EFF5FE; border-radius:6px; padding:10px 21px; font-size:13px; color:#276ECF; }
+    .caption { font-size:12px; color:#61748C; line-height:21px; margin:13px 1px 0; }
+    .board-foot { margin:28px 0 0; border-top:1px solid #D8E2EC; padding-top:18px; color:#62758A; font-size:12px; line-height:22px; }
+    @media(max-width:1000px) { .screens { grid-template-columns:repeat(2,minmax(0,375px)); justify-content:center; } .board-tag { display:none; } }
+    @media(max-width:650px) { .board { padding:22px 12px 30px; } .screens { grid-template-columns:minmax(0,375px); gap:28px; } h1 { font-size:20px; line-height:28px; } .board-head { gap:10px; } .logo { width:36px; height:36px; } .phone { height:812px; } }
+    @media(max-width:350px) { .catalog { padding-left:12px; padding-right:12px; } .tool { padding-left:10px; padding-right:10px; } }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+    <symbol id="search-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="close-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#D6DFE9"/><path d="m9 9 6 6m0-6-6 6" fill="none" stroke="#FFF" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="system-icons" viewBox="0 0 61 13"><path d="M1 10V8m4 2V6m4 4V4m4 6V2" stroke="#17202C" stroke-width="2.5"/><path d="M20 4q6-6 12 0M23 7q3-3 6 0" fill="none" stroke="#17202C" stroke-width="1.6" stroke-linecap="round"/><circle cx="26" cy="10" r="1.3" fill="#17202C"/><rect x="38" y="2" width="20" height="10" rx="2" fill="none" stroke="#17202C"/><rect x="40" y="4" width="15" height="6" rx="1" fill="#17202C"/><path d="M60 5v4" stroke="#17202C" stroke-width="1.5"/></symbol>
+    <symbol id="capsule" viewBox="0 0 56 18"><circle cx="5" cy="9" r="1.5"/><circle cx="11" cy="9" r="2"/><circle cx="17" cy="9" r="1.5"/><path d="M29 2v14" stroke="#D8DFE7"/><circle cx="45" cy="9" r="6" fill="none" stroke="#17202C" stroke-width="1.5"/><circle cx="45" cy="9" r="2.5"/></symbol>
+  </defs></svg>
+  <main class="board">
+    <header class="board-head"><img class="logo" src="../../assets/icons/brand-logo.png" alt="极团工具箱"><div><h1>全部工具</h1><p>图像 · 文本 · 文档 · 查询 · 计算</p></div><span class="board-tag">第三版设计评审 / 2026.09.08</span></header>
+    <div class="screens" id="screens"></div>
+    <footer class="board-foot">本稿用于确认布局和交互方向，未接入小程序。可在预览内切换分类、搜索和清空；工具入口仅展示设计，不跳转业务页面。原生状态栏、返回与胶囊为示意。</footer>
+  </main>
+  <script>
+    const tools = [
+      {name:'图片压缩',desc:'调整体积与清晰度',icon:'compress',tone:'blue',category:'image',keywords:'压缩 体积 大小 KB MB 清晰度'},
+      {name:'尺寸修改',desc:'像素比例与证件照',icon:'resize',tone:'green',category:'image',keywords:'尺寸 缩放 像素 证件照 一寸 二寸 裁剪'},
+      {name:'图片转 PDF',desc:'多张图片合成文档',icon:'pdf',tone:'orange',category:'document',keywords:'PDF 文档 转换 图片'},
+      {name:'图片加水印',desc:'添加专属文字水印',icon:'watermark',tone:'purple',category:'image',keywords:'水印 文字 版权'},
+      {name:'图片拆块',desc:'九宫格与自定义拆分',icon:'split',tone:'purple',category:'image',keywords:'九宫格 拆分 切图'},
+      {name:'图片拼接',desc:'长图横图自由拼接',icon:'stitch',tone:'orange',category:'image',keywords:'长图 横图 合并 拼图 网格'},
+      {name:'字数统计',desc:'字符字节一目了然',icon:'word-count',tone:'blue',category:'text',keywords:'字数 字符 字节 UTF-8 UTF-16'},
+      {name:'文本清洗',desc:'清理格式批量替换',icon:'text-clean',tone:'green',category:'text',keywords:'文字 空格 空行 替换 正则 HTML 大小写'},
+      {name:'文字比对',desc:'逐字逐行查看差异',icon:'text-compare',tone:'orange',category:'text',keywords:'文本 对比 差异 diff'},
+      {name:'花样字体',desc:'英文数字个性变换',icon:'fancy-font',tone:'purple',category:'text',keywords:'字体 英文 数字 文字 样式'}
+    ];
+    const categories = [
+      {key:'all',name:'全部',tab:'全部'},
+      {key:'image',name:'图像工具',tab:'图像'},
+      {key:'text',name:'文本工具',tab:'文本'},
+      {key:'document',name:'文档工具',tab:'文档'},
+      {key:'query',name:'查询工具',tab:'查询'},
+      {key:'calculate',name:'计算工具',tab:'计算'}
+    ];
+    const states = [
+      {title:'全部工具',label:'默认浏览',active:'all',query:'',caption:'五个业务分类加“全部”聚合入口。图像、文本、文档分组浏览；查询和计算可点击查看空状态。'},
+      {title:'文本分类',label:'Tab 选中状态',active:'text',query:'',caption:'切换到文本，只展示四个文本工具。图片转 PDF 已归入文档，每个工具只收录一次。'},
+      {title:'用途搜索',label:'全目录搜索',active:'all',query:'证件照',caption:'搜索暂时收起 Tab，覆盖全部分类。“证件照”可找到尺寸修改；输入“音频剪辑”可查看无结果状态。'}
+    ];
+    function toolCard(tool) {
+      const card = document.createElement('article'); card.className = 'tool';
+      card.innerHTML = `<span class="tool-icon ${tool.tone}"><img src="../../assets/icons/${tool.icon}.svg" alt=""></span><h4>${tool.name}</h4><p>${tool.desc}</p>`;
+      return card;
+    }
+    states.forEach((state,index) => {
+      const section = document.createElement('section');
+      section.innerHTML = `<h2 class="screen-label">${state.title}<span>${state.label}</span></h2><div class="phone"><header class="native"><div class="status"><span>9:41</span><svg class="system-icons" aria-hidden="true"><use href="#system-icons"/></svg></div><div class="nav"><img class="back" src="../../assets/icons/arrow-left.svg" alt="原生返回示意"><h2>全部工具</h2><svg class="capsule" aria-label="微信原生胶囊示意"><use href="#capsule"/></svg></div></header><div class="search-area"><label class="search"><svg class="search-icon" aria-hidden="true"><use href="#search-icon"/></svg><input aria-label="${state.title}搜索工具" placeholder="搜索工具名称或用途" autocomplete="off" maxlength="60"><button class="clear" aria-label="清除搜索" title="清除搜索"><svg aria-hidden="true"><use href="#close-icon"/></svg></button></label></div><div class="directory"><nav class="categories" aria-label="${state.title}工具分类"></nav><div class="catalog" aria-live="polite"></div></div><div class="safe" aria-hidden="true"></div></div><p class="caption">${state.caption}</p>`;
+      document.querySelector('#screens').append(section);
+      const input = section.querySelector('input'), clear = section.querySelector('.clear'), nav = section.querySelector('.categories'), catalog = section.querySelector('.catalog');
+      let active = state.active, browsingScroll = 0, searching = Boolean(state.query), composing = false;
+      input.value = state.query;
+      nav.setAttribute('role','tablist');
+      catalog.id = `catalog-${index}`;
+      categories.forEach(category => {
+        const button = document.createElement('button'); button.className = 'category'; button.dataset.category = category.key;
+        button.setAttribute('role','tab'); button.setAttribute('aria-controls',catalog.id);
+        button.textContent = category.tab;
+        button.onclick = () => {
+          active = category.key; browsingScroll = 0; render(); catalog.scrollTop = 0;
+          nav.scrollTo({left:button.offsetLeft - nav.offsetLeft - (nav.clientWidth - button.offsetWidth) / 2});
+        };
+        nav.append(button);
+      });
+      nav.addEventListener('keydown',event => {
+        const buttons = [...nav.querySelectorAll('button')], current = buttons.indexOf(event.target);
+        const offsets = {ArrowLeft:-1,ArrowRight:1};
+        if(current < 0 || !(event.key in offsets || event.key === 'Home' || event.key === 'End')) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : (current + offsets[event.key] + buttons.length) % buttons.length;
+        buttons[next].click(); buttons[next].focus();
+      });
+      function render() {
+        const query = input.value.trim().toLowerCase();
+        nav.hidden = Boolean(query); clear.hidden = !input.value;
+        nav.querySelectorAll('button').forEach(button => {
+          const selected = button.dataset.category === active;
+          button.setAttribute('aria-selected',String(selected)); button.tabIndex = selected ? 0 : -1;
+        });
+        catalog.replaceChildren();
+        const matched = tools.filter(tool => `${tool.name} ${tool.desc} ${tool.keywords}`.toLowerCase().includes(query));
+        const groups = query ? [{name:'搜索结果',items:matched}] : categories.filter(category => category.key !== 'all' && (active === 'all' || category.key === active)).map(category => ({name:category.name,items:tools.filter(tool => tool.category === category.key)})).filter(group => active !== 'all' || group.items.length);
+        groups.forEach(group => {
+          const heading = document.createElement('div'); heading.className = 'group-head'; heading.innerHTML = `<h3>${group.name}</h3><span>${group.items.length} 个工具</span>`; catalog.append(heading);
+          const grid = document.createElement('div'); grid.className = 'tool-grid'; group.items.forEach(tool => grid.append(toolCard(tool))); catalog.append(grid);
+        });
+        const emptyCategory = !query && active !== 'all' && !tools.some(tool => tool.category === active);
+        if((query && !matched.length) || emptyCategory) {
+          const empty = document.createElement('div'); empty.className = 'empty';
+          empty.innerHTML = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="9" y="7" width="35" height="45" rx="7" fill="#EAF1FA" stroke="#CEDCEE" stroke-width="1.5"/><path d="M18 19h17M18 26h11M18 33h8" stroke="#B1C7E3" stroke-width="2.5" stroke-linecap="round"/><circle cx="41" cy="39" r="12" fill="#F7F9FC" stroke="#84ADE4" stroke-width="2.5"/><path d="m50 48 8 8" stroke="#84ADE4" stroke-width="3.5" stroke-linecap="round"/></svg><h3>没有找到相关工具</h3><p>试试更简短的工具名称或用途</p><button class="reset-search">清空搜索</button>';
+          if(emptyCategory) {
+            empty.querySelector('h3').textContent = '该分类暂无工具';
+            empty.querySelector('p').textContent = '先看看其他实用工具吧';
+            empty.querySelector('button').textContent = '查看全部工具';
+          }
+          empty.querySelector('button').onclick = () => { if(emptyCategory) active = 'all'; reset(); };
+          catalog.append(empty);
+        }
+      }
+      function update() {
+        const nextSearching = Boolean(input.value.trim());
+        if(!searching && nextSearching) browsingScroll = catalog.scrollTop;
+        const restore = searching && !nextSearching;
+        searching = nextSearching; render(); catalog.scrollTop = restore ? browsingScroll : 0;
+      }
+      function reset() { input.value = ''; update(); }
+      clear.onclick = reset;
+      input.addEventListener('compositionstart',() => { composing = true; });
+      input.addEventListener('compositionend',() => { composing = false; update(); });
+      input.addEventListener('input',() => { if(!composing) update(); });
+      input.addEventListener('keydown',event => { if(event.key === 'Escape') reset(); if(event.key === 'Enter') input.blur(); });
+      render();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+.directory-page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; letter-spacing: 0; }
+.directory-search-area { flex: none; padding: 8px 15px 15px; background: #FFFFFF; }
+.directory-search { height: 44px; display: flex; align-items: center; gap: 8px; padding-left: 12px; background: #F4F6F9; border: 1px solid #EDF1F6; border-radius: 8px; }
+.directory-search-icon { width: 18px; height: 18px; flex: none; display: block; }
+.directory-search-input { flex: 1; min-width: 0; height: 38px; padding: 0; color: #15233B; font-size: 13px; }
+.directory-search-placeholder { color: #8A99AB; }
+.directory-search-clear { width: 44px; height: 42px; flex: none; display: flex; align-items: center; justify-content: center; }
+.directory-search-clear image { display: block; width: 16px; height: 16px; }
+.directory-tabs { flex: none; width: 100%; height: 50px; background: #FFFFFF; white-space: nowrap; }
+.directory-tabs-inner { display: flex; width: 100%; min-width: 340px; padding: 2px 15px 10px; gap: 7px; }
+.directory-tab { position: relative; flex: 1 0 66px; height: 38px; display: flex; align-items: center; justify-content: center; padding: 0 6px; color: #6F8097; background: #F7F9FC; border: 1px solid #E4EBF4; border-radius: 7px; font-size: 13px; line-height: 20px; white-space: nowrap; }
+.directory-tab.is-active { color: #246DCF; background: #EEF5FF; border-color: #AFCDF4; font-weight: 650; box-shadow: inset 0 0 0 1px rgba(47, 128, 237, .08), 0 3px 10px rgba(47, 128, 237, .06); }
+.directory-control-hover { opacity: .7; }
+.directory-list { flex: 1; height: 0; min-height: 0; width: 100%; }
+.directory-content { padding: 0 32rpx calc(40rpx + env(safe-area-inset-bottom)); }
+.directory-group-head { min-height: 47px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.directory-group-title { color: #15233B; font-size: 14px; line-height: 20px; font-weight: 700; }
+.directory-group-count { color: #8A99AB; font-size: 11px; white-space: nowrap; }
+.directory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18rpx; }
+.directory-tool { min-width: 0; min-height: 214rpx; padding: 22rpx; text-align: left; }
+.directory-tool-hover { background: #F8FBFF; border-color: #C9DCF7; box-shadow: 0 12rpx 36rpx rgba(24, 51, 92, .08); }
+.directory-tool-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18rpx; }
+.directory-tool-title { display: block; color: #15233B; font-size: 29rpx; line-height: 1.35; font-weight: 700; overflow-wrap: anywhere; }
+.directory-tool-desc { display: block; margin-top: 7rpx; color: #718096; font-size: 22rpx; line-height: 1.55; overflow-wrap: anywhere; }
+.directory-empty { display: flex; flex-direction: column; align-items: center; padding: 110px 10px 20px; text-align: center; }
+.directory-empty-icon { width: 62px; height: 62px; display: block; margin-bottom: 20px; }
+.directory-empty-title { font-size: 15px; line-height: 24px; font-weight: 600; }
+.directory-empty-desc { margin: 8px 0 20px; color: #8391A4; font-size: 12px; line-height: 20px; }
+.directory-empty-action { min-height: 44px; padding: 10px 21px; border: 1px solid #D7E5FA; border-radius: 6px; background: #EFF5FE; color: #276ECF; font-size: 13px; line-height: 22px; }
+@media (max-width: 350px) { .directory-content { padding-left: 24rpx; padding-right: 24rpx; } .directory-tool { padding-left: 20rpx; padding-right: 20rpx; } }

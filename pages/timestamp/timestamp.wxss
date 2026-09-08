@@ -1,0 +1,57 @@
+.timestamp-page { padding-bottom: 90rpx; }
+.timestamp-now { padding: 22rpx; border: 1rpx solid #D9E5F2; border-radius: 14rpx; background: #FFFFFF; }
+.timestamp-now-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8rpx; color: var(--jt-navy); font-size: 26rpx; font-weight: 700; }
+.timestamp-now-head text:last-child { color: #8191A4; font-size: 19rpx; font-weight: 400; }
+.timestamp-now-row { display: flex; align-items: center; min-width: 0; min-height: 66rpx; border-top: 1rpx solid #EDF2F7; }
+.timestamp-now-row > view { display: flex; align-items: center; flex: 1; min-width: 0; gap: 12rpx; }
+.timestamp-now-label { flex: 0 0 54rpx; color: #77899E; font-size: 21rpx; }
+.timestamp-now-value { min-width: 0; overflow: hidden; color: #234666; font-family: Consolas, Monaco, monospace; font-size: 25rpx; text-overflow: ellipsis; white-space: nowrap; }
+.timestamp-now-row button { display: flex; align-items: center; justify-content: center; flex: 0 0 58rpx; width: 58rpx; height: 58rpx; }
+.timestamp-now-row image { width: 28rpx; height: 28rpx; }
+.timestamp-segment { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6rpx; margin-top: 18rpx; padding: 6rpx; border-radius: 14rpx; background: #E9EFF6; }
+.timestamp-segment-item { display: flex; align-items: center; justify-content: center; min-width: 0; height: 70rpx; border-radius: 10rpx; color: #718096; font-size: 23rpx; }
+.timestamp-segment-item.active { color: #1768C5; background: #FFFFFF; box-shadow: 0 3rpx 10rpx rgba(32, 75, 125, .1); font-weight: 600; }
+.timestamp-settings { margin-top: 18rpx; padding: 22rpx; border: 1rpx solid #D9E5F2; border-radius: 14rpx; background: #FFFFFF; }
+.timestamp-setting + .timestamp-setting { margin-top: 22rpx; }
+.timestamp-setting-label { display: block; margin-bottom: 12rpx; color: var(--jt-navy); font-size: 25rpx; font-weight: 700; }
+.timestamp-unit-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8rpx; }
+.timestamp-unit { display: flex; align-items: center; justify-content: center; min-width: 0; height: 64rpx; border: 1px solid #D6E2EF; border-radius: 10rpx; color: #667C94; background: #F9FBFD; font-size: 21rpx; }
+.timestamp-unit.active { border-color: #7EB0EE; color: #1768C5; background: #EDF5FF; font-weight: 600; }
+.timestamp-picker { display: flex; align-items: center; justify-content: space-between; min-width: 0; height: 76rpx; padding: 0 16rpx; border: 1rpx solid #D5E1EE; border-radius: 10rpx; background: #FFFFFF; }
+.timestamp-picker > view { display: flex; align-items: baseline; min-width: 0; gap: 12rpx; }
+.timestamp-picker text:first-child { flex: 0 0 auto; color: #244762; font-size: 25rpx; font-weight: 600; }
+.timestamp-picker text:last-child { min-width: 0; overflow: hidden; color: #8494A8; font-size: 20rpx; text-overflow: ellipsis; white-space: nowrap; }
+.timestamp-picker image { flex: 0 0 26rpx; width: 26rpx; height: 26rpx; }
+.timestamp-setting-note { display: block; margin-top: 9rpx; color: #8A99AA; font-size: 19rpx; }
+.timestamp-panel { margin-top: 18rpx; padding: 22rpx; border: 1rpx solid #D9E5F2; border-radius: 14rpx; background: #FFFFFF; overflow: hidden; }
+.timestamp-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
+.timestamp-panel-title { color: var(--jt-navy); font-size: 27rpx; font-weight: 700; }
+.timestamp-count { flex: 0 0 auto; color: #6685A8; font-size: 20rpx; }
+.timestamp-textarea { box-sizing: border-box; display: block; width: 100%; max-width: 100%; height: 240rpx; margin-top: 16rpx; padding: 16rpx; border: 1rpx solid #D5E1EE; border-radius: 12rpx; color: var(--jt-navy); background: #FFFFFF; font-family: Consolas, Monaco, monospace; font-size: 23rpx; line-height: 1.6; overflow: hidden; }
+.timestamp-placeholder { color: #A2AFBD; }
+.timestamp-error { display: block; margin-top: 14rpx; color: #C84444; font-size: 22rpx; line-height: 1.5; }
+.timestamp-main-btn { width: 100%; height: 84rpx; margin-top: 18rpx; border-radius: 14rpx; gap: 10rpx; }
+.timestamp-main-btn image { width: 29rpx; height: 29rpx; }
+.timestamp-results { box-sizing: border-box; width: 100%; height: 520rpx; margin-top: 16rpx; }
+.timestamp-result-row { padding: 18rpx 0; border-bottom: 1rpx solid #E5ECF4; color: #38536D; font-family: Consolas, Monaco, monospace; font-size: 20rpx; line-height: 1.6; overflow-wrap: break-word; }
+.timestamp-result-row text { display: block; max-width: 100%; overflow-wrap: break-word; }
+.timestamp-result-source { margin-bottom: 7rpx; color: #1F68AA; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; font-size: 21rpx; font-weight: 700; }
+.timestamp-result-row.invalid { color: #B64949; }
+.timestamp-row-error { color: #C84444; }
+.timestamp-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 220rpx; margin-top: 16rpx; border: 1rpx dashed #CBD9E8; border-radius: 12rpx; color: #93A2B3; font-size: 21rpx; }
+.timestamp-empty image { width: 56rpx; height: 56rpx; margin-bottom: 11rpx; padding: 7rpx; border-radius: 10rpx; background: #8CB7EC; opacity: .68; }
+.timestamp-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10rpx; margin-top: 18rpx; }
+.timestamp-actions button { min-width: 0; height: 74rpx; padding: 0 5rpx; border-radius: 12rpx; gap: 5rpx; font-size: 20rpx; white-space: nowrap; }
+.timestamp-actions image { flex: 0 0 24rpx; width: 24rpx; height: 24rpx; }
+.timestamp-actions button[disabled] { opacity: .45; }
+.timestamp-date-selection { padding: 26rpx 0; border-top: 1rpx solid #E2E9F3; }
+.timestamp-use-now { display: flex; align-items: center; justify-content: center; height: 56rpx; color: #2F80ED; font-size: 23rpx; }
+.timestamp-date-fields { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr) minmax(0, .7fr); gap: 12rpx; }
+.timestamp-date-fields picker { min-width: 0; }
+.timestamp-date-field { padding: 14rpx 12rpx; border: 1rpx solid #DCE5F1; border-radius: 12rpx; background: #FFFFFF; }
+.timestamp-date-label { color: #8794A7; font-size: 21rpx; }
+.timestamp-date-field > view { display: flex; align-items: center; justify-content: space-between; gap: 6rpx; height: 46rpx; }
+.timestamp-date-field > view text { min-width: 0; color: #304A68; font-size: 24rpx; white-space: nowrap; }
+.timestamp-date-field image { flex: 0 0 18rpx; width: 18rpx; height: 18rpx; }
+.timestamp-date-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16rpx; margin: 18rpx 0 12rpx; }
+.timestamp-date-actions button { min-width: 0; height: 72rpx; font-size: 24rpx; border-radius: 12rpx; }

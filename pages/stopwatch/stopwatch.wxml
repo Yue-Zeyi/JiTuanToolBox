@@ -1,0 +1,35 @@
+<view class="page tool-page stopwatch-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">秒表计时</text><text class="desc">毫秒计时 · 分段记录</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/stopwatch.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="stopwatch-face">
+    <view class="stopwatch-status {{running ? 'is-running' : ''}}"><view class="status-dot"></view><text>{{running ? '计时中' : (elapsedMs ? '已暂停' : '准备计时')}}</text></view>
+    <text class="stopwatch-digits" style="font-size: {{displaySize}}rpx;">{{display}}</text>
+    <view class="stopwatch-split"><text>本次用时</text><text>{{splitDisplay}}</text></view>
+  </view>
+
+  <view class="stopwatch-controls">
+    <button class="stopwatch-control secondary" bindtap="reset" disabled="{{!elapsedMs && !laps.length}}" aria-label="重置秒表"><image class="stopwatch-control-icon" src="/pages/stopwatch/reset.svg" mode="aspectFit"/><text>重置</text></button>
+    <button class="stopwatch-control main {{running ? 'pause' : 'start'}}" bindtap="toggleRunning"><image class="stopwatch-control-icon" src="{{running ? '/pages/stopwatch/pause.svg' : '/pages/stopwatch/play.svg'}}" mode="aspectFit"/><text>{{running ? '暂停' : (elapsedMs ? '继续' : '开始')}}</text></button>
+    <button class="stopwatch-control secondary" bindtap="recordLap" disabled="{{!running}}" aria-label="记录本次用时"><image class="stopwatch-control-icon" src="/pages/stopwatch/lap.svg" mode="aspectFit"/><text>计次</text></button>
+  </view>
+
+  <view class="stopwatch-records">
+    <view class="stopwatch-section-head"><view><text class="stopwatch-section-title">计次记录</text><text class="lap-count">{{laps.length}} 次</text></view><button class="copy-all" bindtap="copyAll" disabled="{{!elapsedMs && !laps.length}}"><image class="stopwatch-copy-icon" src="/pages/stopwatch/copy.svg" mode="aspectFit"/><text>复制全部</text></button></view>
+    <view class="lap-header"><text>计次</text><text>本次用时</text><text>累计用时</text></view>
+    <view wx:if="{{!laps.length}}" class="stopwatch-empty">暂无计次</view>
+    <view wx:for="{{laps}}" wx:key="number" class="lap-row {{item.fastest ? 'lap-fastest' : ''}} {{item.slowest ? 'lap-slowest' : ''}} {{item.fastest && item.slowest ? 'lap-tied' : ''}}">
+      <view class="lap-number"><text>{{item.number}}</text><text wx:if="{{item.fastestLabel}}" class="lap-badge fastest-badge">{{item.fastestLabel}}</text><text wx:if="{{item.slowestLabel}}" class="lap-badge slowest-badge">{{item.slowestLabel}}</text></view>
+      <text class="lap-time">{{item.splitDisplay}}</text><text class="lap-time lap-total">{{item.totalDisplay}}</text>
+    </view>
+  </view>
+
+  <view class="page-foot-tip">
+    <view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">记录仅保留在本次页面，不上传服务器</text></view>
+    <text class="privacy-detail">切到后台继续计时，退出页面后清空</text>
+    <text class="privacy-detail">后台或锁屏期间调整设备时间可能影响计时</text>
+    <text wx:if="{{clockDegraded}}" class="stopwatch-clock-note">当前设备使用系统时钟计时，调整时间会影响结果</text>
+  </view>
+</view>

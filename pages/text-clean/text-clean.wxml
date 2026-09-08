@@ -1,0 +1,40 @@
+<view class="page tool-page text-clean-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">文本清洗</text><text class="desc">去掉杂乱格式，整理出干净文本</text></view>
+    <view class="tool-icon green"><image src="/assets/icons/text-clean.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card clean-editor-card">
+    <view class="clean-editor-head"><view><text class="clean-editor-title">输入内容</text><text class="clean-editor-subtitle">文本仅在本机处理，不会上传</text></view><text class="clean-editor-counter">{{stats.inputCharacters}} / 100000 字符</text></view>
+    <textarea class="clean-textarea" value="{{text}}" bindinput="onTextInput" placeholder="输入或粘贴需要整理的文字" placeholder-class="clean-placeholder" maxlength="100000" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}"></textarea>
+    <view class="clean-editor-foot"><text>可多选清洗规则</text><text wx:if="{{activeCount}}">已启用 {{activeCount}} 项</text><text wx:else>未启用规则</text></view>
+  </view>
+
+  <view class="card clean-replace-card">
+    <view class="clean-replace-head"><view><text class="clean-replace-title">查找与替换</text><text class="clean-replace-subtitle">批量替换输入内容中的匹配文字</text></view><text class="clean-replace-badge">可选</text></view>
+    <view class="clean-replace-fields"><input class="clean-replace-input" value="{{findText}}" bindinput="onFindInput" placeholder="查找内容" placeholder-class="clean-placeholder" maxlength="1000"/><input class="clean-replace-input" value="{{replaceText}}" bindinput="onReplaceInput" placeholder="替换为（可留空）" placeholder-class="clean-placeholder" maxlength="1000"/></view>
+    <view class="clean-replace-tools"><button class="clean-regex-toggle {{useRegex ? 'active' : ''}}" bindtap="toggleRegex"><view class="clean-regex-check"><image wx:if="{{useRegex}}" src="/assets/icons/success.svg" mode="aspectFit"/></view><text>使用正则表达式</text></button><text class="clean-regex-help">{{useRegex ? '支持 . * [ ] 等规则' : '按普通文字进行全量替换'}}</text></view>
+    <button class="secondary-btn clean-replace-btn" bindtap="applyReplace">执行替换</button>
+    <text wx:if="{{replaceError}}" class="clean-replace-error">{{replaceError}}</text>
+  </view>
+
+  <view class="card clean-options-card">
+    <view class="clean-options-head"><view><text class="clean-options-title">清洗选项</text><text class="clean-options-subtitle">常用规则可多选，大小写转换三选一</text></view><button class="clean-reset-btn" bindtap="resetOptions">恢复默认</button></view>
+    <view class="clean-option-grid">
+      <block wx:for="{{options}}" wx:key="key">
+        <button class="clean-option {{item.active ? 'active' : ''}}" data-key="{{item.key}}" bindtap="toggleOption"><view class="clean-option-check"><image wx:if="{{item.active}}" src="/assets/icons/success.svg" mode="aspectFit"/></view><view class="clean-option-copy"><text class="clean-option-title">{{item.title}}</text><text class="clean-option-desc">{{item.desc}}</text></view></button>
+      </block>
+    </view>
+  </view>
+
+  <view class="card clean-result-card">
+    <view class="clean-result-head"><view><text class="clean-result-title">清洗结果</text><text class="clean-result-subtitle">处理结果会实时更新</text></view><view class="clean-result-meta"><text>{{stats.outputCharacters}} 字符</text><text wx:if="{{stats.removedCharacters}}">已减少 {{stats.removedCharacters}} 字符</text></view></view>
+    <scroll-view wx:if="{{hasResult && resultText}}" class="clean-result-box" scroll-y="{{true}}"><text class="clean-result-text" selectable="true">{{resultText}}</text></scroll-view>
+    <view wx:elif="{{hasResult}}" class="clean-result-empty"><image src="/assets/icons/text-clean-muted.svg" mode="aspectFit"/><text>清洗后没有剩余文字</text></view>
+    <view wx:else class="clean-result-empty"><image src="/assets/icons/text-clean-muted.svg" mode="aspectFit"/><text>输入文字后，这里会显示清洗结果</text></view>
+    <view class="clean-result-actions"><button class="secondary-btn" bindtap="copyResult" disabled="{{!hasResult || !resultText}}">复制结果</button><button class="primary-btn" bindtap="replaceOriginal" disabled="{{!hasResult || !stats.removedCharacters}}">替换原文</button></view>
+  </view>
+
+  <view class="clean-bottom-actions"><button class="secondary-btn clean-save-btn" bindtap="saveRecord" disabled="{{!text}}">保存记录</button><button class="primary-btn" bindtap="clearText">清空内容</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，文字不上传服务器</text></view></view>
+</view>

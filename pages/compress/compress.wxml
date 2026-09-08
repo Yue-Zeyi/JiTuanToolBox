@@ -1,0 +1,42 @@
+<view class="page tool-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">图片压缩</text><text class="desc">减小文件体积，发送更轻松</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/compress.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card upload-card" wx:if="{{state === 'empty' || state === 'processing'}}">
+    <view class="selection-head" wx:if="{{files.length}}"><view><text class="selection-title">已选择 {{files.length}} 张图片</text><text class="selection-tip">点击缩略图可放大预览</text></view><button class="ghost-btn" bindtap="chooseImages" disabled="{{files.length >= 9}}">继续添加</button></view>
+    <view class="preview-grid" wx:if="{{files.length}}">
+      <block wx:for="{{files}}" wx:key="path" wx:for-index="index">
+        <view class="preview-tile" data-index="{{index}}" bindtap="previewImage"><image wx:if="{{!item.previewFailed}}" class="preview-thumb" src="{{item.path}}" mode="aspectFill" lazy-load="true" binderror="onPreviewError" data-index="{{index}}"/><view wx:else class="preview-failed"><image src="/assets/icons/image-broken.svg" mode="aspectFit"/><text>无法预览</text></view><view class="preview-index">{{index + 1}}</view><view class="preview-size">{{item.sizeText}}</view><button class="preview-remove" data-index="{{index}}" catchtap="removeFile"><image src="/assets/icons/remove.svg" mode="aspectFit"/></button></view>
+      </block>
+    </view>
+    <view class="upload-dash" bindtap="chooseImages">
+      <image class="upload-plus" src="/assets/icons/add.svg" mode="aspectFit"/><text class="upload-title">{{files.length ? '继续选择图片' : '选择图片'}}</text><view class="upload-tip"><text>支持 JPG、JPEG、PNG、BMP、WEBP、JFIF、JPE</text><text>单张不超过 20MB · 最多 9 张</text><text wx:if="{{files.length}}">还可选 {{9 - files.length}} 张</text></view>
+    </view>
+  </view>
+
+  <view class="card panel" wx:if="{{state === 'empty' || state === 'processing'}}">
+    <view class="panel-title">压缩模式</view>
+    <view class="choice-row"><button class="choice {{mode === 'auto' ? 'active' : ''}}" data-mode="auto" bindtap="setMode">自动压缩</button><button class="choice {{mode === 'custom' ? 'active' : ''}}" data-mode="custom" bindtap="setMode">自定义质量</button><button class="choice {{mode === 'target' ? 'active' : ''}}" data-mode="target" bindtap="setMode">目标大小</button></view>
+    <view class="mode-tip"><text wx:if="{{mode === 'auto'}}">自动压缩：平衡清晰度和体积；若处理后没有变小，会保留原图。</text><text wx:if="{{mode === 'custom'}}">自定义质量：质量越高通常越清晰，但不保证指定体积；部分格式可能不会变小。</text><text wx:if="{{mode === 'target'}}">目标大小：每张不超过设定值，优先调整质量，必要时等比缩小尺寸。需压缩时输出 JPG，透明区域变为白色。</text></view>
+    <view wx:if="{{mode === 'custom'}}" class="quality-row"><view class="quality-head"><text>图片质量</text><text class="slider-value">{{quality}}%</text></view><slider min="20" max="100" value="{{quality}}" activeColor="#2F80ED" backgroundColor="#DFE8F5" block-size="22" bindchanging="onQuality"/></view>
+    <view wx:if="{{mode === 'target'}}" class="target-row">
+      <view class="quality-head"><text>单张大小上限</text><text class="slider-value">{{targetSizeLabel}}</text></view>
+      <view class="target-list"><button class="target-chip {{targetPreset === '200' ? 'active' : ''}}" data-target="200" bindtap="setTargetSize">200 KB</button><button class="target-chip {{targetPreset === '500' ? 'active' : ''}}" data-target="500" bindtap="setTargetSize">500 KB</button><button class="target-chip {{targetPreset === '1024' ? 'active' : ''}}" data-target="1024" bindtap="setTargetSize">1 MB</button></view>
+      <button class="target-custom-toggle {{targetPreset === 'custom' ? 'active' : ''}}" bindtap="selectCustomTarget">自定义目标大小</button>
+      <view wx:if="{{targetPreset === 'custom'}}" class="target-custom-editor"><view class="target-input-wrap"><input class="target-input" type="digit" maxlength="20" disabled="{{state === 'processing'}}" value="{{targetCustomValue}}" bindinput="onTargetInput" placeholder="输入数值"/><text class="target-unit-label">{{targetUnit}}</text></view><view class="target-unit-switch"><button class="target-unit {{targetUnit === 'KB' ? 'active' : ''}}" data-unit="KB" bindtap="setTargetUnit">KB</button><button class="target-unit {{targetUnit === 'MB' ? 'active' : ''}}" data-unit="MB" bindtap="setTargetUnit">MB</button></view></view>
+      <text class="target-helper">80 KB 至 20 MB · 1 MB = 1024 KB。原图已达标则保留，不会为凑大小增加体积。</text><text wx:if="{{targetError}}" class="target-error">{{targetError}}</text>
+    </view>
+  </view>
+
+  <button wx:if="{{state === 'empty' || state === 'processing'}}" class="primary-btn start-btn" bindtap="startCompress" disabled="{{state === 'processing'}}">{{state === 'processing' ? '正在压缩…' : '开始压缩'}}</button>
+
+  <view wx:if="{{state === 'processing'}}" class="card state-card"><image class="state-mark-icon loading" src="/assets/icons/loading.svg" mode="aspectFit"/><text class="state-title">正在处理图片</text><text class="state-desc">{{currentName}} · 已完成 {{progress}}%</text><progress class="compress-progress" percent="{{progress}}" activeColor="#2F80ED" backgroundColor="#E8EEF7" stroke-width="6"/><text class="progress-tip">批量图片会逐张处理，请不要关闭页面</text></view>
+
+  <view wx:if="{{state === 'success'}}" class="card result-card"><view class="eyebrow">处理完成</view><view class="summary-card"><view class="summary-main"><view class="summary-stat"><text class="summary-kicker">压缩后</text><text class="summary-number">{{totalCompressedText}}</text></view><view class="summary-transfer"><view class="summary-arrow"><image src="/assets/icons/arrow-left.svg" mode="aspectFit"/></view><text>体积优化</text></view><view class="summary-stat summary-stat-right"><text class="summary-kicker">原图</text><text class="summary-number">{{totalOriginalText}}</text></view></view><view class="saved-badge">本次节省 <text class="saved-value">{{totalSavedPercent}}%</text></view></view><view class="result-head"><text>处理明细 · {{results.length}} 张</text><button class="ghost-btn" bindtap="saveAll">全部保存</button></view><block wx:for="{{results}}" wx:key="id" wx:for-index="index"><view class="result-file"><image class="result-thumb" src="{{item.outputPath}}" mode="aspectFill" data-index="{{index}}" bindtap="previewResult"/><view class="result-file-info"><text class="file-name">{{item.name}}</text><text class="file-size">{{item.originalText}} → {{item.compressedText}} · 节省 {{item.savedPercent}}%</text><text wx:if="{{item.targetMet}}" class="result-target">已达标 · {{item.compressedBytes}} 字节 / 上限 {{item.targetBytes}} 字节</text><text wx:if="{{item.keptOriginal}}" class="result-note">{{item.targetMet ? '原图已小于上限，保留原图' : '处理后未变小，保留原图'}}</text><text wx:elif="{{item.outputFormat === 'jpg'}}" class="result-note">JPG · {{item.width}} × {{item.height}} px{{item.resized ? ' · 已等比缩小' : ''}}</text></view><button class="ghost-btn" data-index="{{index}}" bindtap="saveResult">保存</button></view></block><view class="action-row"><button class="secondary-btn" bindtap="goHome">返回首页</button><button class="primary-btn" bindtap="chooseAgain">继续处理</button></view></view>
+  <view wx:if="{{state === 'error'}}" class="card state-card"><image class="state-mark-icon error" src="/assets/icons/error.svg" mode="aspectFit"/><text class="state-title">处理失败</text><text class="state-desc">{{error}}</text><view class="action-row"><button class="secondary-btn" bindtap="chooseAgain">重新选择</button><button class="primary-btn" bindtap="retry">再次尝试</button></view></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+  <canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+  <canvas id="compressCanvas" type="2d" class="security-canvas"></canvas>
+</view>

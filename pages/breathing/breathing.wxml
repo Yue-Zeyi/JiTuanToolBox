@@ -1,0 +1,27 @@
+<page-meta page-style="{{fullScreen ? 'overflow: hidden;' : ''}}"/>
+<view class="page tool-page breathing-page">
+  <view class="page-head"><view class="tool-title"><text class="title">呼吸练习</text><text class="desc">放缓节奏，留一点时间给自己</text></view><view class="tool-icon green"><image src="/assets/icons/breathing.svg" mode="aspectFit"/></view></view>
+  <view class="breathing-settings">
+    <view class="breathing-field"><text class="breathing-label">呼吸节奏</text><picker range="{{presets}}" range-key="title" value="{{presetIndex}}" bindchange="onPresetChange" disabled="{{status === 'running' || status === 'paused'}}"><view class="breathing-picker"><text>{{presets[presetIndex].title}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+    <text class="breathing-hint">{{presets[presetIndex].detail}}</text>
+    <view class="breathing-stage-grid">
+      <view><text>吸气</text><view class="breathing-input"><input type="number" value="{{inhale}}" maxlength="2" data-key="inhale" bindinput="onStageInput" disabled="{{status === 'running' || status === 'paused'}}" aria-label="吸气秒数"/><text>秒</text></view></view>
+      <view><text>吸后屏息</text><view class="breathing-input"><input type="number" value="{{holdIn}}" maxlength="2" data-key="holdIn" bindinput="onStageInput" disabled="{{status === 'running' || status === 'paused'}}" aria-label="吸气后屏息秒数"/><text>秒</text></view></view>
+      <view><text>呼气</text><view class="breathing-input"><input type="number" value="{{exhale}}" maxlength="2" data-key="exhale" bindinput="onStageInput" disabled="{{status === 'running' || status === 'paused'}}" aria-label="呼气秒数"/><text>秒</text></view></view>
+      <view><text>呼后屏息</text><view class="breathing-input"><input type="number" value="{{holdOut}}" maxlength="2" data-key="holdOut" bindinput="onStageInput" disabled="{{status === 'running' || status === 'paused'}}" aria-label="呼气后屏息秒数"/><text>秒</text></view></view>
+    </view>
+    <text class="breathing-hint">吸气 / 呼气 1–30 秒，屏息 0–30 秒；0 表示不屏息。</text>
+    <view class="breathing-target"><view class="breathing-segments"><button class="{{targetMode === 'duration' ? 'active' : ''}}" data-mode="duration" bindtap="onTargetMode">按时长</button><button class="{{targetMode === 'rounds' ? 'active' : ''}}" data-mode="rounds" bindtap="onTargetMode">按轮数</button></view><view class="breathing-input breathing-target-input"><input wx:if="{{targetMode === 'duration'}}" type="number" value="{{minutes}}" maxlength="2" data-key="minutes" bindinput="onTargetInput" disabled="{{status === 'running' || status === 'paused'}}" aria-label="练习分钟数"/><input wx:else type="number" value="{{rounds}}" maxlength="3" data-key="rounds" bindinput="onTargetInput" disabled="{{status === 'running' || status === 'paused'}}" aria-label="练习轮数"/><text>{{targetMode === 'duration' ? '分钟' : '轮'}}</text></view></view>
+    <view class="breathing-feedback"><view><text>提示音</text><switch checked="{{sound}}" data-key="sound" bindchange="onFeedbackToggle" color="#2F80ED" aria-label="提示音"/></view><view><text>振动</text><switch checked="{{vibration}}" data-key="vibration" bindchange="onFeedbackToggle" color="#2F80ED" aria-label="振动"/></view></view>
+  </view>
+  <view class="breathing-practice {{fullScreen ? 'breathing-fullscreen' : ''}}">
+    <view class="breathing-practice-head"><text>{{presets[presetIndex].title}}</text><button class="breathing-full-toggle" bindtap="toggleFullScreen" aria-label="{{fullScreen ? '退出全屏' : '全屏练习'}}"><image src="/assets/icons/{{fullScreen ? 'breathing-collapse' : 'breathing-expand'}}.svg" mode="aspectFit"/></button></view>
+    <view class="breathing-ring"><view class="breathing-disc {{phase === 'holdIn' || phase === 'holdOut' ? 'holding' : ''}}" style="transform: scale({{scale}});"/><view class="breathing-center"><text class="breathing-phase">{{status === 'paused' ? '已暂停' : label}}</text><text class="breathing-countdown">{{status === 'done' || status === 'stopped' || status === 'idle' ? '—' : countdown}}</text><text class="breathing-round">{{status === 'idle' ? '舒适呼吸，不要勉强屏息' : ('第 ' + round + ' 轮')}}</text></view></view>
+    <view class="breathing-progress"><view style="width: {{progress}}%;"/></view>
+    <view class="breathing-time"><text>已练习 {{elapsedText}}</text><text wx:if="{{remainingText && status !== 'stopped'}}">剩余 {{remainingText}}</text></view>
+    <text wx:if="{{error}}" class="breathing-error">{{error}}</text>
+    <view class="breathing-actions"><button wx:if="{{status === 'running'}}" class="primary-btn" bindtap="pause">暂停</button><button wx:else class="primary-btn" bindtap="start">{{status === 'paused' ? '继续练习' : (status === 'idle' ? '开始练习' : '重新开始')}}</button><button wx:if="{{status === 'running' || status === 'paused'}}" class="secondary-btn" bindtap="stop">结束练习</button></view>
+    <text class="breathing-safety">保持自然、轻柔的呼吸。出现头晕、胸闷或不适请停止；有呼吸或心血管疾病、孕期等情况请先咨询医生。本工具不替代医疗建议。</text>
+  </view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地练习，节奏与练习数据不上传</text></view></view>
+</view>

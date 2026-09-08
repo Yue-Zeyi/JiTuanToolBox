@@ -1,0 +1,21 @@
+<view class="page legal-page">
+  <view class="legal-header">
+    <text class="eyebrow">{{eyebrow}}</text>
+    <text class="legal-title">{{title}}</text>
+    <text class="legal-updated">{{updated}}</text>
+  </view>
+
+  <view class="legal-card card">
+    <block wx:for="{{sections}}" wx:key="heading">
+      <view class="legal-section">
+        <text class="legal-heading">{{item.heading}}</text>
+        <text wx:if="{{item.body}}" class="legal-body">{{item.body}}</text>
+        <block wx:for="{{item.items}}" wx:for-item="point" wx:key="*this">
+          <view class="legal-point"><text class="legal-bullet">•</text><text class="legal-point-text">{{point}}</text></view>
+        </block>
+      </view>
+    </block>
+  </view>
+
+  <view class="legal-footer">极团工具箱 · 请在使用前阅读并理解以上说明</view>
+</view>

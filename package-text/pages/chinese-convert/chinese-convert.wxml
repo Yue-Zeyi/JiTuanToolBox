@@ -1,0 +1,32 @@
+<view class="page tool-page convert-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">繁简转换</text><text class="desc">词组级转换，本地完成</text></view>
+    <view class="tool-icon green"><image src="/assets/icons/chinese-convert.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="convert-segment" role="group" aria-label="转换方向">
+    <button wx:for="{{modes}}" wx:key="key" class="convert-segment-item {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">{{item.title}}</button>
+  </view>
+
+  <view class="convert-panel">
+    <view class="convert-panel-head"><text class="convert-panel-title">输入文字</text><text class="convert-count">{{inputCount}} / {{maxLength}}</text></view>
+    <textarea class="convert-textarea" value="{{inputText}}" bindinput="onTextInput" maxlength="{{maxLength}}" placeholder="输入或粘贴需要转换的文字" placeholder-class="convert-placeholder" disable-default-padding="{{true}}" show-confirm-bar="{{false}}" cursor-spacing="24"></textarea>
+  </view>
+
+  <text wx:if="{{error}}" class="convert-error">{{error}}</text>
+  <button class="primary-btn convert-main-btn" bindtap="convert" disabled="{{saving}}"><image src="/assets/icons/lightning.svg" mode="aspectFit"/><text>开始转换</text></button>
+
+  <view class="convert-panel convert-result-panel">
+    <view class="convert-panel-head"><text class="convert-panel-title">转换结果</text><text class="convert-count">{{hasResult ? resultCount : 0}} 个字符</text></view>
+    <scroll-view wx:if="{{hasResult}}" class="convert-result" scroll-y="{{true}}"><text selectable="{{true}}">{{resultText}}</text></scroll-view>
+    <view wx:else class="convert-empty"><image src="/assets/icons/chinese-convert.svg" mode="aspectFit"/><text>转换后将在这里显示结果</text></view>
+    <view class="convert-actions">
+      <button class="secondary-btn" bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button>
+      <button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}" disabled="{{!hasResult || saving || saved}}"><image wx:if="{{!saving}}" src="/assets/icons/password-save.svg" mode="aspectFit"/><text>{{saved ? '已保存' : '保存记录'}}</text></button>
+      <button class="secondary-btn" bindtap="clearAll" disabled="{{!inputText && !hasResult}}"><image src="/assets/icons/password-clear.svg" mode="aspectFit"/><text>清空</text></button>
+    </view>
+  </view>
+
+  <text class="convert-note">不同地区的习惯用词可能不同，重要内容请人工核对。</text>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地转换，文字不上传服务器</text></view></view>
+</view>

@@ -1,0 +1,13 @@
+<view class="page tool-page date-calc-page">
+  <view class="page-head"><view class="tool-title"><text class="title">日期计算</text><text class="desc">日期差 · 加减天数 · 工作日</text></view><view class="tool-icon green"><image src="/assets/icons/date-calculator.svg" mode="aspectFit"/></view></view>
+  <view class="date-calc-modes" role="group" aria-label="日期计算模式"><button wx:for="{{modes}}" wx:key="key" class="date-calc-mode {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">{{item.title}}</button></view>
+  <view class="card date-calc-panel">
+    <view class="date-calc-field"><text>{{mode === 'add' ? '基准日期' : '开始日期'}}</text><picker mode="date" value="{{startDate}}" start="0001-01-01" end="9999-12-31" bindchange="onStartDateChange"><view class="date-calc-picker"><text class="{{startDate ? '' : 'placeholder'}}">{{startDate || '请选择日期'}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+    <view wx:if="{{mode === 'add'}}" class="date-calc-field"><text>加减天数</text><input type="number" value="{{dayAmount}}" bindinput="onDayAmountInput" placeholder="例如 30；减去请输入 -30" maxlength="7"/></view>
+    <view wx:else class="date-calc-field"><text>结束日期</text><picker mode="date" value="{{endDate}}" start="0001-01-01" end="9999-12-31" bindchange="onEndDateChange"><view class="date-calc-picker"><text class="{{endDate ? '' : 'placeholder'}}">{{endDate || '请选择日期'}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+    <text wx:if="{{mode === 'business'}}" class="date-calc-note">工作日仅按周一至周五计算，不包含法定节假日与调休。</text><text wx:if="{{error}}" class="date-calc-error">{{error}}</text>
+  </view>
+  <button class="primary-btn date-calc-main" bindtap="calculate">开始计算</button>
+  <view class="card date-calc-result"><view class="date-calc-result-head"><text>计算结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view><text class="date-calc-result-text" selectable="{{true}}">{{hasResult ? resultText : '选择日期后点击计算'}}</text><button class="date-calc-clear" bindtap="clearAll">清空输入</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，日期与计算结果不上传服务器</text></view></view>
+</view>

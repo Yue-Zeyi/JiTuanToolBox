@@ -1,0 +1,80 @@
+<view class="page tool-page radix-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">进制转换</text><text class="desc">大数、小数与补码精确换算</text></view>
+    <view class="tool-icon orange"><image src="/assets/icons/radix.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="radix-modes">
+    <button wx:for="{{modes}}" wx:key="key" class="radix-mode {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode" disabled="{{processing || saving}}">{{item.label}}</button>
+  </view>
+
+  <view class="radix-section radix-input-section">
+    <view class="radix-base-column">
+      <text class="radix-label">源进制</text>
+      <view class="radix-base-presets"><button wx:for="{{basePresets}}" wx:key="*this" class="radix-base-button {{sourceBase === item ? 'active' : ''}}" data-role="source" data-base="{{item}}" bindtap="chooseBase" disabled="{{processing || saving}}">{{item}}</button></view>
+      <view class="radix-custom-base"><text>自定义</text><input type="number" value="{{sourceBase}}" bindinput="onSourceBaseChange" maxlength="2" disabled="{{processing || saving}}" aria-label="自定义源进制"/><text>2–36</text></view>
+    </view>
+    <view class="radix-direction">→</view>
+    <view class="radix-base-column">
+      <text class="radix-label">目标进制</text>
+      <view class="radix-base-presets"><button wx:for="{{basePresets}}" wx:key="*this" class="radix-base-button {{targetBase === item ? 'active' : ''}}" data-role="target" data-base="{{item}}" bindtap="chooseBase" disabled="{{processing || saving}}">{{item}}</button></view>
+      <view class="radix-custom-base"><text>自定义</text><input type="number" value="{{targetBase}}" bindinput="onTargetBaseChange" maxlength="2" disabled="{{processing || saving}}" aria-label="自定义目标进制"/><text>2–36</text></view>
+    </view>
+
+    <view class="radix-editor-head"><view><text class="radix-label">{{mode === 'batch' ? '批量数值' : '待转换数值'}}</text><text class="radix-subtitle">{{mode === 'batch' ? '每行一个，最多 100 行' : '支持正负号和一个小数点'}}</text></view><text>{{input.length}} / {{mode === 'batch' ? 20000 : 5000}}</text></view>
+    <textarea class="radix-textarea {{mode === 'batch' ? 'batch' : ''}}" value="{{input}}" bindinput="onInput" maxlength="{{mode === 'batch' ? 20000 : 5000}}" placeholder="{{inputPlaceholder}}" placeholder-class="radix-placeholder" disabled="{{processing || saving}}" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}"></textarea>
+    <text class="radix-input-note">循环小数会以括号标出；暂不支持括号循环节作为输入。</text>
+
+    <view class="radix-options">
+      <view><text class="radix-option-label">小数展开上限</text><picker mode="selector" range="{{precisions}}" value="{{precisionIndex}}" bindchange="onPrecisionChange" disabled="{{processing || saving}}"><view class="radix-picker"><text>{{maxFractionDigits}} 位</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+      <view wx:if="{{mode === 'single'}}"><text class="radix-option-label">补码位宽</text><picker mode="selector" range="{{widths}}" value="{{widthIndex}}" bindchange="onWidthChange" disabled="{{processing || saving}}"><view class="radix-picker"><text>{{twosWidth}} 位</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+    </view>
+    <text wx:if="{{error}}" class="radix-error">{{error}}</text>
+    <button class="primary-btn radix-convert" bindtap="convertNow" loading="{{processing}}" disabled="{{processing || saving}}">{{processing ? '正在精确换算' : '开始转换'}}</button>
+  </view>
+
+  <block wx:if="{{hasResult && mode === 'single'}}">
+    <view class="radix-section radix-target-result">
+      <view class="radix-section-head"><view><text class="radix-section-title">转换结果</text><text class="radix-section-subtitle">{{sourceBase}} 进制 → {{targetBase}} 进制</text></view><text class="radix-status {{result.truncated ? 'warning' : ''}}">{{statusLabel}}</text></view>
+      <scroll-view class="radix-value-scroll" scroll-x="{{true}}"><text class="radix-main-value" selectable="{{true}}">{{result.value}}</text></scroll-view>
+      <text class="radix-result-note">{{result.note}}</text>
+      <button class="radix-icon-action" bindtap="copyTarget" aria-label="复制转换结果"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button>
+    </view>
+
+    <view class="radix-section">
+      <view class="radix-section-head"><view><text class="radix-section-title">常用进制</text><text class="radix-section-subtitle">二、八、十、十六进制同屏对照</text></view></view>
+      <view class="radix-common-list">
+        <view wx:for="{{commonResults}}" wx:key="base" class="radix-common-row"><text class="radix-common-base">{{item.base}}</text><scroll-view class="radix-common-value" scroll-x="{{true}}"><text selectable="{{true}}">{{item.value}}</text></scroll-view><button data-index="{{index}}" bindtap="copyCommon" aria-label="复制 {{item.base}} 进制结果"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+      </view>
+    </view>
+
+    <view class="radix-section">
+      <view class="radix-section-head"><view><text class="radix-section-title">{{twosWidth}} 位补码与字节序</text><text class="radix-section-subtitle">按有符号整数范围校验，不做溢出取模</text></view></view>
+      <text wx:if="{{complementError}}" class="radix-inline-error">{{complementError}}</text>
+      <block wx:if="{{complement}}">
+        <view class="radix-pattern-row"><text>二进制</text><text selectable="{{true}}">{{complement.binary}}</text><button data-field="binary" bindtap="copyComplement" aria-label="复制补码二进制"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+        <view class="radix-pattern-row"><text>十六进制</text><text selectable="{{true}}">{{complement.hex}}</text><button data-field="hex" bindtap="copyComplement" aria-label="复制补码十六进制"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+        <view class="radix-pattern-row"><text>Big Endian</text><text selectable="{{true}}">{{complement.bigEndian}}</text><button data-field="bigEndian" bindtap="copyComplement" aria-label="复制大端字节序"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+        <view class="radix-pattern-row"><text>Little Endian</text><text selectable="{{true}}">{{complement.littleEndian}}</text><button data-field="littleEndian" bindtap="copyComplement" aria-label="复制小端字节序"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+      </block>
+    </view>
+
+    <view class="radix-section">
+      <button class="radix-step-toggle" bindtap="toggleSteps"><view><text class="radix-section-title">除基取余手算步骤</text><text class="radix-section-subtitle">绝对值整数部分；负号另处理，不含小数</text></view><image class="{{stepsOpen ? 'open' : ''}}" src="/assets/icons/chevron-down.svg" mode="aspectFit"/></button>
+      <scroll-view wx:if="{{stepsOpen}}" class="radix-step-list" scroll-y="{{true}}">
+        <view wx:for="{{steps}}" wx:key="index" class="radix-step-row"><text>{{item.index}}</text><text>{{item.dividend}} ÷ {{item.divisor}} = {{item.quotient}}</text><text>余 {{item.remainder}}（{{item.digit}}）</text></view>
+      </scroll-view>
+      <text wx:if="{{stepsOpen}}" class="radix-result-note">{{stepsNote}}</text>
+    </view>
+  </block>
+
+  <view wx:if="{{hasResult && mode === 'batch'}}" class="radix-section radix-batch-result">
+    <view class="radix-section-head"><view><text class="radix-section-title">批量结果</text><text class="radix-section-subtitle">{{batchResult.successCount}} 成功 · {{batchResult.errorCount}} 失败</text></view><button class="radix-copy-batch" bindtap="copyBatch"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>全部复制</text></button></view>
+    <scroll-view class="radix-batch-list" scroll-y="{{true}}">
+      <view wx:for="{{batchResult.rows}}" wx:key="line" class="radix-batch-row {{item.ok ? '' : 'failed'}}"><text class="radix-line-number">{{item.line}}</text><view><text class="radix-batch-input">{{item.input || '（空行）'}}</text><text class="radix-batch-output">{{item.ok ? item.output : item.error}}</text><text wx:if="{{item.ok && !item.exact}}" class="radix-batch-warning">结果已按上限截断</text></view></view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{hasResult}}" class="radix-actions"><button class="primary-btn" bindtap="clearAll" disabled="{{processing || saving}}">清空</button><button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}" disabled="{{processing || saving || saved}}">{{saved ? '已保存' : '保存记录'}}</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地换算，输入内容不上传服务器</text></view></view>
+</view>

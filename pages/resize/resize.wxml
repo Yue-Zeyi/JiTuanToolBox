@@ -1,0 +1,71 @@
+<view class="page tool-page resize-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">尺寸修改</text><text class="desc">调整图片宽高，适配证件照、头像和横版图片</text></view>
+    <view class="tool-icon green"><image src="/assets/icons/resize.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card upload-card resize-upload" wx:if="{{state === 'empty' || state === 'processing'}}">
+    <view wx:if="{{file}}" class="resize-selected">
+      <view class="resize-preview" bindtap="previewImage"><image wx:if="{{!file.previewFailed}}" class="resize-preview-image" src="{{file.path}}" mode="aspectFit" binderror="onPreviewError"/><view wx:else class="preview-failed"><image src="/assets/icons/image-broken.svg" mode="aspectFit"/><text>无法预览</text></view></view>
+      <view class="resize-file-info"><text class="resize-file-name">{{file.name}}</text><text class="resize-file-meta">原图 {{file.width}} × {{file.height}} px · {{file.sizeText}}</text></view>
+      <button class="ghost-btn resize-change" bindtap="chooseImage">更换</button>
+    </view>
+    <view wx:else class="upload-dash" bindtap="chooseImage"><image class="upload-plus" src="/assets/icons/add.svg" mode="aspectFit"/><text class="upload-title">选择图片</text><view class="upload-tip"><text>支持 JPG、JPEG、PNG、BMP、WEBP、JFIF、JPE</text><text>单张不超过 20MB</text></view></view>
+  </view>
+
+  <view class="card panel resize-panel" wx:if="{{state === 'empty' || state === 'processing'}}">
+    <view class="panel-section">
+      <view class="section-heading"><text class="panel-title">目标尺寸</text><text class="section-caption">先选预设，也可以自定义</text></view>
+      <view class="choice-row resize-mode-row"><button class="choice {{mode === 'pixel' ? 'active' : ''}}" data-mode="pixel" bindtap="setMode">按像素</button><button class="choice {{mode === 'percent' ? 'active' : ''}}" data-mode="percent" bindtap="setMode">按比例</button></view>
+    </view>
+
+    <view class="panel-section preset-section">
+      <view class="section-heading"><text class="panel-label">常用预设</text><text class="section-caption">常用 300dpi 像素规格</text></view>
+      <view class="preset-grid">
+        <block wx:for="{{sizePresets}}" wx:key="key">
+          <button class="size-preset {{preset === item.key ? 'active' : ''}}" data-preset="{{item.key}}" bindtap="setSizePreset"><text class="size-preset-title">{{item.title}}</text><text class="size-preset-size">{{item.pixels}}</text></button>
+        </block>
+      </view>
+      <text class="preset-note">证件照按常用 300dpi 规格换算，具体要求请以办理机构为准。</text>
+    </view>
+
+    <view wx:if="{{mode === 'percent'}}" class="panel-section scale-section">
+      <view class="quality-head"><text class="panel-label">缩放比例</text><text class="slider-value">{{scaleValue}}%</text></view>
+      <slider class="resize-slider" min="1" max="200" value="{{scaleValue}}" activeColor="#2F80ED" backgroundColor="#DFE8F5" block-size="22" bindchanging="onScaleInput"/>
+      <view class="preset-list"><button class="preset-chip {{scalePreset === '50' ? 'active' : ''}}" data-preset="50" bindtap="setScalePreset">50%</button><button class="preset-chip {{scalePreset === '75' ? 'active' : ''}}" data-preset="75" bindtap="setScalePreset">75%</button><button class="preset-chip {{scalePreset === '100' ? 'active' : ''}}" data-preset="100" bindtap="setScalePreset">原尺寸</button></view>
+    </view>
+
+    <view wx:if="{{mode === 'pixel'}}" class="panel-section dimension-section">
+      <view class="section-heading"><text class="panel-label">自定义像素</text><text class="section-caption">最大单边 4096px</text></view>
+      <view class="dimension-row"><view class="dimension-field"><text>宽度</text><view class="dimension-input-wrap"><input type="number" maxlength="4" value="{{width}}" bindinput="onWidthInput"/><text>px</text></view></view><text class="dimension-times">×</text><view class="dimension-field"><text>高度</text><view class="dimension-input-wrap"><input type="number" maxlength="4" value="{{height}}" bindinput="onHeightInput"/><text>px</text></view></view></view>
+    </view>
+
+    <view class="lock-row"><view class="lock-copy"><button class="lock-btn {{lockRatio ? 'active' : ''}}" bindtap="toggleLock">{{lockRatio ? '保持比例' : '自由调整'}}</button><text class="lock-help">{{lockRatio ? '修改一边会同步另一边' : '宽高可分别设置'}}</text></view><text class="dimension-summary">{{width}} × {{height}} px</text></view>
+
+    <view class="panel-section fit-section">
+      <view class="section-heading"><text class="panel-label">适配方式</text><text class="section-caption">根据目标比例选择</text></view>
+      <view class="fit-grid">
+        <block wx:for="{{fitModes}}" wx:key="key">
+          <button class="fit-option {{fitMode === item.key ? 'active' : ''}}" data-fit="{{item.key}}" bindtap="setFitMode"><text class="fit-option-title">{{item.title}}</text><text class="fit-option-desc">{{item.short}}</text></button>
+        </block>
+      </view>
+      <text class="fit-help">{{fitModeDescription}}</text>
+    </view>
+
+    <view class="panel-section output-section">
+      <view class="section-heading"><text class="panel-label">输出格式</text><text class="section-caption">{{format === 'png' ? '保留透明背景' : '适合分享与上传'}}</text></view>
+      <view class="choice-row format-row"><button class="choice {{format === 'auto' ? 'active' : ''}}" data-format="auto" bindtap="setFormat">自动</button><button class="choice {{format === 'jpg' ? 'active' : ''}}" data-format="jpg" bindtap="setFormat">JPG</button><button class="choice {{format === 'png' ? 'active' : ''}}" data-format="png" bindtap="setFormat">PNG</button></view>
+      <view wx:if="{{format != 'png'}}" class="quality-row"><view class="quality-head"><text class="panel-label">JPG 质量</text><text class="slider-value">{{quality}}%</text></view><slider class="resize-slider" min="20" max="100" value="{{quality}}" activeColor="#2F80ED" backgroundColor="#DFE8F5" block-size="22" bindchanging="onQuality"/><text class="quality-help">质量越高越清晰，文件体积也会相应增加</text></view>
+    </view>
+
+  </view>
+
+  <button wx:if="{{state === 'empty' || state === 'processing'}}" class="primary-btn start-btn" bindtap="startResize" disabled="{{state === 'processing'}}">{{state === 'processing' ? '正在修改…' : '开始修改尺寸'}}</button>
+
+  <canvas id="resizeCanvas" type="2d" class="resize-canvas"></canvas>
+  <view wx:if="{{state === 'processing'}}" class="card state-card"><image class="state-mark-icon loading" src="/assets/icons/loading.svg" mode="aspectFit"/><text class="state-title">正在修改图片尺寸</text><text class="state-desc">正在生成 {{width}} × {{height}} px 图片</text><progress class="compress-progress" percent="{{progress}}" activeColor="#2F80ED" backgroundColor="#E8EEF7" stroke-width="6"/><text class="progress-tip">请不要关闭页面</text></view>
+  <view wx:if="{{state === 'success'}}" class="card result-card resize-result"><view class="eyebrow">处理完成</view><image class="resize-result-image" src="{{result.outputPath}}" mode="aspectFit"/><text class="resize-result-name">{{result.name}}</text><text class="resize-result-size">{{result.width}} × {{result.height}} px · {{result.formatLabel}} · {{result.originalText}} → {{result.compressedText}}</text><view class="resize-result-actions"><button class="primary-btn resize-save" bindtap="saveResult">保存图片</button><view class="resize-secondary-actions"><button class="secondary-btn" bindtap="chooseAgain">再次处理</button><button class="secondary-btn" bindtap="goHome">返回首页</button></view></view></view>
+  <view wx:if="{{state === 'error'}}" class="card state-card"><image class="state-mark-icon error" src="/assets/icons/error.svg" mode="aspectFit"/><text class="state-title">处理失败</text><text class="state-desc">{{error}}</text><view class="action-row"><button class="secondary-btn" bindtap="chooseAgain">重新选择</button><button class="primary-btn" bindtap="retry">再次尝试</button></view></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+  <canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+</view>

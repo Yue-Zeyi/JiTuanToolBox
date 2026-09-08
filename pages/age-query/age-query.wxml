@@ -1,0 +1,14 @@
+<view class="page tool-page age-page">
+  <view class="page-head"><view class="tool-title"><text class="title">年龄查询</text><text class="desc">周岁 · 已生活天数 · 下次生日</text></view><view class="tool-icon orange"><image src="/assets/icons/age-query.svg" mode="aspectFit"/></view></view>
+  <view class="card age-panel">
+    <text class="age-label">出生日期</text><picker mode="date" value="{{birthDate}}" start="0001-01-01" end="{{todayDate}}" bindchange="onBirthDateChange"><view class="age-picker"><text class="{{birthDate ? '' : 'placeholder'}}">{{birthDate || '请选择出生日期'}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker>
+    <text class="age-note">年龄按本地今天 {{todayDate}} 计算。2 月 29 日生日在非闰年按 2 月 28 日作为生日。</text><text wx:if="{{error}}" class="age-error">{{error}}</text>
+  </view>
+  <button class="primary-btn age-main" bindtap="calculate">查询年龄</button>
+  <view class="card age-result">
+    <view class="age-result-head"><text>查询结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view>
+    <view wx:if="{{hasResult}}"><text class="age-number">{{result.age}}<text> 岁</text></text><view class="age-rows"><view><text>已生活</text><text>{{result.livedDays}} 天</text></view><view><text>距离下次生日</text><text>{{result.daysToBirthday}} 天</text></view><view><text>下次生日</text><text>{{result.nextBirthday}}</text></view></view></view>
+    <view wx:else class="age-empty">选择出生日期后点击查询</view><button class="age-clear" bindtap="clearAll">清空输入</button>
+  </view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地查询，生日与查询结果不上传服务器</text></view></view>
+</view>

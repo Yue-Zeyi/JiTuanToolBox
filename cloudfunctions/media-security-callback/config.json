@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "name": "cleanup-expired-media-security-jobs",
+      "type": "timer",
+      "config": "0 0/5 * * * * *"
+    }
+  ]
+}

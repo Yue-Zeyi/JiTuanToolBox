@@ -1,0 +1,53 @@
+<view class="page tool-page timestamp-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">时间戳转换</text><text class="desc">固定时区，批量精确互转</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/timestamp.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="timestamp-now">
+    <view class="timestamp-now-head"><text>当前时间戳</text><text>每秒更新</text></view>
+    <view class="timestamp-now-row"><view><text class="timestamp-now-label">秒</text><text class="timestamp-now-value">{{currentSeconds}}</text></view><button data-unit="seconds" bindtap="copyCurrent" aria-label="复制当前秒时间戳"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+    <view class="timestamp-now-row"><view><text class="timestamp-now-label">毫秒</text><text class="timestamp-now-value">{{currentMilliseconds}}</text></view><button data-unit="milliseconds" bindtap="copyCurrent" aria-label="复制当前毫秒时间戳"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+  </view>
+
+  <view class="timestamp-segment" role="group" aria-label="转换模式"><button wx:for="{{modes}}" wx:key="key" class="timestamp-segment-item {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">{{item.title}}</button></view>
+
+  <view class="timestamp-settings">
+    <view wx:if="{{mode === 'timestamp'}}" class="timestamp-setting"><text class="timestamp-setting-label">输入单位</text><view class="timestamp-unit-options"><button wx:for="{{units}}" wx:key="key" class="timestamp-unit {{unit === item.key ? 'active' : ''}}" data-unit="{{item.key}}" bindtap="selectUnit">{{item.title}}</button></view></view>
+    <view class="timestamp-setting"><text class="timestamp-setting-label">固定时区</text><picker mode="selector" range="{{timezones}}" range-key="title" value="{{timezoneIndex}}" bindchange="onTimezoneChange"><view class="timestamp-picker"><view><text>{{timezones[timezoneIndex].title}}</text><text>{{timezones[timezoneIndex].desc}}</text></view><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker><text class="timestamp-setting-note">固定 UTC 偏移，不包含夏令时规则</text></view>
+  </view>
+
+  <view wx:if="{{mode === 'date'}}" class="timestamp-date-selection">
+    <view class="timestamp-panel-head"><text class="timestamp-panel-title">选择日期时间</text><button class="timestamp-use-now" bindtap="selectCurrentDate">当前时间</button></view>
+    <view class="timestamp-date-fields">
+      <picker mode="date" value="{{selectedDate}}" start="0001-01-01" end="9999-12-31" bindchange="onDateChange"><view class="timestamp-date-field"><text class="timestamp-date-label">日期</text><view><text>{{selectedDate}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></view></picker>
+      <picker mode="time" value="{{selectedTime}}" bindchange="onTimeChange"><view class="timestamp-date-field"><text class="timestamp-date-label">时分</text><view><text>{{selectedTime}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></view></picker>
+      <picker mode="selector" range="{{secondOptions}}" value="{{selectedSecond}}" bindchange="onSecondChange"><view class="timestamp-date-field"><text class="timestamp-date-label">秒</text><view><text>{{secondOptions[selectedSecond]}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></view></picker>
+    </view>
+    <view class="timestamp-date-actions"><button class="secondary-btn" data-action="replace" bindtap="useSelectedDate">填入输入框</button><button class="secondary-btn" data-action="append" bindtap="useSelectedDate">追加一行</button></view>
+    <text class="timestamp-setting-note">按 {{timezones[timezoneIndex].title}} 解释，下方仍可手动输入或批量粘贴</text>
+  </view>
+
+  <view class="timestamp-panel">
+    <view class="timestamp-panel-head"><text class="timestamp-panel-title">批量输入</text><text class="timestamp-count">{{inputCount}} / {{maxRows}} 行</text></view>
+    <textarea class="timestamp-textarea" value="{{inputText}}" bindinput="onInput" maxlength="10000" placeholder="{{mode === 'timestamp' ? '每行一个时间戳' : '每行一个 YYYY-MM-DD HH:mm:ss[.SSS]'}}" placeholder-class="timestamp-placeholder" disable-default-padding="{{true}}" show-confirm-bar="{{false}}" cursor-spacing="24"></textarea>
+  </view>
+
+  <text wx:if="{{error}}" class="timestamp-error">{{error}}</text>
+  <button class="primary-btn timestamp-main-btn" bindtap="convert" disabled="{{saving}}"><image src="/assets/icons/timestamp.svg" mode="aspectFit"/><text>开始转换</text></button>
+
+  <view class="timestamp-panel timestamp-result-panel">
+    <view class="timestamp-panel-head"><text class="timestamp-panel-title">转换结果</text><text class="timestamp-count">{{hasResult ? rows.length : 0}} 行</text></view>
+    <scroll-view wx:if="{{hasResult}}" class="timestamp-results" scroll-y="{{true}}">
+      <view wx:for="{{rows}}" wx:key="index" class="timestamp-result-row {{item.ok ? '' : 'invalid'}}">
+        <text class="timestamp-result-source">第 {{index + 1}} 行 · {{item.input || '空行'}}</text>
+        <block wx:if="{{item.ok}}"><text>所选时区：{{item.local}}（{{item.offsetLabel}}）</text><text>ISO 8601：{{item.iso}}</text><text>UTC：{{item.utc}}</text><text>秒：{{item.seconds}}</text><text>毫秒：{{item.milliseconds}}</text></block>
+        <text wx:else class="timestamp-row-error">{{item.error}}</text>
+      </view>
+    </scroll-view>
+    <view wx:else class="timestamp-empty"><image src="/assets/icons/timestamp.svg" mode="aspectFit"/><text>转换后将在这里逐行显示结果</text></view>
+    <view class="timestamp-actions"><button class="secondary-btn" bindtap="copyAll" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制全部</text></button><button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}" disabled="{{!hasResult || saving || saved}}"><image wx:if="{{!saving}}" src="/assets/icons/password-save.svg" mode="aspectFit"/><text>{{saved ? '已保存' : '保存记录'}}</text></button><button class="secondary-btn" bindtap="clearAll" disabled="{{!inputText && !hasResult}}"><image src="/assets/icons/password-clear.svg" mode="aspectFit"/><text>清空</text></button></view>
+  </view>
+
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，输入内容不上传服务器</text></view></view>
+</view>

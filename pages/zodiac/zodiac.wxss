@@ -1,0 +1,72 @@
+.zodiac-page { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+.zodiac-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; margin: 18px 0 14px; background: #EAF0F8; border-radius: 8px; }
+.zodiac-mode { min-width: 0; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #718096; border: 1px solid transparent; border-radius: 6px; }
+.zodiac-mode.active { color: #246DCF; background: #FFFFFF; border-color: #C7DBF7; font-weight: 600; }
+.zodiac-form { padding: 16px; background: #FFFFFF; border: 1px solid #E8EEF7; border-radius: 8px; }
+.zodiac-field { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.zodiac-label { font-size: 14px; line-height: 21px; color: #15233B; flex: none; }
+.zodiac-number { display: flex; align-items: center; gap: 8px; width: 154px; height: 44px; padding: 0 12px; border: 1px solid #DCE5F1; border-radius: 6px; background: #FBFCFE; }
+.zodiac-number input { box-sizing: border-box; min-width: 0; flex: 1; width: 100%; height: 42px; font-size: 15px; text-align: center; color: #15233B; }
+.zodiac-number > text { font-size: 12px; color: #8A99AB; }
+.zodiac-hint { display: block; margin-top: 12px; font-size: 12px; line-height: 20px; color: #8391A4; }
+.zodiac-date-picker { min-width: 0; flex: 1; max-width: 185px; }
+.zodiac-picker-value { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 44px; padding: 0 12px; border: 1px solid #DCE5F1; border-radius: 6px; font-size: 14px; background: #FBFCFE; }
+.zodiac-picker-value image { width: 16px; height: 16px; flex: none; }
+.zodiac-time-toggle { margin-top: 12px; }
+.zodiac-time-toggle switch { flex: none; }
+.zodiac-time-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.zodiac-time-picker { flex: 1; min-width: 0; }
+.zodiac-seconds { width: 110px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #718096; }
+.zodiac-seconds input { width: 72px; height: 44px; box-sizing: border-box; border: 1px solid #DCE5F1; border-radius: 6px; text-align: center; font-size: 14px; color: #15233B; }
+.zodiac-range-label { display: block; margin-top: 14px; }
+.zodiac-range { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.zodiac-range .zodiac-number { min-width: 0; width: auto; flex: 1; }
+.zodiac-range-to { font-size: 12px; color: #8A99AB; }
+.zodiac-query { height: 46px; font-size: 15px; border-radius: 8px; margin-top: 18px; }
+.zodiac-error { display: block; margin-top: 12px; color: #D34C4C; font-size: 12px; line-height: 20px; }
+.zodiac-results { margin-top: 24px; }
+.zodiac-section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; font-size: 15px; font-weight: 600; }
+.zodiac-result-date { color: #8A99AB; font-size: 11px; font-weight: 400; }
+.zodiac-year-result { padding: 16px; border: 1px solid #E8EEF7; border-radius: 8px; background: #FFFFFF; }
+.zodiac-year-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.zodiac-animal { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; flex: none; border-radius: 8px; color: #278566; background: #EAF8F1; font-size: 32px; font-weight: 600; }
+.zodiac-year-title { display: block; font-size: 18px; font-weight: 600; line-height: 26px; }
+.zodiac-year-caption { display: block; margin-top: 5px; font-size: 12px; color: #8A99AB; }
+.zodiac-info-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid #F0F3F8; font-size: 13px; line-height: 20px; }
+.zodiac-info-row text:first-child { color: #8391A4; }
+.zodiac-info-row text:last-child { text-align: right; }
+.zodiac-result-note { display: block; margin: 12px 2px 0; color: #8391A4; font-size: 12px; line-height: 20px; }
+.zodiac-birthday-age { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; color: #718096; font-size: 13px; }
+.zodiac-birthday-age text:last-child { font-size: 18px; color: #15233B; font-weight: 600; }
+.zodiac-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.zodiac-convention { min-width: 0; padding: 14px 12px; border: 1px solid #DCEADF; border-radius: 8px; background: #FFFFFF; }
+.zodiac-convention.lichun { border-color: #DCE6F6; }
+.zodiac-convention-label { display: block; color: #398067; font-size: 12px; line-height: 20px; }
+.lichun .zodiac-convention-label { color: #4F78B0; }
+.zodiac-convention-animal { display: block; margin: 8px 0 3px; font-size: 25px; font-weight: 600; line-height: 34px; }
+.zodiac-convention-year { display: block; color: #718096; font-size: 12px; line-height: 19px; }
+.zodiac-convention-detail { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; color: #718096; font-size: 11px; line-height: 18px; }
+.zodiac-benming { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid #EDF1F6; font-size: 11px; line-height: 18px; color: #718096; }
+.zodiac-benming.yes { color: #258265; font-weight: 600; }
+.zodiac-convention-pending { display: block; font-size: 16px; font-weight: 600; margin: 10px 0; }
+.zodiac-possible { display: flex; flex-direction: column; gap: 3px; padding-top: 8px; margin-top: 8px; border-top: 1px solid #EDF1F6; font-size: 11px; line-height: 17px; color: #718096; }
+.zodiac-possible text:first-child { color: #15233B; font-size: 12px; }
+.zodiac-boundaries { margin-top: 14px; padding: 14px 0; border-top: 1px solid #E3EAF3; }
+.zodiac-boundary-title { display: block; color: #56779F; font-size: 12px; line-height: 21px; margin-bottom: 10px; }
+.zodiac-boundaries > view { display: flex; justify-content: space-between; gap: 12px; color: #718096; font-size: 11px; line-height: 22px; }
+.zodiac-boundaries > view text:last-child { text-align: right; }
+.zodiac-boundary-foot { display: block; margin-top: 7px; font-size: 10px; color: #8A99AB; line-height: 18px; }
+.zodiac-reverse-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+.zodiac-reverse-head text:last-child { color: #8A99AB; font-size: 12px; }
+.zodiac-table { background: #FFFFFF; border: 1px solid #E8EEF7; border-radius: 8px; overflow: hidden; }
+.zodiac-table-row { display: grid; grid-template-columns: .85fr .7fr 1fr 1.45fr; gap: 6px; padding: 13px 10px; border-bottom: 1px solid #EDF1F6; align-items: center; font-size: 12px; line-height: 18px; text-align: center; }
+.zodiac-table-row:last-child { border-bottom: 0; }
+.zodiac-table-head { color: #8391A4; background: #F0F5FC; font-size: 11px; }
+.zodiac-table-year { font-weight: 600; }
+.zodiac-empty { padding: 28px 12px; color: #8A99AB; font-size: 13px; text-align: center; }
+.zodiac-actions { display: flex; gap: 12px; margin-top: 18px; }
+.zodiac-actions button { flex: 1; min-width: 0; height: 44px; font-size: 14px; border-radius: 8px; }
+.zodiac-save { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; margin-top: 10px; border: 1px solid #DCE6F3; border-radius: 8px; color: #4F78B0; background: #FFFFFF; font-size: 13px; }
+.zodiac-save[disabled] { opacity: .6; }
+.zodiac-cultural-note { display: block; margin-top: 14px; color: #8A99AB; font-size: 11px; line-height: 19px; }
+@media (max-width: 350px) { .zodiac-form { padding: 12px; } .zodiac-number { width: 132px; } .zodiac-convention { padding: 12px 9px; } }

@@ -1,0 +1,68 @@
+<view class="page tool-page zodiac-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">生肖查询</text><text class="desc">查生肖、干支与五行</text></view>
+    <view class="tool-icon orange"><image src="/assets/icons/zodiac.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="zodiac-modes">
+    <button class="zodiac-mode {{mode === 'year' ? 'active' : ''}}" data-mode="year" bindtap="selectMode">按年份</button>
+    <button class="zodiac-mode {{mode === 'birthday' ? 'active' : ''}}" data-mode="birthday" bindtap="selectMode">按生日</button>
+    <button class="zodiac-mode {{mode === 'reverse' ? 'active' : ''}}" data-mode="reverse" bindtap="selectMode">反查年份</button>
+  </view>
+
+  <view class="zodiac-form">
+    <block wx:if="{{mode === 'year'}}">
+      <view class="zodiac-field"><text class="zodiac-label">出生年份</text><view class="zodiac-number"><input type="number" value="{{birthYear}}" data-field="birthYear" bindinput="onFieldInput" placeholder="如 2000" maxlength="4" aria-label="出生年份"/><text>年</text></view></view>
+      <text class="zodiac-hint">年份结果以当年春节后的农历年为准；年初出生请按生日查询。</text>
+    </block>
+    <block wx:elif="{{mode === 'birthday'}}">
+      <view class="zodiac-field"><text class="zodiac-label">公历生日</text><picker mode="date" value="{{birthDate}}" start="1900-01-01" end="{{today}}" bindchange="onDateChange" class="zodiac-date-picker"><view class="zodiac-picker-value {{birthDate ? '' : 'muted'}}"><text>{{birthDate || '选择出生日期'}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+      <view class="zodiac-field zodiac-time-toggle"><text class="zodiac-label">填写出生时间</text><switch checked="{{includeTime}}" bindchange="onTimeToggle" color="#2F80ED" aria-label="填写出生时间"/></view>
+      <view wx:if="{{includeTime}}" class="zodiac-time-row">
+        <picker mode="time" value="{{birthTime}}" bindchange="onTimeChange" class="zodiac-time-picker"><view class="zodiac-picker-value"><text>{{birthTime}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker>
+        <view class="zodiac-seconds"><input type="number" value="{{birthSecond}}" data-field="birthSecond" bindinput="onFieldInput" placeholder="选填" maxlength="2" aria-label="出生秒数，选填"/><text>秒</text></view>
+      </view>
+      <text class="zodiac-hint">按北京时间判断。立春当天未填写具体时间时，会保留前后两种可能。</text>
+    </block>
+    <block wx:else>
+      <view class="zodiac-field"><text class="zodiac-label">选择生肖</text><picker mode="selector" range="{{animals}}" value="{{animalIndex}}" bindchange="onAnimalChange" class="zodiac-date-picker"><view class="zodiac-picker-value"><text>属{{animals[animalIndex]}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+      <text class="zodiac-label zodiac-range-label">年份范围</text>
+      <view class="zodiac-range"><view class="zodiac-number"><input type="number" value="{{rangeStart}}" data-field="rangeStart" bindinput="onFieldInput" maxlength="4" aria-label="起始年份"/><text>年</text></view><text class="zodiac-range-to">至</text><view class="zodiac-number"><input type="number" value="{{rangeEnd}}" data-field="rangeEnd" bindinput="onFieldInput" maxlength="4" aria-label="结束年份"/><text>年</text></view></view>
+      <text class="zodiac-hint">支持 1900—2100 年，按年份列出十二年一轮的对应属相。</text>
+    </block>
+    <text wx:if="{{error}}" class="zodiac-error">{{error}}</text>
+    <button class="primary-btn zodiac-query" bindtap="runQuery">{{mode === 'reverse' ? '查询对应年份' : '查询生肖'}}</button>
+  </view>
+
+  <view wx:if="{{hasResult}}" class="zodiac-results">
+    <view class="zodiac-section-head"><text>查询结果</text><text class="zodiac-result-date">截至 {{today}}</text></view>
+    <block wx:if="{{mode === 'year'}}">
+      <view class="zodiac-year-result">
+        <view class="zodiac-year-top"><view class="zodiac-animal">{{yearResult.animal}}</view><view><text class="zodiac-year-title">{{yearResult.yearLabel}}</text><text class="zodiac-year-caption">春节口径 · 年份参考</text></view></view>
+        <view class="zodiac-info-row"><text>天干五行</text><text>{{yearResult.stemElement}}</text></view>
+        <view class="zodiac-info-row"><text>纳音</text><text>{{yearResult.naYin}}</text></view>
+        <view class="zodiac-info-row"><text>今年年龄</text><text>{{yearResult.ageText}}</text></view>
+        <view class="zodiac-info-row"><text>本命年参考</text><text>{{yearResult.benMingNianText}}</text></view>
+      </view>
+      <text class="zodiac-result-note">{{yearResult.boundaryNote}}</text>
+    </block>
+    <block wx:elif="{{mode === 'birthday'}}">
+      <view class="zodiac-birthday-age"><text>{{birthDate}} · 公历</text><text>{{birthdayResult.ageText}}</text></view>
+      <view class="zodiac-comparison">
+        <view class="zodiac-convention"><text class="zodiac-convention-label">春节口径</text><text class="zodiac-convention-animal">属{{birthdayResult.cny.animal}}</text><text class="zodiac-convention-year">{{birthdayResult.cny.yearLabel}}</text><view class="zodiac-convention-detail"><text>天干五行 · {{birthdayResult.cny.stemElement}}</text><text>纳音 · {{birthdayResult.cny.naYin}}</text></view><text class="zodiac-benming {{birthdayResult.cny.isBenMingNian ? 'yes' : ''}}">{{birthdayResult.cny.benMingNianText}}</text></view>
+        <view class="zodiac-convention lichun"><text class="zodiac-convention-label">立春口径</text><block wx:if="{{!birthdayResult.isAmbiguous}}"><text class="zodiac-convention-animal">属{{birthdayResult.lichun.animal}}</text><text class="zodiac-convention-year">{{birthdayResult.lichun.yearLabel}}</text><view class="zodiac-convention-detail"><text>天干五行 · {{birthdayResult.lichun.stemElement}}</text><text>纳音 · {{birthdayResult.lichun.naYin}}</text></view><text class="zodiac-benming {{birthdayResult.lichun.isBenMingNian ? 'yes' : ''}}">{{birthdayResult.lichun.benMingNianText}}</text></block><block wx:else><text class="zodiac-convention-pending">需补充时间</text><view wx:for="{{birthdayResult.lichunOptions}}" wx:key="year" class="zodiac-possible"><text>{{index ? '立春后' : '立春前'}} · 属{{item.animal}}</text><text>{{item.ganZhi}} · {{item.stemElement}} · {{item.naYin}}</text><text>{{item.benMingNianText}}</text></view></block></view>
+      </view>
+      <view class="zodiac-boundaries"><text class="zodiac-boundary-title">{{birthdayResult.boundaryNote}}</text><view><text>当年春节</text><text>{{birthdayResult.cnyDate}}</text></view><view><text>当年立春</text><text>{{birthdayResult.liChunAt}}</text></view><text class="zodiac-boundary-foot">交节时间为历法库推算值，统一采用北京时间。</text></view>
+    </block>
+    <block wx:else>
+      <view class="zodiac-reverse-head"><text>属{{animals[animalIndex]}}的年份</text><text>共 {{reverseRows.length}} 个</text></view>
+      <view class="zodiac-table" wx:if="{{reverseRows.length}}"><view class="zodiac-table-row zodiac-table-head"><text>年份</text><text>干支</text><text>纳音</text><text>今年年龄</text></view><view class="zodiac-table-row" wx:for="{{reverseRows}}" wx:key="year"><text class="zodiac-table-year">{{item.year}}</text><text>{{item.ganZhi}}</text><text>{{item.naYin}}</text><text>{{item.ageText}}</text></view></view>
+      <view wx:else class="zodiac-empty">这个年份范围内没有对应生肖</view>
+      <text class="zodiac-result-note">年份以当年春节后的农历年为准。年龄为周岁范围，年初出生请按生日核对生肖。</text>
+    </block>
+    <view class="zodiac-actions"><button class="secondary-btn" bindtap="copyResult">复制结果</button><button class="primary-btn" bindtap="clearResult">清空结果</button></view>
+    <button class="zodiac-save" bindtap="saveRecord" disabled="{{saving}}">{{saving ? '正在保存' : '保存结果到操作记录'}}</button>
+    <text class="zodiac-cultural-note">生肖与五行为传统历法信息，不作吉凶判断。闰日出生者在非闰年按 2 月 28 日计算周岁。</text>
+  </view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地推算，生日信息不上传服务器</text></view></view>
+</view>

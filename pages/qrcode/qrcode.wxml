@@ -1,0 +1,42 @@
+<view class="page tool-page qr-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">二维码生成</text><text class="desc">文字与网址本地编码</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/qrcode.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="qr-content-modes">
+    <button class="qr-option {{mode === 'text' ? 'active' : ''}}" data-mode="text" bindtap="selectMode">文字内容</button>
+    <button class="qr-option {{mode === 'link' ? 'active' : ''}}" data-mode="link" bindtap="selectMode">链接</button>
+  </view>
+  <text class="qr-mode-note">{{mode === 'text' ? '按普通文字编码，扫码后直接显示内容。' : '按网页链接编码，扫码后可直接打开。'}}</text>
+  <view class="qr-panel">
+    <view class="qr-panel-head"><text class="qr-panel-title">二维码内容</text><text class="qr-count">{{inputCount}} / {{maxLength}}</text></view>
+    <textarea class="qr-textarea" value="{{inputText}}" bindinput="onTextInput" maxlength="{{maxLength}}" placeholder="{{mode === 'text' ? '输入需要展示的文字内容，支持换行' : '输入完整链接，例如 https://example.com'}}" placeholder-class="qr-placeholder" disable-default-padding="{{true}}" show-confirm-bar="{{false}}" cursor-spacing="24"></textarea>
+  </view>
+
+  <view class="qr-settings">
+    <view class="qr-setting-block"><text class="qr-setting-label">图片尺寸</text><view class="qr-options"><button wx:for="{{sizes}}" wx:key="*this" class="qr-option {{size === item ? 'active' : ''}}" data-value="{{item}}" bindtap="selectSize">{{item}}px</button></view></view>
+    <view class="qr-setting-block"><view class="qr-setting-head"><text class="qr-setting-label">纠错级别</text><text class="qr-setting-note">级别越高，可恢复的遮挡越多</text></view><view class="qr-options qr-level-options"><button wx:for="{{levels}}" wx:key="*this" class="qr-option {{level === item ? 'active' : ''}}" data-value="{{item}}" bindtap="selectLevel">{{item}}</button></view></view>
+  </view>
+
+  <text wx:if="{{error}}" class="qr-error">{{error}}</text>
+  <button class="primary-btn qr-main-btn" bindtap="generate" loading="{{rendering}}" disabled="{{rendering || saving}}"><image wx:if="{{!rendering}}" src="/assets/icons/qrcode.svg" mode="aspectFit"/><text>{{rendering ? '正在生成' : (hasResult ? '重新生成' : '生成二维码')}}</text></button>
+
+  <view class="qr-panel qr-result-panel">
+    <view class="qr-panel-head"><text class="qr-panel-title">二维码预览</text><text wx:if="{{hasResult}}" class="qr-result-meta">{{size}}px · {{level}} 级</text></view>
+    <view class="qr-preview">
+      <canvas wx:if="{{showCanvas}}" type="2d" id="qrcodeCanvas" class="qr-canvas"></canvas>
+      <image wx:elif="{{imagePath}}" class="qr-image" src="{{imagePath}}" mode="aspectFit" bindtap="previewImage"/>
+      <view wx:else class="qr-empty"><image src="/assets/icons/qrcode.svg" mode="aspectFit"/><text>{{rendering ? '正在绘制二维码' : '生成后可预览和保存图片'}}</text></view>
+    </view>
+    <view wx:if="{{hasResult}}" class="qr-encoded"><text class="qr-setting-label">实际编码内容</text><scroll-view scroll-y="{{true}}" class="qr-encoded-content"><text selectable="{{true}}">{{encodedText}}</text></scroll-view></view>
+    <view class="qr-actions">
+      <button class="secondary-btn" bindtap="previewImage" disabled="{{!hasResult}}"><image src="/assets/icons/search.svg" mode="aspectFit"/><text>查看大图</text></button>
+      <button class="secondary-btn" bindtap="saveImage" disabled="{{!hasResult}}"><image src="/assets/icons/upload.svg" mode="aspectFit"/><text>保存相册</text></button>
+      <button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}" disabled="{{!hasResult || saving || saved}}"><image wx:if="{{!saving}}" src="/assets/icons/password-save.svg" mode="aspectFit"/><text>{{saved ? '已保存' : '保存记录'}}</text></button>
+    </view>
+  </view>
+
+  <button class="qr-clear" bindtap="clearAll" disabled="{{!inputText && !hasResult}}"><image src="/assets/icons/password-clear.svg" mode="aspectFit"/><text>清空内容</text></button>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地生成，内容与二维码不上传服务器</text></view></view>
+</view>

@@ -1,0 +1,75 @@
+<view class="page tool-page decision-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">随机决策</text><text class="desc">把纠结交给一次公平随机</text></view>
+    <view class="tool-icon purple"><image src="/assets/icons/decision.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="decision-section">
+    <view class="decision-section-head"><text class="decision-label">候选选项</text><text class="decision-note">每行一个，2-20 项</text></view>
+    <textarea class="decision-input" value="{{optionsText}}" bindinput="onOptionsInput" maxlength="{{maxInputLength}}" disabled="{{choosing || animating}}" placeholder="例如：去公园&#10;看电影" auto-height="{{false}}" aria-label="候选选项"/>
+    <view class="decision-input-meta">
+      <text>空行会忽略，重复项会合并，不会增加权重</text>
+      <text>{{optionsText.length}}/{{maxInputLength}}</text>
+    </view>
+    <text wx:if="{{duplicateCount}}" class="decision-merge-tip">已合并 {{duplicateCount}} 个重复选项，每个不同选项仍为等概率</text>
+  </view>
+
+  <view class="decision-section">
+    <view class="decision-section-head"><text class="decision-label">展示方式</text><text class="decision-note">每个选项机会相同</text></view>
+    <view class="decision-modes">
+      <button wx:for="{{modes}}" wx:key="key" class="decision-mode {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode" disabled="{{choosing || animating}}">{{item.title}}</button>
+    </view>
+  </view>
+
+  <view class="decision-stage {{animating ? 'is-animating' : ''}}">
+    <view wx:if="{{mode === 'wheel'}}" class="wheel-wrap">
+      <view class="wheel-pointer"></view>
+      <view class="decision-wheel" style="background:{{wheelBackground}};transform:rotate({{wheelRotation}}deg);">
+        <text wx:for="{{wheelLabels}}" wx:key="index" class="wheel-label" style="{{item.style}}">{{item.value}}</text>
+        <view class="wheel-hub"></view>
+      </view>
+    </view>
+    <view wx:elif="{{mode === 'grid'}}" class="decision-grid">
+      <view wx:for="{{options}}" wx:key="index" class="decision-grid-item {{animating && highlightIndex === index ? 'passing' : ''}} {{!animating && targetIndex === index ? 'target' : ''}}"><text>{{item}}</text></view>
+    </view>
+    <view wx:elif="{{mode === 'roll'}}" class="roll-stage">
+      <text class="roll-neighbor">{{animating && options.length ? options[(highlightIndex + options.length - 1) % options.length] : ''}}</text>
+      <view class="roll-window"><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/><text>{{rollingText || '等待开始'}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view>
+      <text class="roll-neighbor">{{animating && options.length ? options[(highlightIndex + 1) % options.length] : ''}}</text>
+    </view>
+    <view wx:elif="{{mode === 'flip'}}" class="flip-stage">
+      <view class="flip-card {{result ? 'is-revealed' : ''}}">
+        <image wx:if="{{!result}}" src="/assets/icons/decision-card.svg" mode="aspectFit"/>
+        <text wx:else class="flip-result">{{result}}</text>
+      </view>
+      <text class="flip-caption">{{animating ? '正在洗牌' : (result ? '本次抽中' : '等待翻牌')}}</text>
+    </view>
+    <view wx:else class="draw-stage">
+      <view class="ticket ticket-back"></view>
+      <view class="ticket ticket-mid"></view>
+      <view class="ticket ticket-front"><image src="/assets/icons/decision.svg" mode="aspectFit"/><text>{{animating ? '抽取中' : (result || '等待抽签')}}</text></view>
+    </view>
+  </view>
+
+  <view wx:if="{{mode === 'wheel' && wheelNumbered}}" class="wheel-legend"><view wx:for="{{options}}" wx:key="index"><text class="wheel-legend-number">{{index + 1}}</text><text class="wheel-legend-value">{{item}}</text></view></view>
+  <text wx:if="{{error}}" class="decision-error">{{error}}</text>
+  <button class="primary-btn decision-submit" bindtap="decide" loading="{{choosing || animating}}" disabled="{{choosing || animating}}"><text>{{choosing || animating ? '正在决定' : (result ? '再决定一次' : '开始决定')}}</text></button>
+
+  <view wx:if="{{result}}" class="decision-result">
+    <text class="decision-result-kicker">这次就选</text>
+    <text class="decision-result-value" selectable="{{true}}">{{result}}</text>
+    <button class="secondary-btn" bindtap="copyResult"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button>
+  </view>
+
+  <view class="decision-section decision-history">
+    <view class="decision-section-head"><text class="decision-label">本次会话历史</text><button class="decision-clear" bindtap="clearHistory" disabled="{{!history.length || choosing || animating}}">清空</button></view>
+    <scroll-view wx:if="{{history.length}}" class="decision-history-list" scroll-y="{{true}}">
+      <view wx:for="{{history}}" wx:key="index" class="decision-history-row"><text class="decision-history-index">{{history.length - index}}</text><text>{{item}}</text></view>
+    </scroll-view>
+    <view wx:else class="decision-empty">完成一次随机决定后会显示在这里</view>
+  </view>
+
+  <view class="page-foot-tip">
+    <view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">安全随机，本页输入与历史不上传、不自动保存</text></view>
+  </view>
+</view>

@@ -1,0 +1,43 @@
+.breathing-page { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+.breathing-settings { margin-top: 12px; }
+.breathing-field { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.breathing-label { font-size: 14px; font-weight: 600; }
+.breathing-field picker { min-width: 0; width: 62%; }
+.breathing-picker { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 42px; padding: 0 12px; border: 1px solid #DCE5F1; border-radius: 6px; background: white; font-size: 14px; }
+.breathing-picker image { width: 16px; height: 16px; flex: none; }
+.breathing-hint { display: block; margin-top: 9px; color: #8191A6; font-size: 11px; line-height: 18px; }
+.breathing-stage-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.breathing-stage-grid > view { min-width: 0; color: #718096; font-size: 11px; }
+.breathing-input { display: flex; align-items: center; gap: 5px; height: 42px; margin-top: 7px; padding: 0 8px; border: 1px solid #DCE5F1; border-radius: 6px; background: white; }
+.breathing-input input { min-width: 0; width: 100%; flex: 1; height: 40px; font-size: 16px; color: #15233B; text-align: center; }
+.breathing-input > text { flex: none; font-size: 11px; color: #8A99AB; }
+.breathing-target { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
+.breathing-segments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; padding: 3px; background: #EAF0F8; border-radius: 7px; flex: 1; }
+.breathing-segments button { display: flex; align-items: center; justify-content: center; min-width: 0; height: 36px; padding: 0 8px; font-size: 13px; color: #718096; border: 1px solid transparent; border-radius: 5px; }
+.breathing-segments .active { border-color: #C7DBF7; background: white; color: #246DCF; font-weight: 600; }
+.breathing-target-input { width: 104px; margin-top: 0; }
+.breathing-feedback { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; padding: 12px 0; border-bottom: 1px solid #E3EAF3; }
+.breathing-feedback > view { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: #718096; }
+.breathing-feedback switch { transform: scale(.8); transform-origin: right center; }
+.breathing-practice { margin-top: 12px; }
+.breathing-practice-head { display: flex; align-items: center; justify-content: space-between; width: 100%; color: #63788C; font-size: 12px; }
+.breathing-full-toggle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+.breathing-full-toggle image { width: 22px; height: 22px; }
+.breathing-ring { position: relative; width: 100%; max-width: 220px; aspect-ratio: 1; margin: 8px auto 12px; border: 1px solid #C7E7D8; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.breathing-disc { position: absolute; inset: 9px; border: 1px solid #85C9AB; border-radius: 50%; background: #D6F1E4; transition: transform .12s linear; }
+.breathing-disc.holding { background: #DCEEF5; border-color: #9DCDDB; }
+.breathing-center { position: relative; text-align: center; z-index: 1; }
+.breathing-phase { display: block; color: #2B6D56; font-size: 18px; font-weight: 600; line-height: 26px; }
+.breathing-countdown { display: block; margin: 8px 0 6px; color: #20523F; font-size: 54px; font-weight: 600; line-height: 66px; font-variant-numeric: tabular-nums; }
+.breathing-round { display: block; color: #698B7A; font-size: 11px; }
+.breathing-progress { width: 100%; height: 4px; background: #E2ECE7; border-radius: 2px; overflow: hidden; }
+.breathing-progress > view { height: 100%; background: #43AE7E; transition: width .12s linear; }
+.breathing-time { display: flex; justify-content: space-between; width: 100%; margin-top: 10px; color: #8391A4; font-size: 11px; }
+.breathing-actions { display: flex; gap: 12px; width: 100%; margin-top: 18px; }
+.breathing-actions button { flex: 1; min-width: 0; height: 46px; border-radius: 8px; font-size: 15px; }
+.breathing-error { display: block; color: #D34C4C; font-size: 12px; line-height: 20px; margin-top: 12px; }
+.breathing-safety { display: block; width: 100%; margin-top: 16px; color: #8796A8; font-size: 11px; line-height: 19px; }
+.breathing-fullscreen { position: fixed; inset: 0; z-index: 100; margin: 0; padding: 16px 24px calc(20px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; justify-content: center; background: #F7F9FC; overflow-y: auto; }
+.breathing-fullscreen .breathing-ring { flex: none; max-width: 310px; margin-top: 22px; margin-bottom: 30px; }
+.breathing-fullscreen .breathing-practice-head { position: absolute; top: 8px; left: 24px; right: 24px; width: auto; }
+@media (max-width: 350px) { .breathing-stage-grid { gap: 6px; } .breathing-input { padding: 0 6px; } .breathing-ring { max-width: 230px; } .breathing-fullscreen { padding-left: 18px; padding-right: 18px; } }

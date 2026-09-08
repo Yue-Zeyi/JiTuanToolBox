@@ -1,0 +1,38 @@
+<view class="page tool-page text-compare-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">文字比对</text><text class="desc">对照两段文字，快速找出增删差异</text></view>
+    <view class="tool-icon orange"><image src="/assets/icons/text-compare.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card compare-input-card">
+    <view class="compare-input-head"><view><text class="compare-input-title">原文</text><text class="compare-input-count">{{originalCount}} 字符</text></view><button class="compare-clear-btn" data-side="original" bindtap="clearInput">清空</button></view>
+    <textarea class="compare-textarea" data-side="original" value="{{originalText}}" bindinput="onTextInput" placeholder="粘贴或输入原始文字" placeholder-class="compare-placeholder" maxlength="100000" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}"></textarea>
+  </view>
+
+  <view class="compare-swap-wrap"><button class="compare-swap-btn" bindtap="swapTexts"><image src="/assets/icons/arrow-right.svg" mode="aspectFit"/><text>交换顺序</text></button></view>
+
+  <view class="card compare-input-card compare-input-card-second">
+    <view class="compare-input-head"><view><text class="compare-input-title">对比文</text><text class="compare-input-count">{{comparisonCount}} 字符</text></view><button class="compare-clear-btn" data-side="comparison" bindtap="clearInput">清空</button></view>
+    <textarea class="compare-textarea" data-side="comparison" value="{{comparisonText}}" bindinput="onTextInput" placeholder="粘贴或输入需要对比的文字" placeholder-class="compare-placeholder" maxlength="100000" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}"></textarea>
+  </view>
+
+  <view class="card compare-settings-card">
+    <view class="compare-section-head"><view><text class="compare-section-title">对比方式</text><text class="compare-section-subtitle">按内容长度选择更合适的视图</text></view><text class="compare-mode-current">{{mode === 'line' ? '按行' : '按字'}}</text></view>
+    <view class="compare-mode-grid"><block wx:for="{{modeOptions}}" wx:key="key"><button class="compare-mode-option {{item.active ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode"><text class="compare-mode-title">{{item.title}}</text><text class="compare-mode-desc">{{item.desc}}</text></button></block></view>
+    <view class="compare-section-head compare-ignore-head"><view><text class="compare-section-title">忽略选项</text><text class="compare-section-subtitle">减少复制粘贴带来的无意义差异</text></view></view>
+    <view class="compare-ignore-grid"><block wx:for="{{ignoreOptions}}" wx:key="key"><button class="compare-ignore-option {{item.active ? 'active' : ''}}" data-key="{{item.key}}" bindtap="toggleIgnore"><view class="compare-ignore-check"><image wx:if="{{item.active}}" src="/assets/icons/success.svg" mode="aspectFit"/></view><view><text class="compare-ignore-title">{{item.title}}</text><text class="compare-ignore-desc">{{item.desc}}</text></view></button></block></view>
+  </view>
+
+  <view class="card compare-result-card">
+    <view class="compare-result-head"><view><text class="compare-result-title">对比结果</text><text class="compare-result-subtitle">{{mode === 'line' ? '按行标记整段变更' : '按字高亮具体差异'}}</text></view><text class="compare-result-mode">{{onlyDiffs ? '仅差异' : '全部内容'}}</text></view>
+    <view class="compare-stat-grid"><view class="compare-stat compare-stat-added"><text class="compare-stat-value">{{stats.added}}</text><text class="compare-stat-label">新增</text></view><view class="compare-stat compare-stat-removed"><text class="compare-stat-value">{{stats.removed}}</text><text class="compare-stat-label">删除</text></view><view class="compare-stat compare-stat-same"><text class="compare-stat-value">{{stats.same}}</text><text class="compare-stat-label">相同</text></view></view>
+    <scroll-view wx:if="{{hasCompared && visibleSegments.length}}" class="compare-result-box" scroll-y="{{true}}"><block wx:for="{{visibleSegments}}" wx:key="index"><text class="compare-segment compare-segment-{{item.type}}">{{item.text}}</text></block></scroll-view>
+    <view wx:elif="{{hasCompared}}" class="compare-result-empty"><image src="/assets/icons/text-compare-muted.svg" mode="aspectFit"/><text>{{onlyDiffs ? '当前没有差异' : '忽略规则后没有可比较内容'}}</text></view>
+    <view wx:else class="compare-result-empty"><image src="/assets/icons/text-compare-muted.svg" mode="aspectFit"/><text>输入两段文字后，这里会显示比对结果</text></view>
+    <view class="compare-result-actions"><button class="secondary-btn" bindtap="copyResult" disabled="{{!hasCompared}}">复制结果</button><button class="secondary-btn" bindtap="toggleOnlyDiffs" disabled="{{!hasCompared}}">{{onlyDiffs ? '显示全部' : '只看差异'}}</button><button class="primary-btn" bindtap="exportCompareImage" disabled="{{!hasCompared || exporting}}">{{exporting ? '正在导出…' : '导出对比图'}}</button></view>
+  </view>
+
+  <view class="compare-bottom-actions"><button class="secondary-btn" bindtap="saveRecord" disabled="{{!hasCompared}}">保存记录</button><button class="primary-btn" bindtap="clearAll">清空全部</button></view>
+  <canvas id="compareCanvas" type="2d" class="compare-canvas"></canvas>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，文字不上传服务器</text></view></view>
+</view>

@@ -1,0 +1,15 @@
+<view class="page tool-page constellation-page">
+  <view class="page-head"><view class="tool-title"><text class="title">星座查询</text><text class="desc">输入公历生日，快速查星座</text></view><view class="tool-icon purple"><image src="/assets/icons/constellation.svg" mode="aspectFit"/></view></view>
+  <view class="card constellation-panel">
+    <text class="constellation-label">公历生日</text>
+    <view class="constellation-fields"><view class="constellation-field"><input type="number" value="{{month}}" bindinput="onMonthInput" maxlength="2" placeholder="3"/><text>月</text></view><view class="constellation-field"><input type="number" value="{{day}}" bindinput="onDayInput" maxlength="2" placeholder="21"/><text>日</text></view></view>
+    <text class="constellation-note">按常用十二星座公历日期区间查询，不涉及出生年份。</text><text wx:if="{{error}}" class="constellation-error">{{error}}</text>
+  </view>
+  <button class="primary-btn constellation-main" bindtap="calculate">查询星座</button>
+  <view class="card constellation-result">
+    <view class="constellation-result-head"><text>查询结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view>
+    <view wx:if="{{hasResult}}" class="constellation-result-body"><text class="constellation-name">{{result.name}}</text><view class="constellation-meta"><view><text>日期区间</text><text>{{result.range}}</text></view><view><text>元素</text><text>{{result.element}}</text></view></view></view>
+    <view wx:else class="constellation-empty">输入月日后点击查询</view><button class="constellation-clear" bindtap="clearAll">清空输入</button>
+  </view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地查询，生日与查询结果不上传服务器</text></view></view>
+</view>

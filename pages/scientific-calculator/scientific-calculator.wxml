@@ -1,0 +1,14 @@
+<view class="page tool-page scientific-page">
+  <view class="page-head"><view class="tool-title"><text class="title">科学计算器</text><text class="desc">函数 · 常量 · DEG / RAD</text></view><view class="tool-icon purple"><image src="/assets/icons/scientific-calculator.svg" mode="aspectFit"/></view></view>
+  <view class="scientific-segment" role="group" aria-label="角度模式"><button wx:for="{{angleModes}}" wx:key="key" class="scientific-mode {{angleMode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectAngleMode">{{item.title}}</button></view>
+  <view class="card scientific-panel">
+    <view class="scientific-panel-head"><text>表达式</text><text>{{angleMode === 'DEG' ? '三角函数按角度计算' : '三角函数按弧度计算'}}</text></view>
+    <textarea class="scientific-input" value="{{expression}}" bindinput="onExpressionInput" maxlength="300" auto-height="{{true}}" placeholder="例如：sqrt(81)+sin(30)*2" placeholder-class="scientific-placeholder" disable-default-padding="{{true}}" cursor-spacing="24"></textarea>
+    <view class="scientific-keys"><button wx:for="{{quickTokens}}" wx:key="label" class="scientific-key" data-token="{{item.value}}" bindtap="appendToken">{{item.label}}</button></view>
+    <view class="scientific-edit-actions"><button bindtap="backspace">退格</button><button bindtap="clearInput">清空输入</button></view>
+    <text wx:if="{{error}}" class="scientific-error">{{error}}</text>
+  </view>
+  <button class="primary-btn scientific-main" bindtap="calculate">开始计算</button>
+  <view class="card scientific-result"><view class="scientific-result-head"><text>计算结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view><text class="scientific-result-value" selectable="{{true}}">{{hasResult ? resultValue : '—'}}</text><text class="scientific-result-help">支持 + − × ÷、乘方、百分号、括号、sqrt / sin / cos / tan / ln / log，以及 π、e。</text></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，输入与计算结果不上传服务器</text></view></view>
+</view>

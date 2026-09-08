@@ -1,0 +1,53 @@
+.world-clock-page { padding-bottom: 80rpx; }
+.clock-toolbar, .clock-row-head, .clock-time-row, .clock-meta, .clock-travel-head, .clock-travel-value, .clock-travel-scale, .clock-search-head, .clock-search-result { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
+.clock-toolbar { min-height: 76rpx; margin: 8rpx 0; }
+.clock-mode { color: #9B6717; font-size: 23rpx; font-weight: 600; }
+.clock-mode.live { color: #238454; }
+.clock-add { display: flex; align-items: center; gap: 8rpx; height: 68rpx; color: #2F80ED; font-size: 25rpx; }
+.clock-add image { width: 30rpx; height: 30rpx; }
+.clock-row { padding: 23rpx 0 22rpx; border-bottom: 1rpx solid #DCE5EF; }
+.clock-local { border-top: 2rpx solid #2F80ED; }
+.clock-city { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10rpx; min-width: 0; }
+.clock-city-name { color: #263746; font-size: 29rpx; font-weight: 600; overflow-wrap: break-word; }
+.clock-country { color: #7A8997; font-size: 21rpx; }
+.clock-remove, .clock-search-head button, .clock-search-result button { display: flex; flex: 0 0 60rpx; align-items: center; justify-content: center; width: 60rpx; height: 60rpx; }
+.clock-remove image, .clock-search-head button image, .clock-search-result button image { width: 30rpx; height: 30rpx; }
+.clock-local-mark { color: #2F80ED; font-size: 21rpx; }
+.clock-time-row { min-height: 84rpx; }
+.clock-digits { color: #263746; font-family: Consolas, Monaco, monospace; font-size: 52rpx; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 0; white-space: nowrap; }
+.clock-status { display: flex; align-items: center; flex: 0 0 auto; gap: 8rpx; font-size: 21rpx; }
+.clock-dot { flex: 0 0 12rpx; width: 12rpx; height: 12rpx; border-radius: 50%; }
+.working { color: #238454; }.working .clock-dot { background: #2BA46B; }
+.awake { color: #946915; }.awake .clock-dot { background: #D8AE35; }
+.rest { color: #7C8790; }.rest .clock-dot { background: #929DA6; }
+.clock-meta { flex-wrap: wrap; row-gap: 4rpx; color: #536777; font-size: 23rpx; line-height: 1.6; }
+.clock-secondary { margin-top: 2rpx; color: #7A8997; font-size: 21rpx; }
+.clock-zone { display: block; margin-top: 6rpx; color: #84919E; font-size: 19rpx; overflow-wrap: anywhere; }
+.clock-legend { display: flex; flex-wrap: wrap; gap: 12rpx 20rpx; padding: 22rpx 0; font-size: 19rpx; }
+.clock-legend > view { display: flex; align-items: center; gap: 7rpx; }
+.clock-travel { padding: 24rpx 0 10rpx; border-top: 1rpx solid #DCE5EF; }
+.clock-travel-head > text { color: #263746; font-size: 27rpx; font-weight: 600; }
+.clock-travel-head button { height: 60rpx; color: #2F80ED; font-size: 23rpx; line-height: 60rpx; }
+.clock-travel-head button[disabled] { color: #99A6B3; }
+.clock-travel-value { min-height: 50rpx; color: #536777; font-size: 23rpx; }
+.clock-travel-value text:last-child { color: #84919E; font-size: 20rpx; }
+.clock-travel slider { margin: 22rpx 12rpx; }
+.clock-travel-scale { color: #84919E; font-size: 20rpx; }
+.clock-error { padding: 28rpx 0; color: #C04444; font-size: 25rpx; line-height: 1.6; }
+.clock-error button { margin-top: 20rpx; color: #2F80ED; text-align: left; font-size: 25rpx; }
+.clock-overlay { position: fixed; inset: 0; z-index: 90; display: flex; align-items: flex-end; background: rgba(22, 35, 45, .38); }
+.clock-search-sheet { display: flex; flex-direction: column; width: 100%; height: 78vh; padding: 26rpx 32rpx 0; border-radius: 16rpx 16rpx 0 0; background: #FFFFFF; padding-bottom: env(safe-area-inset-bottom); }
+.clock-search-head { flex: 0 0 64rpx; color: #263746; font-size: 29rpx; font-weight: 600; }
+.clock-search-head > view { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12rpx; }
+.clock-search-count { color: #84919E; font-size: 21rpx; font-weight: 400; }
+.clock-search-input { display: flex; align-items: center; flex: 0 0 80rpx; gap: 12rpx; margin: 18rpx 0; padding: 0 18rpx; border: 1rpx solid #DCE5EF; border-radius: 12rpx; background: #F7F9FC; }
+.clock-search-input image { flex: 0 0 30rpx; width: 30rpx; height: 30rpx; }
+.clock-search-input input { flex: 1; min-width: 0; font-size: 25rpx; }
+.clock-search-results { flex: 1; min-height: 0; height: 0; }
+.clock-search-result { min-height: 116rpx; padding: 16rpx 0; border-bottom: 1rpx solid #E8EEF3; color: #263746; font-size: 25rpx; }
+.clock-search-result > view { flex: 1; min-width: 0; }
+.clock-search-result > view > text { display: block; overflow-wrap: anywhere; }
+.clock-result-country { margin-left: 12rpx; color: #84919E; font-size: 21rpx; }
+.clock-result-zone { margin-top: 7rpx; color: #84919E; font-size: 20rpx; }
+.clock-search-result button[disabled] { opacity: .55; }
+.clock-empty { display: block; padding: 60rpx 0; color: #84919E; text-align: center; font-size: 25rpx; }

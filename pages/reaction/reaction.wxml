@@ -1,0 +1,53 @@
+<view class="page tool-page reaction-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">反应测试</text><text class="desc">变绿后立即按下，完成有效轮次</text></view>
+    <view class="tool-icon green"><image src="/assets/icons/reaction.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="reaction-rounds">
+    <text class="reaction-label">测试轮数</text>
+    <view class="reaction-round-options">
+      <button wx:for="{{roundOptions}}" wx:key="*this" class="{{target === item ? 'active' : ''}}" data-target="{{item}}" bindtap="selectRounds" disabled="{{preparing || status === 'waiting' || status === 'greenPending' || status === 'green'}}">{{item}} 轮</button>
+    </view>
+  </view>
+
+  <view class="reaction-progress"><text>有效 {{validCount}} / {{target}}</text><view><view style="width:{{validCount * 100 / target}}%;"></view></view></view>
+
+  <view class="reaction-pad status-{{status}}" bindtouchstart="onPadTouchStart" aria-label="反应测试触摸区域">
+    <view class="reaction-pulse"></view>
+    <image wx:if="{{status === 'idle' || status === 'result' || status === 'complete'}}" src="/assets/icons/reaction.svg" mode="aspectFit"/>
+    <text class="reaction-status-title">{{preparing ? '正在准备' : statusTitle}}</text>
+    <text class="reaction-status-hint">{{preparing ? '安全生成随机等待时间' : statusHint}}</text>
+  </view>
+
+  <text wx:if="{{error}}" class="reaction-error">{{error}}</text>
+  <button wx:if="{{status === 'idle' && !scores.length}}" class="primary-btn reaction-action" bindtap="startTest" loading="{{preparing}}" disabled="{{preparing}}">开始测试</button>
+  <button wx:elif="{{status === 'complete'}}" class="primary-btn reaction-action" bindtap="startTest">重新测试</button>
+  <button wx:else class="primary-btn reaction-action" bindtap="retryRound" loading="{{preparing}}" disabled="{{preparing || status === 'waiting' || status === 'greenPending' || status === 'green'}}">{{status === 'result' || status === 'idle' ? '下一轮' : '重试本轮'}}</button>
+
+  <view class="reaction-results">
+    <view class="reaction-section-head"><text class="reaction-label">本次成绩</text><text>{{average ? ('平均 ' + average + ' ms') : '等待有效成绩'}}</text></view>
+    <view wx:if="{{scores.length}}" class="reaction-score-grid"><view wx:for="{{scores}}" wx:key="index"><text>第 {{index + 1}} 轮</text><text>{{item}} ms</text></view></view>
+    <view wx:else class="reaction-empty">抢跳与超时不会计入有效轮数</view>
+    <view wx:if="{{status === 'complete'}}" class="reaction-summary"><text>{{tier}}</text><text>平均 {{average}} ms · 最佳 {{best}} ms</text></view>
+  </view>
+
+  <view class="reaction-personal">
+    <view class="reaction-section-head"><text class="reaction-label">本机个人最好</text><button bindtap="clearPersonalBest">清除</button></view>
+    <view class="reaction-best-grid">
+      <view><text>3 轮平均</text><text>{{best3 ? (best3 + ' ms') : '--'}}</text></view>
+      <view><text>5 轮平均</text><text>{{best5 ? (best5 + ' ms') : '--'}}</text></view>
+      <view><text>10 轮平均</text><text>{{best10 ? (best10 + ' ms') : '--'}}</text></view>
+      <view><text>最佳单轮</text><text>{{bestSingle ? (bestSingle + ' ms') : '--'}}</text></view>
+    </view>
+  </view>
+
+  <view class="reaction-reference">
+    <text class="reaction-label">粗略参考</text>
+    <view><text>100-199 ms · 快</text><text>200-299 ms · 常见区间</text><text>300+ ms · 仍可练习</text></view>
+    <text class="reaction-disclaimer">仅为练习反馈，不是标准人群常模或严格实验结果；设备、显示刷新与触摸延迟都会影响成绩。</text>
+    <text wx:if="{{clockDegraded}}" class="reaction-clock-note">当前环境不支持高精度单调计时，已退化为系统时钟，成绩仅供参考。</text>
+  </view>
+
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">成绩仅在本机保存，不上传服务器</text></view></view>
+</view>

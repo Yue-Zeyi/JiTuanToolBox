@@ -1,0 +1,63 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/all-tools/all-tools",
+    "pages/compress/compress",
+    "pages/resize/resize",
+    "pages/pdf/pdf",
+    "pages/watermark/watermark",
+    "pages/split/split",
+    "pages/stitch/stitch",
+    "pages/word-count/word-count",
+    "pages/text-clean/text-clean",
+    "pages/fancy-font/fancy-font",
+    "pages/text-compare/text-compare",
+    "pages/password/password",
+    "pages/zodiac/zodiac",
+    "pages/qrcode/qrcode",
+    "pages/ip-query/ip-query",
+    "pages/decision/decision",
+    "pages/coin/coin",
+    "pages/reaction/reaction",
+    "pages/breathing/breathing",
+    "pages/timestamp/timestamp",
+    "pages/radix/radix",
+    "pages/unit-converter/unit-converter",
+    "pages/scientific-calculator/scientific-calculator",
+    "pages/percentage/percentage",
+    "pages/date-calculator/date-calculator",
+    "pages/world-clock/world-clock",
+    "pages/constellation/constellation",
+    "pages/age-query/age-query",
+    "pages/date-info/date-info",
+    "pages/stopwatch/stopwatch",
+    "pages/ocr/ocr",
+    "pages/history/history",
+    "pages/profile/profile",
+    "pages/legal/legal"
+  ],
+  "subPackages": [
+    { "root": "package-text", "pages": ["pages/chinese-convert/chinese-convert"] }
+  ],
+  "window": {
+    "navigationBarTitleText": "极团工具箱",
+    "navigationBarBackgroundColor": "#F7F9FC",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F9FC",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9AA8BB",
+    "selectedColor": "#2F80ED",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/history/history", "text": "记录" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

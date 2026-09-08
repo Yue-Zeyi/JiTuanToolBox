@@ -1,0 +1,14 @@
+<view class="page tool-page date-info-page">
+  <view class="page-head"><view class="tool-title"><text class="title">日期信息</text><text class="desc">星期 · 周数 · 季度 · 闰年</text></view><view class="tool-icon blue"><image src="/assets/icons/date-info.svg" mode="aspectFit"/></view></view>
+  <view class="card date-info-panel">
+    <text class="date-info-label">选择日期</text><picker mode="date" value="{{dateValue}}" start="0001-01-01" end="9999-12-31" bindchange="onDateChange"><view class="date-info-picker"><text class="{{dateValue ? '' : 'placeholder'}}">{{dateValue || '请选择日期'}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker>
+    <text class="date-info-note">距今天按设备本地日期 {{todayDate}} 计算；ISO 周按周一为每周第一天。</text><text wx:if="{{error}}" class="date-info-error">{{error}}</text>
+  </view>
+  <button class="primary-btn date-info-main" bindtap="calculate">查询日期信息</button>
+  <view class="card date-info-result">
+    <view class="date-info-result-head"><text>查询结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view>
+    <view wx:if="{{hasResult}}"><text class="date-info-weekday">{{result.weekday}}</text><view class="date-info-rows"><view><text>年内序号</text><text>第 {{result.dayOfYear}} 天</text></view><view><text>ISO 周</text><text>{{result.isoWeekYear}} 年第 {{result.isoWeek}} 周</text></view><view><text>季度</text><text>第 {{result.quarter}} 季度</text></view><view><text>年份类型</text><text>{{result.leapYear ? '闰年' : '平年'}}</text></view><view><text>距今天</text><text>{{relativeLabel}}</text></view></view></view>
+    <view wx:else class="date-info-empty">选择日期后点击查询</view><button class="date-info-clear" bindtap="clearAll">清空输入</button>
+  </view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地查询，日期与查询结果不上传服务器</text></view></view>
+</view>

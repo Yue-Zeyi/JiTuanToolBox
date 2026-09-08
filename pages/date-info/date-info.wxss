@@ -1,0 +1,21 @@
+.date-info-page { padding-bottom: 90rpx; }
+.date-info-panel, .date-info-result { padding: 24rpx; }
+.date-info-result { margin-top: 18rpx; }
+.date-info-label { display: block; color: var(--jt-navy); font-size: 26rpx; font-weight: 700; }
+.date-info-picker { display: flex; align-items: center; justify-content: space-between; height: 80rpx; margin-top: 14rpx; padding: 0 16rpx; border: 1rpx solid #CBDCED; border-radius: 12rpx; color: #234666; background: #FFFFFF; font-size: 25rpx; }
+.date-info-picker .placeholder { color: #9AA8BB; }
+.date-info-picker image { width: 24rpx; height: 24rpx; }
+.date-info-note { display: block; margin-top: 14rpx; color: #8794A7; font-size: 20rpx; line-height: 1.6; }
+.date-info-error { display: block; margin-top: 12rpx; color: #C84444; font-size: 22rpx; }
+.date-info-main { width: 100%; height: 84rpx; margin-top: 18rpx; border-radius: 14rpx; }
+.date-info-result-head { display: flex; align-items: center; justify-content: space-between; color: var(--jt-navy); font-size: 27rpx; font-weight: 700; }
+.date-info-result-head button { display: flex; align-items: center; gap: 7rpx; min-height: 52rpx; color: #2F80ED; font-size: 21rpx; font-weight: 400; }
+.date-info-result-head image { width: 26rpx; height: 26rpx; }
+.date-info-result-head button[disabled] { opacity: .4; }
+.date-info-weekday { display: block; margin-top: 14rpx; color: #1768C5; font-size: 40rpx; font-weight: 700; line-height: 1.5; }
+.date-info-rows { margin-top: 8rpx; border-top: 1rpx solid #EDF1F6; }
+.date-info-rows > view { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; min-height: 68rpx; border-bottom: 1rpx solid #EDF1F6; }
+.date-info-rows text:first-child { color: #8794A7; font-size: 21rpx; }
+.date-info-rows text:last-child { color: #38536D; font-size: 23rpx; font-weight: 600; text-align: right; }
+.date-info-empty { display: flex; align-items: center; justify-content: center; min-height: 170rpx; color: #93A2B3; font-size: 22rpx; }
+.date-info-clear { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 60rpx; margin-top: 16rpx; color: #2F80ED; font-size: 22rpx; }

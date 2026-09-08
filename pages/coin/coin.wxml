@@ -1,0 +1,56 @@
+<view class="page tool-page coin-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">抛硬币</text><text class="desc">一枚或一百枚，正反各半</text></view>
+    <view class="tool-icon orange"><image src="/assets/icons/coin.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="coin-settings">
+    <view class="coin-count-field">
+      <view><text class="coin-label">连抛次数</text><text class="coin-note">1-{{maxTosses}} 次</text></view>
+      <view class="coin-number-box"><input type="number" value="{{count}}" bindinput="onCountInput" maxlength="3" disabled="{{generating || flipping}}" aria-label="连抛次数"/><text>次</text></view>
+    </view>
+    <view class="coin-label-grid">
+      <view class="coin-label-field"><text class="coin-label">正面文案</text><input value="{{frontLabel}}" bindinput="onFrontLabelInput" maxlength="12" disabled="{{generating || flipping}}" placeholder="默认太阳银币" aria-label="正面文案"/><text class="coin-note">最多 6 个字符</text></view>
+      <view class="coin-label-field"><text class="coin-label">反面文案</text><input value="{{backLabel}}" bindinput="onBackLabelInput" maxlength="12" disabled="{{generating || flipping}}" placeholder="默认月牙银币" aria-label="反面文案"/><text class="coin-note">最多 6 个字符</text></view>
+    </view>
+  </view>
+
+  <view class="coin-stage {{flipping ? 'is-flipping' : ''}}">
+    <view class="coin-disc">
+      <image src="{{pendingFace === 'front' ? '/assets/icons/coin-front.svg' : '/assets/icons/coin-back.svg'}}" mode="aspectFit"/>
+      <text wx:if="{{pendingFace === 'front' ? frontLabel : backLabel}}">{{pendingFace === 'front' ? frontLabel : backLabel}}</text>
+    </view>
+    <text class="coin-stage-side">{{generating || flipping ? '正反各半，等待落定' : (pendingFace === 'front' ? ('正面 · ' + (frontLabel || '太阳')) : ('反面 · ' + (backLabel || '月牙')))}}</text>
+    <text class="coin-stage-hint">{{generating ? '正在生成整批结果' : (flipping ? '正在抛出最后一枚' : (currentBatch ? '最后一枚结果' : '准备抛出'))}}</text>
+  </view>
+  <view class="coin-face-legend"><view><image src="/assets/icons/coin-front.svg" mode="aspectFit"/><text>正面 · 太阳</text></view><view><image src="/assets/icons/coin-back.svg" mode="aspectFit"/><text>反面 · 月牙</text></view></view>
+
+  <text wx:if="{{error}}" class="coin-error">{{error}}</text>
+  <button class="primary-btn coin-submit" bindtap="toss" loading="{{generating || flipping}}" disabled="{{generating || flipping}}"><text>{{generating ? '正在生成' : (flipping ? '正在抛出' : '抛硬币')}}</text></button>
+
+  <view wx:if="{{currentBatch}}" class="coin-result">
+    <view class="coin-result-head"><view><text class="coin-label">本批结果</text><text class="coin-note">共 {{currentBatch.results.length}} 次</text></view><button bindtap="copyCurrent"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view>
+    <view class="coin-stats">
+      <view><text>正面</text><text class="coin-stat-value">{{currentBatch.frontCount}}</text><text>{{currentBatch.frontRatio}}%</text></view>
+      <view><text>反面</text><text class="coin-stat-value">{{currentBatch.backCount}}</text><text>{{currentBatch.backRatio}}%</text></view>
+    </view>
+    <scroll-view class="coin-detail" scroll-y="{{true}}">
+      <view wx:for="{{currentBatch.resultRows}}" wx:key="index" class="coin-detail-row"><text>{{item.index}}</text><text class="coin-side-{{item.side}}">{{item.label}}</text></view>
+    </scroll-view>
+  </view>
+
+  <view class="coin-session">
+    <view class="coin-result-head"><view><text class="coin-label">会话合计</text><text class="coin-note">仅保留在当前页面，最多 10000 次</text></view><button bindtap="clearSession" disabled="{{!sessionTotal || generating || flipping}}">清空会话</button></view>
+    <view class="coin-session-summary"><text>总计 {{sessionTotal}}</text><text>正 {{sessionFront}} · {{sessionFrontRatio}}%</text><text>反 {{sessionBack}} · {{sessionBackRatio}}%</text></view>
+    <view wx:if="{{historyRows.length}}" class="coin-history">
+      <view wx:for="{{historyRows}}" wx:key="sequence" class="coin-history-batch">
+        <button class="coin-history-head" data-sequence="{{item.sequence}}" bindtap="toggleBatch"><text>第 {{item.sequence}} 批 · {{item.results.length}} 次</text><text>正 {{item.frontCount}} / 反 {{item.backCount}} · {{expandedBatches[item.sequence] ? '收起' : '展开'}}</text></button>
+        <view wx:if="{{expandedBatches[item.sequence]}}" class="coin-history-details"><text wx:for="{{item.resultRows}}" wx:key="index">{{item.index}}. {{item.label}}</text></view>
+      </view>
+      <button wx:if="{{hasMoreHistory}}" class="coin-load-more" bindtap="loadMoreHistory">加载更多批次</button>
+    </view>
+    <view wx:else class="coin-empty">暂无会话记录</view>
+  </view>
+
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">安全随机，结果不上传且不会自动写入本机存储</text></view></view>
+</view>

@@ -1,0 +1,53 @@
+<view class="page tool-page unit-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">单位换算</text><text class="desc">公制 · 英制 · 国际单位</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/unit-converter.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="unit-category-row">
+    <text class="unit-label">换算类别</text>
+    <picker mode="selector" range="{{categories}}" range-key="title" value="{{categoryIndex}}" bindchange="onCategoryChange" aria-label="换算类别">
+      <view class="unit-category"><text>{{categories[categoryIndex].title}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view>
+    </picker>
+  </view>
+
+  <view class="unit-form">
+    <view class="unit-selectors">
+      <view class="unit-selector">
+        <text class="unit-label">从</text>
+        <picker mode="selector" range="{{units}}" range-key="label" value="{{fromIndex}}" bindchange="onFromChange" aria-label="原始单位">
+          <view class="unit-picker"><view><text class="unit-picker-symbol">{{units[fromIndex].symbol}}</text><text class="unit-picker-title">{{units[fromIndex].title}}</text></view><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view>
+        </picker>
+      </view>
+      <button class="unit-swap" bindtap="swapUnits" aria-label="交换单位"><image src="./swap.svg" mode="aspectFit"/></button>
+      <view class="unit-selector">
+        <text class="unit-label">到</text>
+        <picker mode="selector" range="{{units}}" range-key="label" value="{{toIndex}}" bindchange="onToChange" aria-label="目标单位">
+          <view class="unit-picker"><view><text class="unit-picker-symbol">{{units[toIndex].symbol}}</text><text class="unit-picker-title">{{units[toIndex].title}}</text></view><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="unit-input-head"><text class="unit-label">数值</text><button class="unit-icon-button" bindtap="clearAll" disabled="{{!inputText}}" aria-label="清空数值"><image src="/assets/icons/password-clear.svg" mode="aspectFit"/></button></view>
+    <input class="unit-input" type="text" value="{{inputText}}" bindinput="onInput" maxlength="80" placeholder="0" placeholder-class="unit-placeholder" cursor-spacing="24" aria-label="待换算数值"/>
+    <text wx:if="{{error}}" class="unit-error">{{error}}</text>
+
+    <view class="unit-result">
+      <view class="unit-result-heading"><text class="unit-label">换算结果</text><button class="unit-icon-button" bindtap="copyResult" disabled="{{!result}}" aria-label="复制换算结果"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button></view>
+      <view class="unit-result-value"><text wx:if="{{result.approximate}}" class="unit-approximate">约</text><text selectable="{{true}}">{{result ? result.value : '—'}}</text></view>
+      <text class="unit-result-symbol">{{units[toIndex].symbol}}</text>
+      <text wx:if="{{result.approximate}}" class="unit-precision">15 位有效数字</text>
+    </view>
+  </view>
+
+  <view class="unit-all-heading"><text>全部单位</text><button class="unit-copy-all" bindtap="copyAll" disabled="{{!rows.length}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制全部</text></button></view>
+  <view wx:if="{{rows.length}}" class="unit-all-results">
+    <view wx:for="{{rows}}" wx:key="key" class="unit-row {{item.key === units[toIndex].key ? 'selected' : ''}}">
+      <view class="unit-row-name"><text>{{item.title}}</text><text>{{item.symbol}}</text></view>
+      <text class="unit-row-value" selectable="{{true}}">{{item.approximate ? '≈ ' : ''}}{{item.value}}</text>
+    </view>
+  </view>
+  <view wx:else class="unit-empty"><text>{{error ? '数值无效' : '暂无结果'}}</text></view>
+
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，输入内容不上传服务器</text></view></view>
+</view>

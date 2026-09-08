@@ -1,0 +1,7 @@
+<view wx:if="{{visible}}" class="bottom-nav">
+  <block wx:for="{{list}}" wx:key="pagePath" wx:for-index="index">
+    <view class="nav-item {{selected === index ? 'active' : ''}}" data-index="{{index}}" bindtap="switchTab">
+      <image class="nav-icon" src="/assets/icons/{{selected === index ? item.activeIcon : item.icon}}.svg" mode="aspectFit"/><text>{{item.text}}</text>
+    </view>
+  </block>
+</view>

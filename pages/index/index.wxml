@@ -1,0 +1,65 @@
+<view class="page home-page">
+  <view class="page-head">
+    <view>
+      <view class="eyebrow">JITUAN TOOLBOX</view>
+      <view class="brand-line">
+        <text class="brand">极团工具箱</text>
+        <text class="brand-count">已收录 {{toolCount}} 个工具</text>
+      </view>
+    </view>
+    <image class="brand-icon" src="/assets/icons/brand-logo.png" mode="aspectFit"/>
+  </view>
+
+  <view class="hero card">
+    <view class="hero-copy">
+      <text class="hero-title">把琐碎处理，变成一步完成</text>
+      <text class="hero-desc">极简，轻量，高效，安全，随手即用，用完即走。</text>
+    </view>
+    <view class="hero-sheen" aria-hidden="true"></view>
+    <image class="hero-shape" src="/assets/icons/lightning.svg" mode="aspectFit"/>
+  </view>
+
+  <view class="section-title">
+    <text>常用工具</text>
+    <button class="section-link-action" bindtap="showAllTools" aria-label="查看全部工具">
+      <image src="/assets/icons/all-tools.svg" mode="aspectFit"/>
+      <text>全部工具</text>
+    </button>
+  </view>
+  <view class="tool-grid">
+    <block wx:for="{{tools}}" wx:key="key">
+      <button class="tool-card card" data-key="{{item.key}}" bindtap="openTool">
+        <view class="tool-card-top"><view class="tool-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text wx:if="{{item.comingSoon}}" class="tool-card-badge">即将上线</text><image wx:else class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></view>
+        <text class="tool-card-title">{{item.title}}</text>
+        <text class="tool-card-desc">{{item.desc}}</text>
+      </button>
+    </block>
+  </view>
+
+  <view class="section-title">
+    <text>随机推荐</text>
+    <button class="recommend-refresh" bindtap="refreshRecommendations" aria-label="换一批随机推荐">
+      <image src="/assets/icons/recommend-refresh.svg" mode="aspectFit"/>
+      <text>换一批</text>
+    </button>
+  </view>
+  <view class="more-tools card">
+    <button wx:for="{{recommendations}}" wx:key="key" class="more-item" data-key="{{item.key}}" bindtap="openRecommendation" aria-label="打开{{item.title}}">
+      <view class="mini-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view>
+      <text class="more-item-label">{{item.title}}</text>
+    </button>
+  </view>
+
+  <view class="section-title"><text>最近使用</text><text class="section-link" wx:if="{{recent.length}}" bindtap="onNav" data-target="history">操作记录</text></view>
+  <view class="recent card" wx:if="{{recent.length}}">
+    <block wx:for="{{recent}}" wx:key="key" wx:for-index="index">
+      <button class="recent-item" data-index="{{index}}" bindtap="openRecent">
+        <view class="mini-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text>{{item.title}}</text><image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/>
+      </button>
+    </block>
+  </view>
+  <view class="empty-recent card" wx:else><text>还没有使用记录，先试试图片压缩吧</text></view>
+
+  <view class="foot-note">文件仅用于完成当前任务 · 临时文件会自动清理</view>
+
+</view>

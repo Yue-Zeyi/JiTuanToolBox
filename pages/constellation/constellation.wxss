@@ -1,0 +1,23 @@
+.constellation-page { padding-bottom: 90rpx; }
+.constellation-panel, .constellation-result { padding: 24rpx; }
+.constellation-result { margin-top: 18rpx; }
+.constellation-label { display: block; color: var(--jt-navy); font-size: 26rpx; font-weight: 700; }
+.constellation-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14rpx; margin-top: 15rpx; }
+.constellation-field { display: flex; align-items: center; height: 80rpx; padding: 0 16rpx; border: 1rpx solid #CBDCED; border-radius: 12rpx; background: #FFFFFF; }
+.constellation-field input { flex: 1; min-width: 0; height: 78rpx; color: #234666; font-family: Consolas, Monaco, monospace; font-size: 30rpx; text-align: center; }
+.constellation-field > text { flex: 0 0 auto; margin-left: 6rpx; color: #718096; font-size: 23rpx; }
+.constellation-note { display: block; margin-top: 14rpx; color: #8794A7; font-size: 20rpx; line-height: 1.55; }
+.constellation-error { display: block; margin-top: 12rpx; color: #C84444; font-size: 22rpx; }
+.constellation-main { width: 100%; height: 84rpx; margin-top: 18rpx; border-radius: 14rpx; }
+.constellation-result-head { display: flex; align-items: center; justify-content: space-between; color: var(--jt-navy); font-size: 27rpx; font-weight: 700; }
+.constellation-result-head button { display: flex; align-items: center; gap: 7rpx; min-height: 52rpx; color: #2F80ED; font-size: 21rpx; font-weight: 400; }
+.constellation-result-head image { width: 26rpx; height: 26rpx; }
+.constellation-result-head button[disabled] { opacity: .4; }
+.constellation-result-body { padding-top: 16rpx; }
+.constellation-name { display: block; color: #6E63DE; font-size: 42rpx; font-weight: 700; line-height: 1.5; }
+.constellation-meta { margin-top: 12rpx; border-top: 1rpx solid #EDF1F6; }
+.constellation-meta > view { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; min-height: 66rpx; border-bottom: 1rpx solid #EDF1F6; }
+.constellation-meta text:first-child { color: #8794A7; font-size: 21rpx; }
+.constellation-meta text:last-child { color: #38536D; font-size: 23rpx; font-weight: 600; }
+.constellation-empty { display: flex; align-items: center; justify-content: center; min-height: 150rpx; color: #93A2B3; font-size: 22rpx; }
+.constellation-clear { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 60rpx; margin-top: 16rpx; color: #2F80ED; font-size: 22rpx; }

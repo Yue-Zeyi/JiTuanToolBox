@@ -1,0 +1,31 @@
+<view class="page tool-page fancy-font-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">花样字体</text><text class="desc">把普通文字变成更有个性的样式</text></view>
+    <view class="tool-icon purple"><image src="/assets/icons/fancy-font.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card fancy-editor-card">
+    <view class="fancy-editor-head"><view><text class="fancy-editor-title">输入内容</text><text class="fancy-editor-subtitle">仅支持英文、数字、空格和常用符号</text></view><text class="fancy-editor-counter">{{stats.inputCharacters}} / 100000 字符</text></view>
+    <textarea class="fancy-textarea" value="{{text}}" bindinput="onTextInput" placeholder="输入英文昵称、签名或需要装饰的文字" placeholder-class="fancy-placeholder" maxlength="100000" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}"></textarea>
+    <view class="fancy-editor-foot"><text>中文、表情等不支持，会自动忽略</text><text>{{stats.inputCharacters}} 字符</text></view>
+  </view>
+
+  <view class="card fancy-style-card">
+    <view class="fancy-style-head"><view><text class="fancy-style-title">选择字体样式</text><text class="fancy-style-subtitle">点击样式即可实时预览</text></view><text class="fancy-style-current">{{selectedStyleTitle}}</text></view>
+    <view class="fancy-style-grid">
+      <block wx:for="{{styles}}" wx:key="key">
+        <button class="fancy-style-option {{item.active ? 'active' : ''}}" data-style="{{item.key}}" bindtap="selectStyle"><view class="fancy-style-check"><image wx:if="{{item.active}}" src="/assets/icons/success.svg" mode="aspectFit"/></view><view class="fancy-style-copy"><text class="fancy-style-preview">{{item.preview}}</text><view class="fancy-style-label"><text>{{item.title}}</text><text>{{item.desc}}</text></view></view></button>
+      </block>
+    </view>
+  </view>
+
+  <view class="card fancy-result-card">
+    <view class="fancy-result-head"><view><text class="fancy-result-title">生成结果</text><text class="fancy-result-subtitle">当前样式：{{selectedStyleTitle}}</text></view><text class="fancy-result-count">{{stats.outputCharacters}} 字符</text></view>
+    <scroll-view wx:if="{{hasResult}}" class="fancy-result-box" scroll-y="{{true}}"><text class="fancy-result-text" selectable="true">{{resultText}}</text></scroll-view>
+    <view wx:else class="fancy-result-empty"><image src="/assets/icons/fancy-font-muted.svg" mode="aspectFit"/><text>输入文字后，这里会显示花样结果</text></view>
+    <view class="fancy-result-actions"><button class="secondary-btn" bindtap="copyResult" disabled="{{!hasResult}}">复制结果</button><button class="primary-btn" bindtap="replaceOriginal" disabled="{{!hasResult || resultText === text}}">替换原文</button></view>
+  </view>
+
+  <view class="fancy-bottom-actions"><button class="secondary-btn" bindtap="saveRecord" disabled="{{!text}}">保存记录</button><button class="primary-btn" bindtap="clearText">清空内容</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，文字不上传服务器</text></view></view>
+</view>

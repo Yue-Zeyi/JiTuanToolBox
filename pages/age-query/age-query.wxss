@@ -1,0 +1,22 @@
+.age-page { padding-bottom: 90rpx; }
+.age-panel, .age-result { padding: 24rpx; }
+.age-result { margin-top: 18rpx; }
+.age-label { display: block; color: var(--jt-navy); font-size: 26rpx; font-weight: 700; }
+.age-picker { display: flex; align-items: center; justify-content: space-between; height: 80rpx; margin-top: 14rpx; padding: 0 16rpx; border: 1rpx solid #CBDCED; border-radius: 12rpx; color: #234666; background: #FFFFFF; font-size: 25rpx; }
+.age-picker .placeholder { color: #9AA8BB; }
+.age-picker image { width: 24rpx; height: 24rpx; }
+.age-note { display: block; margin-top: 14rpx; padding: 12rpx 14rpx; border-radius: 10rpx; color: #8A6D45; background: #FFF9EF; font-size: 20rpx; line-height: 1.6; }
+.age-error { display: block; margin-top: 12rpx; color: #C84444; font-size: 22rpx; }
+.age-main { width: 100%; height: 84rpx; margin-top: 18rpx; border-radius: 14rpx; }
+.age-result-head { display: flex; align-items: center; justify-content: space-between; color: var(--jt-navy); font-size: 27rpx; font-weight: 700; }
+.age-result-head button { display: flex; align-items: center; gap: 7rpx; min-height: 52rpx; color: #2F80ED; font-size: 21rpx; font-weight: 400; }
+.age-result-head image { width: 26rpx; height: 26rpx; }
+.age-result-head button[disabled] { opacity: .4; }
+.age-number { display: block; margin-top: 14rpx; color: #D9792D; font-size: 48rpx; font-weight: 700; line-height: 1.5; }
+.age-number text { font-size: 24rpx; font-weight: 500; }
+.age-rows { margin-top: 8rpx; border-top: 1rpx solid #EDF1F6; }
+.age-rows > view { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; min-height: 68rpx; border-bottom: 1rpx solid #EDF1F6; }
+.age-rows text:first-child { color: #8794A7; font-size: 21rpx; }
+.age-rows text:last-child { color: #38536D; font-size: 23rpx; font-weight: 600; }
+.age-empty { display: flex; align-items: center; justify-content: center; min-height: 170rpx; color: #93A2B3; font-size: 22rpx; }
+.age-clear { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 60rpx; margin-top: 16rpx; color: #2F80ED; font-size: 22rpx; }

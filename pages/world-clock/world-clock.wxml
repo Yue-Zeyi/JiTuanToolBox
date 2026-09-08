@@ -1,0 +1,41 @@
+<view class="page tool-page world-clock-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">世界时钟</text><text class="desc">此刻，世界各地</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/world-clock.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view wx:if="{{error}}" class="clock-error"><text>{{error}}</text><button bindtap="resetLive">重试</button></view>
+  <block wx:else>
+    <view class="clock-toolbar"><text class="clock-mode {{isLive ? 'live' : ''}}">{{isLive ? '实时' : '时间预览'}}</text><button class="clock-add" bindtap="openSearch"><image src="/assets/icons/plus-small.svg" mode="aspectFit"/><text>添加城市</text></button></view>
+    <view class="clock-list">
+      <view wx:for="{{clocks}}" wx:key="id" class="clock-row {{item.id === 'local' ? 'clock-local' : ''}}">
+        <view class="clock-row-head"><view class="clock-city"><text class="clock-city-name">{{item.name}}</text><text class="clock-country">{{item.country}}</text></view><button wx:if="{{item.id !== 'local'}}" class="clock-remove" data-id="{{item.id}}" bindtap="removeCity" aria-label="移除{{item.name}}"><image src="/assets/icons/search-clear.svg" mode="aspectFit"/></button><text wx:else class="clock-local-mark">本地</text></view>
+        <view class="clock-time-row"><text class="clock-digits">{{item.time}}</text><view class="clock-status {{item.status}}"><view class="clock-dot"/><text>{{item.statusLabel}}</text></view></view>
+        <view class="clock-meta"><text>{{item.date}} {{item.weekday}}</text><text>{{item.offsetLabel}}</text></view>
+        <view class="clock-meta clock-secondary"><text>{{item.differenceLabel}}</text><text>{{item.dstLabel}}</text></view>
+        <text class="clock-zone">{{item.zone}}</text>
+      </view>
+    </view>
+
+    <view class="clock-legend"><view class="working"><view class="clock-dot"/><text>工作 09–18</text></view><view class="awake"><view class="clock-dot"/><text>清醒 07–09 / 18–23</text></view><view class="rest"><view class="clock-dot"/><text>休息 23–07</text></view></view>
+    <view class="clock-travel">
+      <view class="clock-travel-head"><text>时间预览</text><button bindtap="resetLive" disabled="{{isLive}}">回到实时</button></view>
+      <view class="clock-travel-value"><text>{{travelLabel}}</text><text>{{isLive ? '实时' : '已暂停走时'}}</text></view>
+      <slider min="-1440" max="1440" step="15" value="{{travelMinutes}}" bindchanging="onTravel" bindchange="onTravel" activeColor="#2F80ED" backgroundColor="#DCE5EF" block-size="22" aria-label="时间预览，前后24小时"/>
+      <view class="clock-travel-scale"><text>−24 小时</text><text>0</text><text>+24 小时</text></view>
+    </view>
+  </block>
+
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，输入内容不上传服务器</text></view></view>
+
+  <view wx:if="{{searchOpen}}" class="clock-overlay" bindtap="closeSearch">
+    <view class="clock-search-sheet" catchtap="stopPropagation">
+      <view class="clock-search-head"><view><text>添加城市</text><text class="clock-search-count">{{cityCount}} 个城市</text></view><button bindtap="closeSearch" aria-label="关闭城市搜索"><image src="/assets/icons/search-clear.svg" mode="aspectFit"/></button></view>
+      <view class="clock-search-input"><image src="/assets/icons/search.svg" mode="aspectFit"/><input value="{{searchText}}" bindinput="onSearch" placeholder="搜索城市、国家或时区" maxlength="80" confirm-type="search"/></view>
+      <scroll-view class="clock-search-results" scroll-y="{{true}}">
+        <view wx:for="{{searchResults}}" wx:key="id" class="clock-search-result"><view><text>{{item.name}}<text class="clock-result-country">{{item.country}}</text></text><text class="clock-result-zone">{{item.english}} · {{item.zone}}</text></view><button data-id="{{item.id}}" bindtap="addCity" disabled="{{item.selected}}" aria-label="{{item.selected ? '已添加' : '添加'}}{{item.name}}"><image src="{{item.selected ? '/assets/icons/success.svg' : '/assets/icons/plus-small.svg'}}" mode="aspectFit"/></button></view>
+        <text wx:if="{{!searchResults.length}}" class="clock-empty">没有匹配的城市</text>
+      </scroll-view>
+    </view>
+  </view>
+</view>

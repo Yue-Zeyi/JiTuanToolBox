@@ -1,0 +1,21 @@
+<view class="page">
+  <view class="page-head"><view class="top-title"><text class="title">我的</text><text class="desc">设置与帮助</text></view><button class="share-entry" open-type="share"><image class="share-entry-icon" src="/assets/icons/share.svg" mode="aspectFit"/><text>分享好友</text></button></view>
+  <view class="profile-card card">
+    <view class="profile-card-orb"></view>
+    <view class="profile-identity">
+      <view class="profile-logo-shell"><image class="profile-brand-icon" src="/assets/icons/brand-logo.png" mode="aspectFit"/></view>
+      <view class="profile-copy"><text class="profile-name">极团工具箱</text><text class="profile-tagline">轻量工具，处理完即走</text></view>
+    </view>
+    <view class="profile-divider"></view>
+    <view class="profile-privacy">
+      <view class="profile-privacy-icon"><image src="/assets/icons/success.svg" mode="aspectFit"/></view>
+      <view class="profile-privacy-copy"><view class="profile-privacy-head"><text class="profile-privacy-title">隐私保护</text><text class="profile-privacy-badge">本地处理为主</text></view><text class="profile-privacy-text">多数工具仅在设备本地处理，不上传输入内容；你主动选择的图片仅会为内容安全检测临时提交至微信官方服务。</text></view>
+    </view>
+  </view>
+  <view class="menu card"><button class="menu-item" data-type="privacy" bindtap="openLegal"><text>隐私说明</text><image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></button><button class="menu-item" data-type="agreement" bindtap="openLegal"><text>用户协议</text><image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></button><button class="menu-item" data-type="third-party" bindtap="openLegal"><text>三方说明</text><image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></button><view class="menu-item"><text>当前版本</text><text class="muted">{{version}}</text></view></view>
+  <view class="feedback-card card">
+    <view class="feedback-top"><view class="feedback-icon"><image src="/assets/icons/mail.svg" mode="aspectFit"/></view><view class="feedback-copy"><text class="feedback-title">邮件反馈</text><text class="feedback-desc">产品建议、问题反馈与合作联系</text></view></view>
+    <view class="feedback-address"><view class="address-copy"><text class="address-label">反馈邮箱</text><text class="feedback-email">itzeyi@qq.com</text></view><button class="feedback-btn" bindtap="showFeedback">复制邮箱</button></view>
+    <text class="feedback-hint">点击复制邮箱地址，在邮件客户端中发送反馈</text>
+  </view>
+</view>

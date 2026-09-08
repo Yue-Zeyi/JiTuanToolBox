@@ -1,0 +1,44 @@
+.reaction-page { --reaction: #25A865; padding-bottom: 80rpx; }
+.reaction-rounds { display: flex; align-items: center; justify-content: space-between; gap: 18rpx; padding: 20rpx 0; }
+.reaction-label { color: var(--jt-navy); font-size: 27rpx; font-weight: 600; }
+.reaction-round-options { display: grid; grid-template-columns: repeat(3, 118rpx); gap: 10rpx; }
+.reaction-round-options button { display: flex; align-items: center; justify-content: center; height: 68rpx; border: 1px solid #DDE5E0; border-radius: 10rpx; background: #FFFFFF; color: #667085; font-size: 22rpx; }
+.reaction-round-options button.active { border-color: #82CDA5; background: #EAF8F0; color: #17864D; font-weight: 600; }
+.reaction-progress { display: flex; align-items: center; gap: 16rpx; margin: 4rpx 0 20rpx; color: #718096; font-size: 21rpx; }
+.reaction-progress > text { flex: 0 0 auto; }
+.reaction-progress > view { flex: 1; height: 10rpx; border-radius: 5rpx; background: #E2E8E5; overflow: hidden; }
+.reaction-progress > view > view { height: 10rpx; border-radius: 5rpx; background: var(--reaction); transition: width .25s ease; }
+.reaction-pad { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 480rpx; padding: 30rpx; border-radius: 16rpx; background: #F6F8F7; color: #263649; text-align: center; overflow: hidden; transition: background .12s ease, color .12s ease; }
+.reaction-pad image { width: 74rpx; height: 74rpx; margin-bottom: 22rpx; padding: 14rpx; border-radius: 50%; background: #2EAD6B; }
+.reaction-status-title { position: relative; z-index: 2; max-width: 100%; font-size: 42rpx; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.reaction-status-hint { position: relative; z-index: 2; max-width: 100%; margin-top: 14rpx; font-size: 23rpx; line-height: 1.55; opacity: .8; }
+.status-waiting { background: #D94B4B; color: #FFFFFF; transition: none; }
+.status-greenPending, .status-green { background: #20A862; color: #FFFFFF; transition: none; }
+.status-early, .status-invalid { background: #FFF0EE; color: #B13F3F; }
+.status-result, .status-complete { background: #E9F8EF; color: #167B48; }
+.reaction-pulse { display: none; position: absolute; width: 260rpx; height: 260rpx; border: 4rpx solid rgba(255,255,255,.6); border-radius: 50%; }
+.status-green .reaction-pulse { display: block; animation: reaction-pulse .8s ease-out infinite; }
+@keyframes reaction-pulse { from { transform: scale(.35); opacity: .8; } to { transform: scale(1.5); opacity: 0; } }
+.reaction-error { display: block; margin-top: 14rpx; color: #C84444; font-size: 22rpx; line-height: 1.5; }
+.reaction-action { width: 100%; height: 88rpx; margin-top: 18rpx; border-radius: 14rpx; background: var(--reaction); }
+.reaction-results, .reaction-personal, .reaction-reference { padding: 28rpx 0; border-bottom: 1rpx solid #E1E9E5; }
+.reaction-section-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
+.reaction-section-head > text:last-child { color: #718096; font-size: 21rpx; }
+.reaction-section-head button { display: flex; align-items: center; justify-content: center; min-height: 54rpx; padding: 0 10rpx; color: #188953; font-size: 22rpx; }
+.reaction-score-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10rpx; margin-top: 18rpx; }
+.reaction-score-grid > view { display: flex; align-items: center; justify-content: space-between; gap: 8rpx; min-width: 0; height: 66rpx; padding: 0 14rpx; border-radius: 9rpx; background: #F0F5F2; color: #7A8792; font-size: 20rpx; }
+.reaction-score-grid > view text:last-child { flex: 0 0 auto; color: #287452; font-size: 23rpx; font-weight: 600; }
+.reaction-empty { display: flex; align-items: center; justify-content: center; height: 100rpx; color: #99A4AE; font-size: 21rpx; }
+.reaction-summary { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; margin-top: 16rpx; padding: 16rpx; border-radius: 10rpx; background: #E7F7ED; color: #22794D; font-size: 21rpx; }
+.reaction-summary text:first-child { flex: 0 0 auto; font-weight: 700; }
+.reaction-summary text:last-child { min-width: 0; text-align: right; }
+.reaction-best-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10rpx; margin-top: 18rpx; }
+.reaction-best-grid > view { display: flex; align-items: center; justify-content: space-between; gap: 8rpx; min-width: 0; height: 68rpx; padding: 0 14rpx; border: 1rpx solid #E1E8E4; border-radius: 9rpx; background: #FFFFFF; color: #7C8794; font-size: 20rpx; }
+.reaction-best-grid > view text:last-child { flex: 0 0 auto; color: #304A3D; font-size: 22rpx; font-weight: 600; }
+.reaction-reference { border-bottom: 0; }
+.reaction-reference > view { display: flex; flex-wrap: wrap; gap: 9rpx; margin-top: 16rpx; }
+.reaction-reference > view text { padding: 9rpx 11rpx; border-radius: 8rpx; background: #EEF3F0; color: #5E6E64; font-size: 19rpx; }
+.reaction-disclaimer, .reaction-clock-note { display: block; margin-top: 14rpx; color: #8995A0; font-size: 20rpx; line-height: 1.6; }
+.reaction-clock-note { color: #A46A26; }
+.reaction-page .page-foot-tip { margin-top: 4rpx; }
+@media (max-width: 350px) { .reaction-round-options { grid-template-columns: repeat(3, 102rpx); } }

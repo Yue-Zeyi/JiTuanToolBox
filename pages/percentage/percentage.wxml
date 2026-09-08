@@ -1,0 +1,13 @@
+<view class="page tool-page percentage-page">
+  <view class="page-head"><view class="tool-title"><text class="title">百分比计算</text><text class="desc">占比 · 涨跌 · 折扣快速算</text></view><view class="tool-icon blue"><image src="/assets/icons/percentage.svg" mode="aspectFit"/></view></view>
+  <view class="percentage-modes" role="group" aria-label="百分比计算模式"><button wx:for="{{modes}}" wx:key="key" class="percentage-mode {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">{{item.title}}</button></view>
+  <view class="card percentage-panel">
+    <view class="percentage-field"><text>{{firstLabel}}</text><input type="digit" value="{{firstValue}}" bindinput="onFirstInput" placeholder="{{firstPlaceholder}}" maxlength="40"/></view>
+    <view class="percentage-field"><text>{{secondLabel}}</text><input type="digit" value="{{secondValue}}" bindinput="onSecondInput" placeholder="{{secondPlaceholder}}" maxlength="40"/></view>
+    <text wx:if="{{mode === 'change'}}" class="percentage-note">涨跌幅可输入负数，百分比基准取原值绝对值。</text><text wx:elif="{{mode === 'discount'}}" class="percentage-note">优惠比例填写 0—100，例如“15”表示优惠 15%。</text>
+    <text wx:if="{{error}}" class="percentage-error">{{error}}</text>
+  </view>
+  <button class="primary-btn percentage-main" bindtap="calculate">开始计算</button>
+  <view class="card percentage-result"><view class="percentage-result-head"><text>计算结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view><text class="percentage-result-text" selectable="{{true}}">{{hasResult ? resultText : '填写数值后点击计算'}}</text><button class="percentage-clear" bindtap="clearAll">清空输入</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，输入与计算结果不上传服务器</text></view></view>
+</view>

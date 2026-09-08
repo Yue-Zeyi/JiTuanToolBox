@@ -1,0 +1,24 @@
+<view class="page tool-page word-count-page">
+  <view class="page-head">
+    <view class="tool-title"><text class="title">字数统计</text><text class="desc">输入文字，实时了解内容规模</text></view>
+    <view class="tool-icon blue"><image src="/assets/icons/word-count.svg" mode="aspectFit"/></view>
+  </view>
+
+  <view class="card word-editor-card">
+    <view class="word-editor-head"><view><text class="word-editor-title">输入内容</text><text class="word-editor-subtitle">文字仅在本机统计，不会上传</text></view><text class="word-editor-counter">{{stats.characters}} / 100000 字符</text></view>
+    <textarea class="word-textarea" value="{{text}}" bindinput="onTextInput" placeholder="输入或粘贴需要统计的文字" placeholder-class="word-placeholder" maxlength="100000" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}"></textarea>
+    <view class="word-editor-foot"><text>支持中文、英文、数字和标点</text><text>{{stats.lines}} 行</text></view>
+  </view>
+
+  <view class="card word-stats-card">
+    <view class="word-stats-head"><view><text class="word-stats-title">统计概览</text><text class="word-stats-subtitle">随输入实时更新</text></view><view class="word-live-dot"><view></view><text>本地统计</text></view></view>
+    <view class="word-total"><view class="word-total-number-wrap"><text class="word-total-number">{{stats.characters}}</text><text class="word-total-unit">字符</text></view><view class="word-total-note"><text>字符总数</text><text>包含空格与换行</text></view></view>
+    <view class="word-stat-row word-stat-row-2 word-stat-row-first"><view class="word-stat-item word-stat-feature"><text class="word-stat-value">{{stats.utf8Bytes}}</text><text class="word-stat-label">字节数 (UTF-8)</text></view><view class="word-stat-item word-stat-feature"><text class="word-stat-value">{{stats.utf16Bytes}}</text><text class="word-stat-label">字节数 (UTF-16)</text></view></view>
+    <view class="word-stat-row word-stat-row-2"><view class="word-stat-item word-stat-feature"><text class="word-stat-value">{{stats.noSpaceLineBreak}}</text><text class="word-stat-label">字符数（不含空格和换行）</text></view><view class="word-stat-item word-stat-feature"><text class="word-stat-value">{{stats.noLineBreak}}</text><text class="word-stat-label">字符数（不含换行）</text></view></view>
+    <view class="word-stat-row word-stat-row-2"><view class="word-stat-item"><text class="word-stat-value">{{stats.lines}}</text><text class="word-stat-label">行数</text></view><view class="word-stat-item"><text class="word-stat-value">{{stats.characters - stats.noSpaceLineBreak}}</text><text class="word-stat-label">空白字符</text></view></view>
+    <view class="word-stat-row word-stat-row-4"><view class="word-stat-item"><text class="word-stat-value">{{stats.chinese}}</text><text class="word-stat-label">汉字</text></view><view class="word-stat-item"><text class="word-stat-value">{{stats.letters}}</text><text class="word-stat-label">英文</text></view><view class="word-stat-item"><text class="word-stat-value">{{stats.numbers}}</text><text class="word-stat-label">数字</text></view><view class="word-stat-item"><text class="word-stat-value">{{stats.punctuation}}</text><text class="word-stat-label">符号</text></view></view>
+  </view>
+
+  <view class="word-actions"><button class="secondary-btn word-save-btn" bindtap="saveRecord" disabled="{{!text}}">保存记录</button><button class="primary-btn word-clear-btn" bindtap="clearText">清空内容</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，文字不上传服务器</text></view></view>
+</view>
