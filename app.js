@@ -5,6 +5,18 @@ const LEGACY_TOOL_PAGES = {
   '/pages/zodiac/zodiac': '/package-calendar/pages/zodiac/zodiac'
 };
 
+const PLUGIN_PACKAGES = [
+  { prefix: 'plugin://jtkMovie/', root: 'package-movie' },
+  { prefix: 'plugin://meishi/', root: 'package-deals' },
+  { prefix: 'plugin://jtkDc/', root: 'package-dining' }
+];
+
+function normalizePluginPage(page) {
+  const value = String(page || '');
+  const target = PLUGIN_PACKAGES.find(item => value.startsWith(item.prefix));
+  return target ? `/${target.root}/pages/redirect/redirect?target=${encodeURIComponent(value)}` : value;
+}
+
 const historyExtension = filePath => {
   const match = String(filePath || '').match(/\.([a-z0-9]+)(?:[?#].*)?$/i);
   return match ? `.${match[1].toLowerCase()}` : '.jpg';
@@ -52,7 +64,7 @@ App({
     const iconMap = { '↘': 'compress', A: 'ocr', '▤': 'pdf' };
     const recent = (wx.getStorageSync(key) || []).map(item => ({ ...item, icon: iconMap[item.icon] || item.icon }));
     const normalizedTool = { ...tool, icon: iconMap[tool.icon] || tool.icon, page: this.normalizeToolPage(tool.page) };
-    const next = [normalizedTool, ...recent.filter(item => item.key !== normalizedTool.key)].slice(0, 5);
+    const next = [normalizedTool, ...recent.filter(item => item.key !== normalizedTool.key)].slice(0, 6);
     wx.setStorageSync(key, next);
   },
 
@@ -62,7 +74,7 @@ App({
   },
 
   normalizeToolPage(page) {
-    return LEGACY_TOOL_PAGES[page] || page;
+    return normalizePluginPage(LEGACY_TOOL_PAGES[page] || page);
   },
 
   getOperationRecord(recordId) {

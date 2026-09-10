@@ -51,10 +51,10 @@
   </view>
 
   <view class="section-title"><text>最近使用</text><text class="section-link" wx:if="{{recent.length}}" bindtap="onNav" data-target="history">操作记录</text></view>
-  <view class="recent card" wx:if="{{recent.length}}">
+  <view class="recent" wx:if="{{recent.length}}">
     <block wx:for="{{recent}}" wx:key="key" wx:for-index="index">
-      <button class="recent-item" data-index="{{index}}" bindtap="openRecent">
-        <view class="mini-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text>{{item.title}}</text><image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/>
+      <button class="recent-item card" data-index="{{index}}" bindtap="openRecent">
+        <view class="mini-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text class="recent-title">{{item.title}}</text><image class="recent-arrow" src="/assets/icons/arrow-right.svg" mode="aspectFit"/>
       </button>
     </block>
   </view>

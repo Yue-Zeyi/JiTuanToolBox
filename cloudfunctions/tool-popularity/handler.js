@@ -4,7 +4,8 @@ const TOOL_KEYS = new Set([
   'image-format', 'image-transform', 'base64', 'url-codec', 'image-exif', 'image-picker', 'regex-test', 'color-query',
   'user-agent', 'http-status', 'unicode-query', 'lunar-convert', 'plate-query', 'word-count', 'text-clean', 'text-compare',
   'fancy-font', 'password', 'zodiac', 'chinese-convert', 'qrcode', 'ip-query', 'decision', 'coin', 'reaction', 'breathing',
-  'marquee', 'metronome', 'timestamp', 'radix', 'unit-converter', 'scientific-calculator', 'percentage', 'date-calculator',
+  'marquee', 'metronome', 'movie-ticket', 'food-group-deal', 'meituan-coupon', 'taobao-flash-coupon', 'ride-discount',
+  'hotel-discount', 'shopping-coupon', 'brand-dining', 'timestamp', 'radix', 'unit-converter', 'scientific-calculator', 'percentage', 'date-calculator',
   'world-clock', 'constellation', 'age-query', 'date-info', 'stopwatch', 'countdown'
 ]);
 

@@ -1,3 +1,18 @@
+const runtime = require('../config/runtime');
+
+const jutuikePubId = String(runtime.jutuikePubId || '').trim();
+const encodedJutuikePubId = encodeURIComponent(jutuikePubId);
+const movieTicketSid = String(runtime.movieTicketSid || '').replace(/[^a-z0-9]/gi, '').slice(0, 30);
+const pluginBridgePage = (packageRoot, target) => `/${packageRoot}/pages/redirect/redirect?target=${encodeURIComponent(target)}`;
+const movieTicketPage = pluginBridgePage('package-movie', `plugin://jtkMovie/home?pub_id=${encodedJutuikePubId}${movieTicketSid ? `&sid=${encodeURIComponent(movieTicketSid)}` : ''}`);
+const foodGroupDealPage = pluginBridgePage('package-deals', `plugin://meishi/home?pub_id=${encodedJutuikePubId}&sid=groupbuy`);
+const meituanCouponPage = pluginBridgePage('package-deals', `plugin://meishi/shop?pub_id=${encodedJutuikePubId}&type=meituan&sid=meituan`);
+const taobaoFlashCouponPage = pluginBridgePage('package-deals', `plugin://meishi/shop?pub_id=${encodedJutuikePubId}&type=ele&sid=taobaoflash`);
+const rideDiscountPage = pluginBridgePage('package-deals', `plugin://meishi/shop?pub_id=${encodedJutuikePubId}&type=didi&sid=taxi`);
+const hotelDiscountPage = pluginBridgePage('package-deals', `plugin://meishi/shop?pub_id=${encodedJutuikePubId}&type=hotel&sid=hotel`);
+const shoppingCouponPage = pluginBridgePage('package-deals', `plugin://meishi/dianshang?pub_id=${encodedJutuikePubId}&source=jd,taobao,douyin,pdd`);
+const brandDiningPage = pluginBridgePage('package-dining', `plugin://jtkDc/index?pub_id=${encodedJutuikePubId}&sid=branddining`);
+
 const toolCategories = [
   { key: 'all', title: '全部' },
   { key: 'content', title: '图文处理' },
@@ -45,6 +60,14 @@ const catalogTools = [
   { key: 'breathing', title: '呼吸练习', desc: '跟随节律，让呼吸慢下来', directoryDesc: '跟随节律轻柔呼吸', icon: 'breathing', tone: 'green', page: '/pages/breathing/breathing', category: 'life', keywords: '呼吸 4-7-8 箱式 腹式 共振 节律 放松' },
   { key: 'marquee', title: '手持弹幕', desc: '全屏滚动展示醒目文字', directoryDesc: '全屏滚动文字展示', icon: 'marquee', tone: 'orange', page: '/package-life/pages/marquee/marquee', category: 'life', keywords: '手持弹幕 滚动字幕 LED 全屏 应援 接机 演唱会 文字' },
   { key: 'metronome', title: '节拍器', desc: '稳定节拍与重音练习辅助', directoryDesc: 'BPM 节拍重音练习', icon: 'metronome', tone: 'green', page: '/package-life/pages/metronome/metronome', category: 'life', keywords: '节拍器 BPM 拍号 重音 音乐 吉他 钢琴 练习 速度' },
+  { key: 'movie-ticket', title: '特惠电影票', desc: '优惠购票，在线选座更省心', directoryDesc: '电影场次优惠选座购票', icon: 'movie-ticket', tone: 'purple', page: movieTicketPage, category: 'life', keywords: '电影票 特惠 特价 优惠 影院 影城 电影 场次 选座 购票' },
+  { key: 'food-group-deal', title: '美食团购优惠', desc: '团购套餐优惠，发现附近美食', directoryDesc: '附近美食团购优惠', icon: 'food-group-deal', tone: 'orange', page: foodGroupDealPage, category: 'life', keywords: '美食 团购 优惠 附近 餐饮 套餐 餐厅' },
+  { key: 'meituan-coupon', title: '美团外卖领券', desc: '点餐先领券，外卖下单更划算', directoryDesc: '美团外卖优惠领券', icon: 'meituan-coupon', tone: 'blue', page: meituanCouponPage, category: 'life', keywords: '美团 外卖 领券 优惠券 点餐 配送' },
+  { key: 'taobao-flash-coupon', title: '淘宝闪购领券', desc: '闪购先领券，日常好物更省钱', directoryDesc: '淘宝闪购优惠领券', icon: 'taobao-flash-coupon', tone: 'orange', page: taobaoFlashCouponPage, category: 'life', keywords: '淘宝 闪购 饿了么 外卖 领券 优惠券' },
+  { key: 'ride-discount', title: '优惠打车出行', desc: '出行优惠直达，打车更省心', directoryDesc: '打车出行优惠入口', icon: 'ride-discount', tone: 'blue', page: rideDiscountPage, category: 'life', keywords: '打车 出行 优惠 滴滴 网约车 领券' },
+  { key: 'hotel-discount', title: '住酒店有优惠', desc: '住宿优惠直达，预订更轻松', directoryDesc: '酒店住宿优惠预订', icon: 'hotel-discount', tone: 'green', page: hotelDiscountPage, category: 'life', keywords: '酒店 住宿 宾馆 预订 优惠 旅行' },
+  { key: 'shopping-coupon', title: '电商购物找券', desc: '多平台购物，先找券再下单', directoryDesc: '电商平台购物找券', icon: 'shopping-coupon', tone: 'purple', page: shoppingCouponPage, category: 'life', keywords: '电商 购物 找券 优惠券 京东 淘宝 抖音 拼多多' },
+  { key: 'brand-dining', title: '大牌点餐优惠', desc: '连锁品牌点餐，享受专属优惠', directoryDesc: '大牌餐饮优惠点单', icon: 'brand-dining', tone: 'orange', page: brandDiningPage, category: 'life', keywords: '大牌 点餐 点菜 优惠 肯德基 麦当劳 星巴克 瑞幸 奈雪 必胜客 库迪 堂食 打包' },
   { key: 'timestamp', title: '时间戳转换', desc: '时间日期，秒毫秒双向换算', directoryDesc: '时间日期双向换算', icon: 'timestamp', tone: 'blue', page: '/pages/timestamp/timestamp', category: 'math', keywords: '时间戳 Unix 日期 UTC ISO 秒 毫秒 时区' },
   { key: 'radix', title: '进制转换', desc: '精确换算，查看循环与补码', directoryDesc: '精确换算循环补码', icon: 'radix', tone: 'orange', page: '/pages/radix/radix', category: 'math', keywords: '进制 二进制 八进制 十进制 十六进制 BigInt 小数 循环 补码 大小端' },
   { key: 'unit-converter', title: '单位换算', desc: '公制英制，多类单位互转', directoryDesc: '常用单位精确互转', icon: 'unit-converter', tone: 'blue', page: '/pages/unit-converter/unit-converter', category: 'math', keywords: '单位 换算 长度 面积 体积 质量 温度 时间 速度 压力 数据 能量 功率 厘米 英寸 华氏 摄氏' },

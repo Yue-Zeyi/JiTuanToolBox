@@ -1,5 +1,6 @@
 const { PRESETS, createPractice, getPracticeState } = require('../../utils/breathing');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { createLocalAudioPlayer } = require('../../utils/local-audio');
 const timeText = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
 Page({
@@ -14,6 +15,11 @@ Page({
     this._now = performance && typeof performance.now === 'function' ? () => performance.now() : () => Date.now();
     this._elapsed = 0;
     this._unloaded = false;
+    this._cueAudio = createLocalAudioPlayer({
+      src: '/assets/audio/breathing-cue.mp3',
+      volume: 0.9,
+      onError: () => this.audioUnavailable()
+    });
   },
   onPresetChange(event) {
     if (this.isActive()) return;
@@ -104,31 +110,16 @@ Page({
     if (typeof wx.setKeepScreenOn === 'function') wx.setKeepScreenOn({ keepScreenOn, fail: () => {} });
   },
   stopSound() {
-    if (this._source) { try { this._source.stop(); } catch (error) {} this._source = null; }
+    if (this._cueAudio) this._cueAudio.stop();
   },
   playCue() {
-    try {
-      if (!this._audio) this._audio = wx.createWebAudioContext();
-      const audio = this._audio;
-      if (audio.state === 'suspended') {
-        const resume = audio.resume();
-        if (resume && resume.catch) resume.catch(() => this.audioUnavailable());
-      }
-      this.stopSound();
-      const sampleRate = audio.sampleRate;
-      const buffer = audio.createBuffer(1, Math.floor(sampleRate * 0.16), sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < data.length; i++) data[i] = Math.sin(2 * Math.PI * 528 * i / sampleRate) * Math.sin(Math.PI * i / data.length) * 0.12;
-      this._source = audio.createBufferSource();
-      this._source.buffer = buffer;
-      this._source.connect(audio.destination);
-      this._source.start();
-    } catch (error) { this.audioUnavailable(); }
+    if (!this._cueAudio || !this._cueAudio.play()) this.audioUnavailable();
   },
   audioUnavailable() {
     if (this._unloaded) return;
+    const shouldNotify = this.data.sound;
     this.setData({ sound: false });
-    wx.showToast({ title: '当前设备暂不支持提示音', icon: 'none' });
+    if (shouldNotify) wx.showToast({ title: '当前设备暂不支持提示音', icon: 'none' });
   },
   onHide() { this.pause(); this.stopSound(); },
   onUnload() {
@@ -136,7 +127,8 @@ Page({
     this.clearTimer();
     this.stopSound();
     this.keepScreen(false);
-    if (this._audio) { try { const closed = this._audio.close(); if (closed && closed.catch) closed.catch(() => {}); } catch (error) {} }
+    if (this._cueAudio) this._cueAudio.destroy();
+    this._cueAudio = null;
   },
   onShareAppMessage() { return getShareAppMessage({ path: '/pages/breathing/breathing' }); },
   onShareTimeline() { return getShareTimeline(); }

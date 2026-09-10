@@ -1,12 +1,21 @@
 const { PRESETS, durationMs, formatRemaining, Countdown } = require('../../utils/countdown');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { createLocalAudioPlayer } = require('../../utils/local-audio');
 Page({
   data: {
     hours: '0', minutes: '5', seconds: '0', presets: PRESETS, selected: 300,
     status: 'idle', display: '00:05:00', progress: 0, ring: '', endText: '', totalText: '00:05:00',
     sound: true, vibration: true, screenOn: true, alerting: false, error: '', audioNote: '', vibrationNote: ''
   },
-  onLoad() { this.clock = new Countdown(); this.soundGeneration = 0; this.unloaded = false; this.update(); },
+  onLoad() {
+    this.clock = new Countdown(); this.unloaded = false;
+    this.alarmAudio = createLocalAudioPlayer({
+      src: '/assets/audio/countdown-alarm.mp3',
+      volume: 0.95,
+      onError: () => this.audioFailure()
+    });
+    this.update();
+  },
   onShow() {
     this.visible = true;
     const bar = typeof this.getTabBar === 'function' ? this.getTabBar() : null;
@@ -15,8 +24,9 @@ Page({
   },
   onHide() { this.visible = false; this.clearRender(); this.stopAlarm(); this.keepScreen(); },
   onUnload() {
-    this.unloaded = true; this.visible = false; this.clearRender(); this.stopAlarm(); this.keepScreen();
-    if (this.audio) { try { const closed = this.audio.close(); if (closed && closed.catch) closed.catch(() => {}); } catch (error) {} }
+    this.unloaded = true; this.visible = false; this.clearRender(); this.clearTestSound(); this.stopAlarm(); this.keepScreen();
+    if (this.alarmAudio) this.alarmAudio.destroy();
+    this.alarmAudio = null;
   },
   isActive() { return this.clock && ['running', 'paused'].includes(this.clock.status); },
   onInput(event) {
@@ -38,6 +48,7 @@ Page({
     this.clock.reset(ms); this.setData({ error: '', totalText: formatRemaining(ms) }); this.update();
   },
   toggleRunning() {
+    this.clearTestSound();
     if (this.clock.status === 'running') {
       this.clock.pause(); this.clearRender(); this.update(); this.keepScreen(); return;
     }
@@ -48,7 +59,7 @@ Page({
       this.clock.reset(ms); this.notified = false; this.setData({ totalText: formatRemaining(ms) });
     }
     this.stopAlarm(); this.setData({ error: '' });
-    if (this.data.sound) this.prepareAudio().catch(() => this.audioFailure());
+    if (this.data.sound && this.alarmAudio) this.alarmAudio.prime();
     this.clock.start(); this.update(); this.startRender(); this.keepScreen();
   },
   reset() {
@@ -88,31 +99,23 @@ Page({
     if (key === 'screenOn') this.keepScreen();
   },
   keepScreen() { if (typeof wx.setKeepScreenOn === 'function') wx.setKeepScreenOn({ keepScreenOn: Boolean(this.visible && this.data.screenOn && this.clock && this.clock.status === 'running'), fail: () => {} }); },
-  async prepareAudio() {
-    if (!this.audio) this.audio = wx.createWebAudioContext();
-    if (this.audio.state === 'suspended') await this.audio.resume();
-    return this.audio;
-  },
-  async playSound(seconds) {
-    this.stopSound(); const generation = this.soundGeneration;
-    try {
-      const audio = await this.prepareAudio();
-      if (this.unloaded || !this.visible || generation !== this.soundGeneration) return;
-      const rate = audio.sampleRate, buffer = audio.createBuffer(1, Math.floor(rate * seconds), rate), samples = buffer.getChannelData(0);
-      for (let i = 0; i < samples.length; i++) {
-        const t = i / rate, beat = t % 0.8;
-        if (beat < 0.48) samples[i] = Math.sin(2 * Math.PI * (beat < 0.24 ? 880 : 1174.66) * t) * Math.min(1, beat / 0.015, (0.48 - beat) / 0.03) * 0.22;
-      }
-      this.source = audio.createBufferSource(); this.source.buffer = buffer; this.source.connect(audio.destination); this.source.start();
-      this.setData({ audioNote: '' });
-    } catch (error) { if (generation === this.soundGeneration) this.audioFailure(); }
+  playSound() {
+    if (this.unloaded || !this.visible || !this.alarmAudio || !this.alarmAudio.play()) return this.audioFailure();
+    this.setData({ audioNote: '' });
   },
   audioFailure() { if (!this.unloaded) this.setData({ audioNote: '当前设备无法播放提醒音，请留意屏幕提示和振动。' }); },
-  stopSound() { this.soundGeneration++; if (this.source) { try { this.source.stop(); } catch (error) {} this.source = null; } },
-  testSound() { if (this.data.alerting) return; this.playSound(1.6); },
+  stopSound() { if (this.alarmAudio) this.alarmAudio.stop(); },
+  clearTestSound() { if (this.testSoundTimer) clearTimeout(this.testSoundTimer); this.testSoundTimer = null; },
+  testSound() {
+    if (this.data.alerting) return;
+    this.clearTestSound();
+    this.playSound();
+    this.testSoundTimer = setTimeout(() => { this.testSoundTimer = null; if (!this.data.alerting) this.stopSound(); }, 1600);
+  },
   notifyEnd() {
+    this.clearTestSound();
     this.setData({ alerting: true });
-    if (this.data.sound) this.playSound(8);
+    if (this.data.sound) this.playSound();
     if (this.data.vibration && typeof wx.vibrateLong === 'function') wx.vibrateLong({ fail: () => { if (!this.unloaded) this.setData({ vibrationNote: '当前设备未能振动，请留意屏幕提示。' }); } });
     this.alarmTimer = setTimeout(() => this.stopAlarm(), 8000);
   },

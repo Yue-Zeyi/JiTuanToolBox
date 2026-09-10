@@ -6,10 +6,12 @@
 .directory-search-placeholder { color: #8A99AB; }
 .directory-search-clear { width: 44px; height: 42px; flex: none; display: flex; align-items: center; justify-content: center; }
 .directory-search-clear image { display: block; width: 16px; height: 16px; }
-.directory-tabs { flex: none; width: 100%; height: 50px; background: #FFFFFF; white-space: nowrap; }
-.directory-tabs-inner { display: flex; width: 100%; min-width: 340px; padding: 2px 15px 10px; gap: 7px; }
-.directory-tab { position: relative; flex: 1 0 66px; height: 38px; display: flex; align-items: center; justify-content: center; padding: 0 6px; color: #6F8097; background: #F7F9FC; border: 1px solid #E4EBF4; border-radius: 7px; font-size: 13px; line-height: 20px; white-space: nowrap; }
-.directory-tab.is-active { color: #246DCF; background: #EEF5FF; border-color: #AFCDF4; font-weight: 650; box-shadow: inset 0 0 0 1px rgba(47, 128, 237, .08), 0 3px 10px rgba(47, 128, 237, .06); }
+.directory-tabs { flex: none; width: 100%; height: 49px; padding: 0 15px; background: #FFFFFF; border-bottom: 1px solid #EDF1F6; }
+.directory-tabs-inner { width: 100%; height: 49px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.directory-tab { position: relative; min-width: 0; height: 49px; display: flex; align-items: center; justify-content: center; padding: 0; color: #7A899D; background: transparent; font-size: 12px; line-height: 18px; white-space: nowrap; }
+.directory-tab::before { content: ''; position: absolute; left: 50%; bottom: 0; width: 18px; height: 3px; border-radius: 2px 2px 0 0; background: transparent; transform: translateX(-50%); }
+.directory-tab.is-active { color: #246DCF; font-weight: 700; }
+.directory-tab.is-active::before { background: #2F80ED; }
 .directory-control-hover { opacity: .7; }
 .directory-list { flex: 1; height: 0; min-height: 0; width: 100%; }
 .directory-content { padding: 0 32rpx calc(40rpx + env(safe-area-inset-bottom)); }

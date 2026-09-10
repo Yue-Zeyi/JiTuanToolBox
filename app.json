@@ -74,8 +74,44 @@
         "pages/marquee/marquee",
         "pages/metronome/metronome"
       ]
+    },
+    {
+      "root": "package-movie",
+      "pages": ["pages/redirect/redirect"],
+      "plugins": {
+        "jtkMovie": {
+          "version": "1.1.7",
+          "provider": "wx89752980e795bfde"
+        }
+      }
+    },
+    {
+      "root": "package-deals",
+      "pages": ["pages/redirect/redirect"],
+      "plugins": {
+        "meishi": {
+          "version": "1.2.3",
+          "provider": "wx5c787b48e6a02a51"
+        }
+      }
+    },
+    {
+      "root": "package-dining",
+      "pages": ["pages/redirect/redirect"],
+      "plugins": {
+        "jtkDc": {
+          "version": "1.4.9",
+          "provider": "wx6c999744b6d125ef"
+        }
+      }
     }
   ],
+  "requiredPrivateInfos": ["getLocation"],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于电影票及本地生活服务展示附近商家"
+    }
+  },
   "window": {
     "navigationBarTitleText": "极团工具箱",
     "navigationBarBackgroundColor": "#F7F9FC",

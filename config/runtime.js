@@ -3,6 +3,9 @@ module.exports = {
   analyticsEnabled: false,
   cloudEnvId: 'cloud1-d2gzwmpwtfed214d2',
   popularityFunctionName: 'tool-popularity',
+  // 聚推客联盟后台“开发”页面中的联盟 ID；相关插件要求必须传入。
+  jutuikePubId: '3790',
+  movieTicketSid: 'jituantoolbox',
   securityFunctionName: 'media-security',
   securityPollIntervalMs: 1500,
   securityTimeoutMs: 120000,

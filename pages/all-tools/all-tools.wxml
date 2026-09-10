@@ -7,11 +7,11 @@
     </view>
   </view>
 
-  <scroll-view wx:if="{{!isSearching}}" class="directory-tabs" scroll-x="{{true}}" show-scrollbar="{{false}}" scroll-into-view="tab-{{activeCategory}}">
+  <view class="directory-tabs">
     <view class="directory-tabs-inner">
       <button wx:for="{{categories}}" wx:key="key" id="tab-{{item.key}}" class="directory-tab {{activeCategory === item.key ? 'is-active' : ''}}" data-category="{{item.key}}" bindtap="selectCategory" aria-label="{{item.title}}{{activeCategory === item.key ? '，已选中' : ''}}" hover-class="directory-control-hover">{{item.title}}</button>
     </view>
-  </scroll-view>
+  </view>
 
   <scroll-view class="directory-list" scroll-y="{{true}}" scroll-top="{{scrollTop}}" bindscroll="onListScroll" bindtap="dismissKeyboard" show-scrollbar="{{false}}">
     <view class="directory-content">

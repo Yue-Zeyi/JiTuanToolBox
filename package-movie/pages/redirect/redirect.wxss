@@ -1,0 +1,1 @@
+.plugin-bridge{display:flex;min-height:70vh;align-items:center;justify-content:center;color:#8A99AC;font-size:26rpx}.plugin-bridge button{display:flex;align-items:center;justify-content:center;width:240rpx;height:76rpx;border-radius:14rpx;color:#fff;background:#2F80ED;font-size:26rpx}

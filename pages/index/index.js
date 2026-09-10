@@ -44,7 +44,7 @@ Page({
     const tabBar = this.getTabBar();
     if (tabBar) { tabBar.setData({ visible: true }); tabBar.syncSelected(); }
     const recent = wx.getStorageSync(app.globalData.recentKey) || [];
-    this.setData({ recent: Array.isArray(recent) ? recent.slice(0, 4) : [] });
+    this.setData({ recent: Array.isArray(recent) ? recent.slice(0, 6) : [] });
     this.loadPopularTools();
   },
 
