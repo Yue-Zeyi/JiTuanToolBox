@@ -1,6 +1,4 @@
-const runtime = require('../config/runtime');
 const { compressFile, discardCompressionResults } = require('./image-compression');
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
 const MAX_RESIZE_DIMENSION = 4096;
 const MAX_SPLIT_PARTS = 100;
@@ -566,24 +564,6 @@ async function compressImages(files, options = 80, onProgress, isCancelled) {
   return results;
 }
 
-function recognizeImage(file) {
-  if (!runtime.useMockServices && runtime.apiBaseUrl && typeof wx !== 'undefined' && typeof wx.uploadFile === 'function') {
-    return new Promise((resolve, reject) => wx.uploadFile({
-      url: `${runtime.apiBaseUrl}/v1/ocr`,
-      filePath: file.path,
-      name: 'file',
-      success: response => {
-        try { resolve(JSON.parse(response.data)); } catch (error) { reject(error); }
-      },
-      fail: reject
-    }));
-  }
-  return wait(1300).then(() => ({
-    text: '这是极团工具箱 OCR 识别结果示例。\n\n接入服务后，这里会展示图片中的完整文字，并支持一键复制、重新识别与结果清理。',
-    source: file
-  }));
-}
-
 const PDF_PAGE_SIZES = {
   a4: { width: 595, height: 842 },
   a5: { width: 420, height: 595 },
@@ -889,4 +869,4 @@ function watermarkImage(file, options = {}, pageContext) {
   }));
 }
 
-module.exports = { compressImages, resizeImage, splitImage, stitchImages, recognizeImage, imagesToPdf, watermarkImage, MAX_IMAGE_BYTES, MAX_RESIZE_DIMENSION, MAX_SPLIT_PARTS, MAX_STITCH_IMAGES, MAX_STITCH_DIMENSION, SUPPORTED_IMAGE_EXTENSIONS };
+module.exports = { compressImages, resizeImage, splitImage, stitchImages, imagesToPdf, watermarkImage, MAX_IMAGE_BYTES, MAX_RESIZE_DIMENSION, MAX_SPLIT_PARTS, MAX_STITCH_IMAGES, MAX_STITCH_DIMENSION, SUPPORTED_IMAGE_EXTENSIONS };

@@ -1,0 +1,50 @@
+.bmi-page { padding-bottom: 90rpx; }
+.bmi-page .tool-title { min-width: 0; padding-right: 12rpx; }
+.bmi-page .tool-icon { flex-shrink: 0; }
+.body-panel { padding: 24rpx; }
+.body-result { margin-top: 20rpx; }
+.body-heading { display: block; color: var(--jt-navy); font-size: 27rpx; font-weight: 600; line-height: 1.5; }
+.body-pair, .body-sexes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16rpx; }
+.body-field { min-width: 0; margin-top: 22rpx; }
+.body-field > text { display: block; margin-bottom: 12rpx; color: #66788E; font-size: 23rpx; }
+.body-input { display: flex; align-items: center; gap: 8rpx; height: 80rpx; padding: 0 14rpx; border: 1px solid #D5E1EE; border-radius: 12rpx; background: #FFFFFF; }
+.body-input input { box-sizing: border-box; flex: 1; width: 0; min-width: 0; height: 76rpx; color: #234666; font-size: 26rpx; }
+.body-input > text { flex-shrink: 0; color: #8191A4; font-size: 22rpx; }
+.body-sex { box-sizing: border-box; position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; height: 74rpx; border: 1px solid #D5E1EE; border-radius: 12rpx; background: #FFFFFF; color: #66788E; font-size: 24rpx; }
+.body-sex.active { border-color: #83B6A0; background: #EFF9F3; box-shadow: inset 0 0 0 1px #DCEFE3; color: #228454; font-weight: 600; }
+.body-picker { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; min-height: 80rpx; padding: 14rpx; border: 1px solid #D5E1EE; border-radius: 12rpx; color: #38536D; font-size: 24rpx; line-height: 1.5; }
+.body-picker text { min-width: 0; }
+.body-picker image { width: 24rpx; height: 24rpx; flex-shrink: 0; }
+.body-hint { display: block; margin-top: 14rpx; color: #8191A4; font-size: 21rpx; line-height: 1.65; }
+.body-error { display: block; margin-top: 18rpx; color: #C84444; font-size: 23rpx; line-height: 1.6; }
+.body-main { margin-top: 22rpx; width: 100%; height: 88rpx; }
+.body-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; min-height: 58rpx; }
+.body-copy { display: flex; align-items: center; justify-content: center; gap: 6rpx; min-height: 58rpx; padding: 0 4rpx; flex-shrink: 0; color: #2F80ED; font-size: 22rpx; }
+.body-copy image { width: 26rpx; height: 26rpx; }
+.body-bmi { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin: 20rpx 0; }
+.body-bmi > view { min-width: 0; }
+.body-bmi > view > text { display: block; color: #6B8A7C; font-size: 22rpx; }
+.body-bmi .body-number { margin-top: 10rpx; color: #228454; font-size: 54rpx; font-weight: 700; overflow-wrap: anywhere; }
+.body-badge { flex-shrink: 0; padding: 10rpx 16rpx; border-radius: 12rpx; color: #38536D; background: #F0F4F8; font-size: 24rpx; }
+.body-scale { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4rpx; }
+.body-scale > view { border-top: 6rpx solid #89B9D4; padding-top: 10rpx; text-align: center; }
+.body-scale > view:nth-child(2) { border-color: #69BD90; }
+.body-scale > view:nth-child(3) { border-color: #E6BD72; }
+.body-scale > view:nth-child(4) { border-color: #DB9B8B; }
+.body-scale text { display: block; color: #718096; font-size: 19rpx; line-height: 1.7; white-space: nowrap; }
+.body-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16rpx; margin-top: 24rpx; }
+.body-metric { min-width: 0; padding: 18rpx 14rpx; border: 1rpx solid #E3ECE8; border-radius: 14rpx; background: #F7FBF9; }
+.body-label, .body-value, .body-unit { display: block; }
+.body-label { font-size: 22rpx; color: #5B786A; }
+.body-value { margin-top: 12rpx; font-size: 34rpx; font-weight: 600; color: #285B43; overflow-wrap: anywhere; }
+.body-unit { min-height: 30rpx; margin-top: 4rpx; font-size: 20rpx; color: #748B7E; }
+.body-metric .body-hint { font-size: 20rpx; margin-top: 10rpx; }
+.body-range { padding: 20rpx 0; margin-top: 22rpx; border-top: 1rpx solid #E8EEF7; border-bottom: 1rpx solid #E8EEF7; }
+.body-range > text { display: block; font-size: 23rpx; color: #66788E; }
+.body-range > text + text { margin-top: 12rpx; color: #285B43; font-size: 26rpx; overflow-wrap: anywhere; }
+.body-range > .body-hint { color: #8191A4; font-size: 21rpx; }
+.body-clear { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 76rpx; margin-top: 20rpx; color: #2F80ED; font-size: 24rpx; }
+.body-formulas { margin-top: 18rpx; color: #8191A4; font-size: 21rpx; line-height: 1.7; }
+.body-formulas button { display: flex; align-items: center; justify-content: space-between; min-height: 64rpx; width: 100%; font-size: 23rpx; color: #66788E; }
+.body-formulas image { width: 24rpx; height: 24rpx; }
+.body-formulas > view > text { display: block; margin-top: 12rpx; }

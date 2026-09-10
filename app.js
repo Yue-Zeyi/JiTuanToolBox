@@ -1,5 +1,10 @@
 const runtime = require('./config/runtime');
 
+const LEGACY_TOOL_PAGES = {
+  '/pages/lunar-convert/lunar-convert': '/package-calendar/pages/lunar-convert/lunar-convert',
+  '/pages/zodiac/zodiac': '/package-calendar/pages/zodiac/zodiac'
+};
+
 const historyExtension = filePath => {
   const match = String(filePath || '').match(/\.([a-z0-9]+)(?:[?#].*)?$/i);
   return match ? `.${match[1].toLowerCase()}` : '.jpg';
@@ -28,7 +33,13 @@ App({
     const recent = wx.getStorageSync(this.globalData.recentKey);
     const iconMap = { '↘': 'compress', A: 'ocr', '▤': 'pdf' };
     if (Array.isArray(recent)) {
-      wx.setStorageSync(this.globalData.recentKey, recent.map(item => ({ ...item, icon: iconMap[item.icon] || item.icon })));
+      wx.setStorageSync(this.globalData.recentKey, recent
+        .filter(item => item && item.key !== 'ocr')
+        .map(item => ({
+          ...item,
+          icon: iconMap[item.icon] || item.icon,
+          page: this.normalizeToolPage(item.page)
+        })));
     } else {
       wx.setStorageSync(this.globalData.recentKey, []);
     }
@@ -40,14 +51,18 @@ App({
     const key = this.globalData.recentKey;
     const iconMap = { '↘': 'compress', A: 'ocr', '▤': 'pdf' };
     const recent = (wx.getStorageSync(key) || []).map(item => ({ ...item, icon: iconMap[item.icon] || item.icon }));
-    const normalizedTool = { ...tool, icon: iconMap[tool.icon] || tool.icon };
+    const normalizedTool = { ...tool, icon: iconMap[tool.icon] || tool.icon, page: this.normalizeToolPage(tool.page) };
     const next = [normalizedTool, ...recent.filter(item => item.key !== normalizedTool.key)].slice(0, 5);
     wx.setStorageSync(key, next);
   },
 
   getOperationHistory() {
     const history = wx.getStorageSync(this.globalData.historyKey);
-    return Array.isArray(history) ? history : [];
+    return Array.isArray(history) ? history.map(record => ({ ...record, page: this.normalizeToolPage(record.page) })) : [];
+  },
+
+  normalizeToolPage(page) {
+    return LEGACY_TOOL_PAGES[page] || page;
   },
 
   getOperationRecord(recordId) {

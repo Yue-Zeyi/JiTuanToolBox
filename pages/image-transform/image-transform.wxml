@@ -1,0 +1,21 @@
+<view class="page tool-page transform-page">
+  <view class="page-head"><view class="tool-title"><text class="title">图片旋转翻转</text><text class="desc">调整方向或制作镜像图片</text></view><view class="tool-icon green"><image src="/assets/icons/image-transform.svg" mode="aspectFit"/></view></view>
+  <view class="card transform-workspace">
+    <view wx:if="{{file}}" class="transform-preview" bindtap="previewSource"><image src="{{file.path}}" mode="aspectFit" style="transform: {{transformStyle}};"/></view>
+    <button wx:else class="transform-empty" bindtap="chooseImage"><image src="/assets/icons/add.svg" mode="aspectFit"/><text>选择图片</text><text>支持常见图片格式，单张不超过 20MB</text></button>
+    <view wx:if="{{file}}" class="transform-meta"><text>{{file.name}}</text><text>{{file.width}} × {{file.height}} px · {{file.sizeText}}</text></view>
+  </view>
+  <view class="card transform-controls">
+    <view class="transform-head"><text>旋转</text><button bindtap="resetTransform">恢复原图</button></view>
+    <view class="transform-grid"><button data-angle="-90" bindtap="rotate"><text class="transform-symbol">↶</text><text>向左 90°</text></button><button data-angle="90" bindtap="rotate"><text class="transform-symbol">↷</text><text>向右 90°</text></button><button data-angle="180" bindtap="rotate"><text class="transform-symbol">↻</text><text>旋转 180°</text></button></view>
+    <view class="transform-divider"></view>
+    <text class="transform-label">翻转</text>
+    <view class="transform-grid two"><button class="{{flipX ? 'active' : ''}}" data-axis="x" bindtap="toggleFlip"><text class="transform-symbol">↔</text><text>水平翻转</text></button><button class="{{flipY ? 'active' : ''}}" data-axis="y" bindtap="toggleFlip"><text class="transform-symbol">↕</text><text>垂直翻转</text></button></view>
+    <text class="transform-summary">当前：旋转 {{rotation}}°{{flipX ? ' · 水平翻转' : ''}}{{flipY ? ' · 垂直翻转' : ''}}</text>
+  </view>
+  <button class="primary-btn transform-main" bindtap="startTransform" loading="{{state === 'processing'}}" disabled="{{state === 'processing'}}">{{state === 'processing' ? '正在生成' : (result ? '重新生成' : '生成图片')}}</button>
+  <text wx:if="{{error}}" class="transform-error">{{error}}</text>
+  <view wx:if="{{result}}" class="card transform-result"><view class="transform-head"><text>处理结果</text><text class="transform-done">已完成</text></view><image src="{{result.outputPath}}" mode="aspectFit" bindtap="previewResult"/><text class="transform-result-name">{{result.outputName}}</text><text class="transform-result-meta">{{result.width}} × {{result.height}} px · {{result.formatLabel}} · {{result.sizeText}}</text><view class="transform-actions"><button class="primary-btn" bindtap="saveResult">保存图片</button><button class="secondary-btn" bindtap="newImage">处理新图片</button></view></view>
+  <canvas id="transformCanvas" type="2d" class="hidden-canvas"></canvas><canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+</view>

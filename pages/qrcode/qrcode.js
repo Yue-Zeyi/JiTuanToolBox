@@ -1,6 +1,7 @@
 const app = getApp();
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
 const { MAX_TEXT_LENGTH, ERROR_LEVELS, SIZES, buildQrContent, createQrMatrix, getQrLayout } = require('../../utils/qrcode');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 const TOOL = { key: 'qrcode', title: '二维码生成', desc: '将文字或网址生成二维码', icon: 'qrcode', tone: 'blue', page: '/pages/qrcode/qrcode' };
 
@@ -17,6 +18,7 @@ Page({
     level: 'M',
     hasResult: false,
     imagePath: '',
+    outputName: '',
     showCanvas: false,
     rendering: false,
     saving: false,
@@ -49,7 +51,7 @@ Page({
     const mode = ['text', 'link'].includes(input.mode) ? input.mode : (/^https?:\/\//i.test(input.text.trim()) ? 'link' : 'text');
     const payload = typeof input.payload === 'string' ? input.payload : input.text;
     this._resultInput = { text: input.text, size: Number(input.size), level: input.level, mode, payload };
-    this.setData({ mode, encodedText: payload, inputText: input.text, inputCount: inputLength, size: Number(input.size), level: input.level, imagePath, hasResult: true, saved: true });
+    this.setData({ mode, encodedText: payload, inputText: input.text, inputCount: inputLength, size: Number(input.size), level: input.level, imagePath, outputName: (file && (file.outputName || file.name)) || outputName('jituan-qrcode', 'png'), hasResult: true, saved: true });
   },
 
   onShow() {
@@ -67,7 +69,7 @@ Page({
     this.qrMatrix = null;
     this.qrFilePath = '';
     this._resultInput = null;
-    this.setData({ ...patch, hasResult: false, imagePath: '', encodedText: '', showCanvas: false, rendering: false, saving: false, error: '', saved: false });
+    this.setData({ ...patch, hasResult: false, imagePath: '', outputName: '', encodedText: '', showCanvas: false, rendering: false, saving: false, error: '', saved: false });
   },
 
   onTextInput(event) {
@@ -147,7 +149,7 @@ Page({
         success: file => {
           if (this.unloaded || matrix !== this.qrMatrix) return;
           this.qrFilePath = file.tempFilePath;
-          this.setData({ imagePath: file.tempFilePath, hasResult: true, showCanvas: false, rendering: false, error: '' });
+          this.setData({ imagePath: file.tempFilePath, outputName: outputName('jituan-qrcode', 'png'), hasResult: true, showCanvas: false, rendering: false, error: '' });
         },
         fail: () => {
           if (!this.unloaded && matrix === this.qrMatrix) this.finishRenderError('二维码图片生成失败，请重试');
@@ -174,10 +176,9 @@ Page({
   },
 
   saveImageToAlbum(allowSettings) {
-    wx.saveImageToPhotosAlbum({
-      filePath: this.qrFilePath,
-      success: () => wx.showToast({ title: '已保存到相册' }),
-      fail: error => {
+    saveNamedImageToAlbum(this.qrFilePath, 'jituan-qrcode', 'png', this.data.outputName).then(() => {
+      wx.showToast({ title: '已保存到相册' });
+    }).catch(error => {
         const denied = /auth deny|authorize:fail|permission/i.test(String(error && error.errMsg || ''));
         if (!denied || !allowSettings || typeof wx.openSetting !== 'function') {
           wx.showToast({ title: denied ? '请允许访问相册后重试' : '保存失败，请重试', icon: 'none' });
@@ -194,7 +195,6 @@ Page({
             } });
           }
         });
-      }
     });
   },
 
@@ -207,6 +207,7 @@ Page({
     const revision = this._revision;
     const resultInput = { ...this._resultInput };
     const filePath = this.qrFilePath;
+    const resultName = this.data.outputName || outputName('jituan-qrcode', 'png');
     this.setData({ saving: true });
     try {
       await app.recordOperation({
@@ -215,7 +216,7 @@ Page({
         detailText: `${Array.from(resultInput.text).length} 个字符`,
         text: resultInput.text,
         qrInput: resultInput,
-        files: [{ name: '二维码.png', type: 'image', path: filePath, outputPath: filePath }]
+        files: [{ name: resultName, outputName: resultName, type: 'image', path: filePath, outputPath: filePath, outputFormat: 'png' }]
       });
       if (this.unloaded || revision !== this._revision) return;
       this.setData({ saved: true });

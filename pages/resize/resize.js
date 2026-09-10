@@ -5,6 +5,7 @@ const { requestConsent } = require('../../utils/privacy');
 const { checkSelectedImages } = require('../../utils/content-security');
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, Math.round(Number(value) || 0)));
 const FIT_MODES = [
@@ -104,7 +105,7 @@ Page({
         compressedBytes,
         originalText: item.sizeText || formatBytes(originalBytes),
         compressedText: item.outputSizeText || formatBytes(compressedBytes),
-        name: `极团工具箱-${width}x${height}.${outputFormat}`
+        name: item.outputName || outputName(`jituan-resize-${width}x${height}`, outputFormat)
       }
     });
   },
@@ -265,9 +266,9 @@ Page({
       const formatLabel = result.outputFormat === 'png' ? 'PNG' : 'JPG';
       const originalText = formatBytes(result.originalBytes);
       const compressedText = formatBytes(result.compressedBytes);
-      const resultView = { ...result, formatLabel, originalText, compressedText, name: `极团工具箱-${result.width}x${result.height}.${result.outputFormat}` };
+      const resultView = { ...result, formatLabel, originalText, compressedText, name: outputName(`jituan-resize-${result.width}x${result.height}`, result.outputFormat) };
       this.setData({ state: 'success', progress: 100, result: resultView });
-      app.recordOperation({ key: 'resize', title: '尺寸修改', desc: '调整图片宽高，适配不同场景', icon: 'resize', tone: 'green', page: '/pages/resize/resize', modeLabel: `${result.width} × ${result.height} px`, detailText: `${this.data.file.width} × ${this.data.file.height} px → ${result.width} × ${result.height} px`, files: [{ path: this.data.file.path, outputPath: result.outputPath, outputFormat: result.outputFormat, name: this.data.file.name, size: result.originalBytes, sizeText: originalText, outputSize: result.compressedBytes, outputSizeText: compressedText, width: this.data.file.width, height: this.data.file.height, outputWidth: result.width, outputHeight: result.height }] }).catch(() => {});
+      app.recordOperation({ key: 'resize', title: '尺寸修改', desc: '调整图片宽高，适配不同场景', icon: 'resize', tone: 'green', page: '/pages/resize/resize', modeLabel: `${result.width} × ${result.height} px`, detailText: `${this.data.file.width} × ${this.data.file.height} px → ${result.width} × ${result.height} px`, files: [{ path: this.data.file.path, outputPath: result.outputPath, outputName: resultView.name, outputFormat: result.outputFormat, name: this.data.file.name, size: result.originalBytes, sizeText: originalText, outputSize: result.compressedBytes, outputSizeText: compressedText, width: this.data.file.width, height: this.data.file.height, outputWidth: result.width, outputHeight: result.height }] }).catch(() => {});
       track('tool_success', { tool: 'resize' });
     }).catch(error => {
       track('tool_error', { tool: 'resize', reason: 'service_error' });
@@ -278,7 +279,7 @@ Page({
   saveResult() {
     const result = this.data.result;
     if (!result || !result.outputPath) return wx.showToast({ title: '当前没有可保存的结果', icon: 'none' });
-    wx.saveImageToPhotosAlbum({ filePath: result.outputPath, success: () => wx.showToast({ title: '已保存到相册' }), fail: () => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }) });
+    saveNamedImageToAlbum(result.outputPath, `jituan-resize-${result.width}x${result.height}`, result.outputFormat, result.name).then(() => wx.showToast({ title: '已保存到相册' })).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
   },
 
   chooseAgain() {

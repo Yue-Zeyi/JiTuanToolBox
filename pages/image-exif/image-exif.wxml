@@ -1,0 +1,13 @@
+<view class="page tool-page exif-page">
+  <view class="page-head"><view class="tool-title"><text class="title">图片去 EXIF</text><text class="desc">清除图片中的设备和位置元数据</text></view><view class="tool-icon green"><image src="/assets/icons/image-exif.svg" mode="aspectFit"/></view></view>
+  <view class="card exif-upload">
+    <view wx:if="{{file}}" class="exif-file"><image src="{{file.path}}" mode="aspectFill" bindtap="previewSource"/><view><text>{{file.name}}</text><text>{{file.width}} × {{file.height}} px · {{file.sizeText}}</text></view><button class="ghost-btn" bindtap="chooseImage">更换</button></view>
+    <button wx:else class="exif-empty" bindtap="chooseImage"><image src="/assets/icons/add.svg" mode="aspectFit"/><text>选择图片</text><text>单张不超过 20MB</text></button>
+  </view>
+  <view class="card exif-info"><view class="exif-info-head"><image src="/assets/icons/image-exif.svg" mode="aspectFit"/><text>将清除的隐私信息</text></view><view class="exif-tags"><text>拍摄时间</text><text>设备型号</text><text>GPS 位置</text><text>相机参数</text><text>编辑软件</text><text>缩略图</text></view><text class="exif-note">直接移除元数据块，不重新压缩图片像素，原图不会被修改。</text></view>
+  <button class="primary-btn exif-main" bindtap="removeExif" loading="{{state === 'processing'}}" disabled="{{state === 'processing'}}">{{state === 'processing' ? '正在清除' : (result ? '重新清除' : '清除图片元数据')}}</button>
+  <text wx:if="{{error}}" class="exif-error">{{error}}</text>
+  <view wx:if="{{result}}" class="card exif-result"><view class="exif-result-head"><text>处理结果</text><text>元数据已清除</text></view><image src="{{result.outputPath}}" mode="aspectFit" bindtap="previewResult"/><text class="exif-result-name">{{result.outputName}}</text><text class="exif-result-meta">{{result.width}} × {{result.height}} px · {{result.formatLabel}} · {{result.originalText}} → {{result.outputText}}</text><text class="exif-result-detail">{{result.removedText}}</text><view class="exif-actions"><button class="primary-btn" bindtap="saveResult">保存图片</button><button class="secondary-btn" bindtap="reset">处理新图片</button></view></view>
+  <canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+</view>

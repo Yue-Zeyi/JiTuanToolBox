@@ -1,0 +1,42 @@
+.plate-page { padding-bottom: 100rpx; }
+.plate-page .page-head .tool-title { min-width: 0; }
+.plate-page .page-head .tool-icon { flex: 0 0 auto; }
+.plate-input-panel, .plate-result { box-sizing: border-box; width: 100%; padding: 24rpx; overflow: hidden; }
+.plate-input-panel { margin-top: 18rpx; }
+.plate-head { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; min-width: 0; color: var(--jt-navy); font-size: 26rpx; font-weight: 600; }
+.plate-head text:first-child { min-width: 0; }
+.plate-head text:last-child { flex: 0 0 auto; color: #8797AA; font-size: 19rpx; font-weight: 400; white-space: nowrap; }
+.plate-input { display: flex; align-items: center; gap: 12rpx; height: 94rpx; margin-top: 18rpx; padding: 0 16rpx; border: 1px solid #D8E3EF; border-radius: 13rpx; background: #FFFFFF; }
+.plate-input > view { display: flex; align-items: center; justify-content: center; flex: 0 0 88rpx; height: 58rpx; border-radius: 9rpx; color: #FFFFFF; background: #2F80ED; font-size: 23rpx; font-weight: 700; }
+.plate-input input { flex: 1; width: 0; min-width: 0; height: 92rpx; color: #1F3550; font-size: 31rpx; font-weight: 600; letter-spacing: 0; }
+.plate-examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10rpx; margin-top: 16rpx; }
+.plate-examples button { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; min-width: 0; width: 100%; height: 72rpx; padding: 9rpx 12rpx; border: 1rpx solid #E0E8F1; border-radius: 10rpx; background: #F8FAFD; text-align: left; }
+.plate-examples text { display: block; color: #405873; font-size: 20rpx; font-weight: 600; }
+.plate-examples text + text { margin-top: 3rpx; color: #8A9AB0; font-size: 17rpx; font-weight: 400; }
+.plate-main { width: 100%; height: 86rpx; margin-top: 18rpx; border-radius: 14rpx; }
+.plate-error { display: block; margin-top: 14rpx; padding: 14rpx 18rpx; border-radius: 12rpx; color: #B84141; background: #FFF5F5; font-size: 22rpx; line-height: 1.5; }
+.plate-result { margin-top: 18rpx; }
+.plate-visual { box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 14rpx; width: 88%; max-width: 520rpx; height: 116rpx; margin: 4rpx auto 18rpx; border: 5rpx solid #FFFFFF; border-radius: 13rpx; color: #FFFFFF; background: #176CC0; box-shadow: 0 0 0 3rpx #176CC0, 0 10rpx 24rpx rgba(22,73,124,.16); font-size: 38rpx; font-weight: 700; letter-spacing: 0; overflow: hidden; }
+.plate-visual.green { color: #173B2D; background: #AEEA78; box-shadow: 0 0 0 3rpx #55A84B, 0 10rpx 24rpx rgba(44,120,65,.14); }
+.plate-visual.dark { background: #25364B; box-shadow: 0 0 0 3rpx #25364B, 0 10rpx 24rpx rgba(20,35,55,.16); }
+.plate-dot { width: 9rpx; height: 9rpx; border-radius: 50%; background: currentColor; }
+.plate-valid { display: flex; align-items: center; justify-content: center; gap: 8rpx; color: #238657; font-size: 21rpx; }
+.plate-valid image { width: 28rpx; height: 28rpx; padding: 4rpx; border-radius: 7rpx; background: #35B879; }
+.plate-details { margin-top: 18rpx; border-top: 1rpx solid #EDF1F6; }
+.plate-details view { display: flex; align-items: flex-start; justify-content: space-between; gap: 18rpx; min-height: 64rpx; padding: 15rpx 0; border-bottom: 1rpx solid #EDF1F6; }
+.plate-details text { color: #8392A5; font-size: 21rpx; }
+.plate-details text:last-child { flex: 1; min-width: 0; color: #334A64; text-align: right; line-height: 1.45; overflow-wrap: anywhere; }
+.plate-note, .plate-disclaimer { display: block; margin-top: 15rpx; color: #8797AA; font-size: 20rpx; line-height: 1.55; }
+.plate-actions { display: grid; grid-template-columns: 1fr 1.2fr; gap: 12rpx; margin-top: 20rpx; }
+.plate-actions button { min-width: 0; width: 100%; height: 76rpx; border-radius: 13rpx; font-size: 23rpx; }
+.plate-clear { display: flex; align-items: center; justify-content: center; width: 100%; height: 68rpx; margin-top: 10rpx; color: #74869C; font-size: 22rpx; }
+.plate-disclaimer { margin: 4rpx 8rpx 0; padding: 0; text-align: center; overflow-wrap: anywhere; }
+@media (max-width: 350px) {
+  .plate-head { align-items: flex-start; }
+  .plate-head text:last-child { max-width: 56%; padding-top: 4rpx; font-size: 17rpx; line-height: 1.4; text-align: right; white-space: normal; }
+  .plate-input > view { flex-basis: 74rpx; }
+  .plate-input input { font-size: 27rpx; }
+  .plate-examples { grid-template-columns: 1fr; }
+  .plate-visual { width: 94%; font-size: 34rpx; }
+  .plate-actions button { font-size: 21rpx; }
+}

@@ -1,0 +1,53 @@
+<view class="page tool-page mortgage-page">
+  <view class="page-head"><view class="tool-title"><text class="title">房贷计算器</text><text class="desc">月供明细 · 提前还款省息测算</text></view><view class="tool-icon blue"><image src="/assets/icons/mortgage.svg" mode="aspectFit"/></view></view>
+  <view class="loan-modes"><button wx:for="{{modes}}" wx:key="key" class="loan-mode {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">{{item.title}}</button></view>
+  <text class="loan-hint">{{mode === 'annuity' ? '每月本息合计基本相同，前期利息占比较高。' : '每月归还本金基本相同，月供逐月递减。'}}</text>
+  <view class="card loan-panel">
+    <text class="loan-heading">贷款信息</text>
+    <view class="loan-field"><text>贷款金额</text><view class="loan-input"><input type="digit" value="{{amount}}" data-key="amount" bindinput="onInput" maxlength="12" placeholder="填写贷款本金" aria-label="贷款金额，万元"/><text>万元</text></view></view>
+    <view class="loan-pair">
+      <view class="loan-field"><text>贷款年限</text><view class="loan-input"><input type="number" value="{{years}}" data-key="years" bindinput="onInput" maxlength="2" placeholder="1—30" aria-label="贷款年限"/><text>年</text></view></view>
+      <view class="loan-field"><text>合同年利率</text><view class="loan-input"><input type="digit" value="{{rate}}" data-key="rate" bindinput="onInput" maxlength="8" placeholder="例如 3.1" aria-label="年利率百分比"/><text>%</text></view></view>
+    </view>
+    <text class="loan-hint">填写合同执行利率，示例数值不代表当前银行报价。</text>
+  </view>
+  <view class="card loan-panel">
+    <view class="loan-heading-row"><text class="loan-heading">提前还款测算</text><switch checked="{{prepay}}" bindchange="togglePrepay" color="#2F80ED" aria-label="启用提前还款测算"/></view>
+    <text class="loan-hint">比较降低月供与缩短期限两种方案。</text>
+    <block wx:if="{{prepay}}">
+      <view class="loan-field"><text>已还期数</text><view class="loan-input"><input type="number" value="{{paid}}" data-key="paid" bindinput="onInput" maxlength="3" placeholder="例如 24，表示已还 24 个月" aria-label="已还期数"/><text>期</text></view></view>
+      <view class="loan-field"><text>提前归还本金</text><view class="loan-input"><input type="digit" value="{{prepayAmount}}" data-key="prepayAmount" bindinput="onInput" maxlength="13" placeholder="不超过当期剩余本金" aria-label="提前归还本金，万元"/><text>万元</text></view></view>
+      <view class="loan-field"><text>提前还款费用（可选）</text><view class="loan-input"><input type="digit" value="{{fee}}" data-key="fee" bindinput="onInput" maxlength="12" placeholder="无费用可留空" aria-label="提前还款费用，元"/><text>元</text></view></view>
+    </block>
+  </view>
+  <text wx:if="{{error}}" class="loan-error">{{error}}</text>
+  <button class="primary-btn loan-main" bindtap="calculate">{{prepay ? '计算月供与省息' : '开始计算'}}</button>
+  <view wx:if="{{hasResult}}" class="card loan-panel">
+    <view class="loan-heading-row"><text class="loan-heading">原还款方案</text><button class="loan-copy" bindtap="copyResult"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button></view>
+    <text class="loan-hint">金额单位：元</text>
+    <view class="loan-stats"><view wx:for="{{summary}}" wx:key="label"><text>{{item.label}}</text><text selectable="{{true}}">{{item.value}}</text></view></view>
+    <block wx:if="{{plans.length}}">
+      <view class="loan-balance"><text>提前还款前剩余本金：{{balance}} 元</text><text>提前还款后剩余本金：{{remaining}} 元</text></view>
+      <view wx:for="{{plans}}" wx:key="key" class="loan-plan">
+        <text class="loan-heading">{{item.title}}</text>
+        <view class="loan-saved"><text>节省利息</text><text>{{item.saved}}<text class="loan-unit"> 元</text></text></view>
+        <view class="loan-detail"><text>扣除费用后净省</text><text>{{item.netSaved}} 元</text></view>
+        <view class="loan-detail"><text>剩余期限</text><text>{{item.months}} 期 · 缩短 {{item.reducedMonths}} 期</text></view>
+        <view class="loan-detail"><text>调整后首期 / 末期</text><text>{{item.first}} / {{item.last}} 元</text></view>
+        <view class="loan-detail"><text>剩余利息</text><text>{{item.interest}} 元</text></view>
+      </view>
+      <text class="loan-hint">缩短期限：等额本息保持原月供；等额本金保持原每期本金，利息随余额降低。全部还清时剩余期数为 0。</text>
+    </block>
+  </view>
+  <view wx:if="{{hasResult}}" class="card loan-panel">
+    <text class="loan-heading">逐期还款明细</text>
+    <view wx:if="{{plans.length}}" class="loan-table-modes"><button class="loan-mode {{tableMode === 'original' ? 'active' : ''}}" data-key="original" bindtap="selectTable">原方案</button><button class="loan-mode {{tableMode === 'reduce' ? 'active' : ''}}" data-key="reduce" bindtap="selectTable">降低月供</button><button class="loan-mode {{tableMode === 'shorten' ? 'active' : ''}}" data-key="shorten" bindtap="selectTable">缩短期限</button></view>
+    <text class="loan-hint">{{tableMode === 'original' ? '原合同全部期数' : '提前还款后的期数，不包含已还款和一次性提前还本金'}} · 金额单位：元</text>
+    <scroll-view wx:if="{{rows.length}}" scroll-x="{{true}}" class="loan-table-scroll"><view class="loan-table"><view class="loan-tr loan-th"><text>期数</text><text>月供</text><text>本金</text><text>利息</text><text>剩余本金</text></view><view wx:for="{{rows}}" wx:key="period" class="loan-tr"><text>{{item.period}}</text><text>{{item.payment}}</text><text>{{item.capital}}</text><text>{{item.interest}}</text><text>{{item.balance}}</text></view></view></scroll-view>
+    <text wx:else class="loan-hint">已全部结清，无后续月供。</text>
+    <button wx:if="{{rows.length < tableTotal}}" class="loan-more" bindtap="loadMore">再显示 12 期（{{rows.length}} / {{tableTotal}}）</button>
+  </view>
+  <button class="loan-clear" bindtap="clearAll">清空输入</button>
+  <view class="loan-notes"><text>测算口径</text><text>按固定年利率÷12逐月计息，每期四舍五入到分；已还期数对应的月供还完后提前归还本金。未考虑浮动利率、按日计息及特殊合同规则，实际以银行账单为准。</text></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，贷款信息与结果不上传服务器</text></view></view>
+</view>

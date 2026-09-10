@@ -1,0 +1,28 @@
+<view class="page tool-page bmi-page">
+  <view class="page-head"><view class="tool-title"><text class="title">BMI 计算</text><text class="desc">体重指数 · 体脂估算 · 热量需求</text></view><view class="tool-icon green"><image src="/assets/icons/bmi.svg" mode="aspectFit"/></view></view>
+  <view class="card body-panel">
+    <text class="body-heading">身体信息</text>
+    <view class="body-pair">
+      <view class="body-field"><text>身高</text><view class="body-input"><input type="digit" value="{{height}}" data-key="height" bindinput="onInput" maxlength="6" placeholder="例如 170" aria-label="身高，厘米"/><text>cm</text></view></view>
+      <view class="body-field"><text>体重</text><view class="body-input"><input type="digit" value="{{weight}}" data-key="weight" bindinput="onInput" maxlength="6" placeholder="例如 65" aria-label="体重，千克"/><text>kg</text></view></view>
+    </view>
+    <view class="body-field"><text>年龄</text><view class="body-input"><input type="number" value="{{age}}" data-key="age" bindinput="onInput" maxlength="3" placeholder="请填写实际周岁，18 岁起" aria-label="年龄，周岁"/><text>岁</text></view></view>
+    <view class="body-field"><text>公式所用生理性别</text><view class="body-sexes"><button wx:for="{{sexes}}" wx:key="key" class="body-sex {{sex === item.key ? 'active' : ''}}" data-sex="{{item.key}}" bindtap="selectSex">{{item.title}}</button></view></view>
+    <view class="body-field"><text>日常活动水平</text><picker range="{{activities}}" range-key="title" value="{{activity}}" bindchange="selectActivity"><view class="body-picker"><text>{{activities[activity].title}}</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+    <text class="body-hint">适用于一般成年人。孕期、哺乳期、运动员及老年人的适宜体重和热量需求需单独评估。</text>
+  </view>
+  <text wx:if="{{error}}" class="body-error">{{error}}</text>
+  <button class="primary-btn body-main" bindtap="calculate">计算身体指标</button>
+  <view wx:if="{{hasResult}}" class="card body-panel body-result">
+    <view class="body-heading-row"><text class="body-heading">身体指标参考</text><button class="body-copy" bindtap="copyResult"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button></view>
+    <view class="body-bmi"><view><text>BMI · 体重指数</text><text class="body-number">{{bmi}}</text></view><text class="body-badge">{{category}}</text></view>
+    <view class="body-scale"><view><text>偏瘦</text><text>＜18.5</text></view><view><text>正常</text><text>18.5—＜24</text></view><view><text>超重</text><text>24—＜28</text></view><view><text>肥胖</text><text>≥28</text></view></view>
+    <text wx:if="{{older}}" class="body-hint">你已满 65 岁，以上一般成人分类不作为老年人个体体重目标。</text>
+    <view class="body-metrics"><view wx:for="{{metrics}}" wx:key="label" class="body-metric"><text class="body-label">{{item.label}}</text><text class="body-value" selectable="{{true}}">{{item.value}}</text><text class="body-unit">{{item.unit}}</text><text class="body-hint">{{item.note}}</text></view></view>
+    <view class="body-range"><text>一般成人正常 BMI 对应体重</text><text selectable="{{true}}">{{range}}</text><text class="body-hint">范围按 18.5 ≤ BMI ＜ 24 推算，边界显示保留一位小数。</text></view>
+    <text class="body-hint">体脂率是 Deurenberg 公式估算；每日热量为静息能量 × 活动系数 {{factor}}，不是减脂餐热量建议。结果仅供参考，不替代实测或医疗评估。</text>
+  </view>
+  <button class="body-clear" bindtap="clearAll">清空输入</button>
+  <view class="body-formulas"><button bindtap="toggleFormula"><text>计算依据</text><image src="{{showFormula ? '/assets/icons/chevron-up.svg' : '/assets/icons/chevron-down.svg'}}" mode="aspectFit"/></button><view wx:if="{{showFormula}}"><text>BMI = 体重(kg) ÷ 身高(m)²，分级采用中国一般成人标准。</text><text>体脂率 = 1.2 × BMI + 0.23 × 年龄 − 10.8 × 性别值 − 5.4；男性为 1，女性为 0（Deurenberg，1991）。</text><text>静息能量 = 10 × 体重(kg) + 6.25 × 身高(cm) − 5 × 年龄 + 性别常数；男性 +5，女性 −161（Mifflin–St Jeor，1990）。活动系数为常用粗估档位 1.2—1.9。</text><text>理想体重参考采用 BMI 22 推算，不代表每个人都应达到此体重。异常输入导致公式结果失真时显示“暂不适用”。</text></view></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计算，身体数据与结果不上传服务器</text></view></view>
+</view>

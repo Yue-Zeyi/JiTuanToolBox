@@ -2,9 +2,24 @@ const app = getApp();
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
 const { catalogTools, getTool } = require('../../utils/tool-catalog');
+const { reportToolClick, fetchPopularToolKeys } = require('../../utils/tool-popularity');
 
-const tools = catalogTools.filter(tool => tool.homeFeatured);
+const defaultTools = catalogTools.filter(tool => tool.homeFeatured);
 const toolCount = catalogTools.length;
+
+function resolvePopularTools(keys = []) {
+  const result = [];
+  const used = new Set();
+  const append = tool => {
+    if (!tool || tool.comingSoon || used.has(tool.key) || result.length >= 6) return;
+    used.add(tool.key);
+    result.push(tool);
+  };
+  keys.forEach(key => append(getTool(key)));
+  defaultTools.forEach(append);
+  catalogTools.forEach(append);
+  return result;
+}
 
 function pickRecommendations(previousKeys = []) {
   const available = catalogTools.filter(tool => !tool.comingSoon);
@@ -19,7 +34,7 @@ function pickRecommendations(previousKeys = []) {
 }
 
 Page({
-  data: { tools, toolCount, recent: [], recommendations: [] },
+  data: { tools: defaultTools, toolCount, recent: [], recommendations: [] },
 
   onLoad() {
     this.setData({ recommendations: pickRecommendations() });
@@ -30,6 +45,15 @@ Page({
     if (tabBar) { tabBar.setData({ visible: true }); tabBar.syncSelected(); }
     const recent = wx.getStorageSync(app.globalData.recentKey) || [];
     this.setData({ recent: Array.isArray(recent) ? recent.slice(0, 4) : [] });
+    this.loadPopularTools();
+  },
+
+  async loadPopularTools() {
+    const revision = (this._popularityRevision || 0) + 1;
+    this._popularityRevision = revision;
+    const keys = await fetchPopularToolKeys(6);
+    if (revision !== this._popularityRevision || !keys.length) return;
+    this.setData({ tools: resolvePopularTools(keys) });
   },
 
   onShareAppMessage() {
@@ -45,9 +69,11 @@ Page({
     const target = getTool(key);
     if (!target) return;
     if (target.comingSoon) return wx.showToast({ title: '工具即将上线，敬请期待', icon: 'none' });
-    app.recordRecent(target);
-    track('tool_open', { tool: target.key });
-    wx.navigateTo({ url: target.page });
+    wx.navigateTo({
+      url: target.page,
+      success: () => this.recordToolOpen(target),
+      fail: () => wx.showToast({ title: '暂时无法打开，请稍后重试', icon: 'none' })
+    });
   },
 
   openRecommendation(event) {
@@ -66,9 +92,20 @@ Page({
   openRecent(event) {
     const target = this.data.recent[event.currentTarget.dataset.index];
     if (!target) return;
-    app.recordRecent(target);
-    wx.navigateTo({ url: target.page });
+    wx.navigateTo({
+      url: target.page,
+      success: () => this.recordToolOpen(target),
+      fail: () => wx.showToast({ title: '暂时无法打开，请稍后重试', icon: 'none' })
+    });
   },
+
+  recordToolOpen(target) {
+    app.recordRecent(target);
+    reportToolClick(target.key);
+    track('tool_open', { tool: target.key });
+  },
+
+  onUnload() { this._popularityRevision = (this._popularityRevision || 0) + 1; },
 
   onNav(event) {
     const target = event.currentTarget.dataset.target;

@@ -1,0 +1,31 @@
+<view class="page tool-page countdown-page">
+  <view class="page-head"><view class="tool-title"><text class="title">倒计时器</text><text class="desc">设定时长 · 专注当下 · 到点提醒</text></view><view class="tool-icon blue"><image src="/assets/icons/countdown.svg" mode="aspectFit"/></view></view>
+  <view class="card timer-face {{status === 'done' ? 'timer-done' : ''}}">
+    <view class="timer-ring"><image class="timer-ring-image" src="{{ring}}" mode="aspectFit"/><view class="timer-center"><text class="timer-status">{{status === 'running' ? '倒计时中' : status === 'paused' ? '已暂停' : status === 'done' ? '时间到' : '准备开始'}}</text><text class="timer-digits">{{display}}</text><text class="timer-progress">{{status === 'idle' ? '时 : 分 : 秒' : '已完成 ' + progress + '%'}}</text></view></view>
+    <text class="timer-end">{{endText ? '预计结束 ' + endText : status === 'paused' ? '继续后按剩余时长计时' : status === 'done' ? '本次 ' + totalText + ' 已结束' : '设好时长，点击开始'}}</text>
+    <button wx:if="{{alerting}}" class="secondary-btn timer-dismiss" bindtap="stopAlarm">停止提醒</button>
+  </view>
+  <view class="timer-actions"><button class="secondary-btn" bindtap="reset">重置</button><button class="primary-btn" bindtap="toggleRunning">{{status === 'running' ? '暂停' : status === 'paused' ? '继续倒计时' : status === 'done' ? '再来一次' : '开始倒计时'}}</button></view>
+  <text wx:if="{{error}}" class="timer-error">{{error}}</text>
+  <view class="card timer-panel">
+    <view class="timer-head"><text class="timer-heading">设定时长</text><text class="timer-small">最长 99:59:59</text></view>
+    <view class="timer-fields">
+      <view class="timer-field"><input type="number" value="{{hours}}" data-key="hours" bindinput="onInput" maxlength="2" disabled="{{status === 'running' || status === 'paused'}}" aria-label="倒计时小时，0到99"/><text>时</text></view>
+      <view class="timer-field"><input type="number" value="{{minutes}}" data-key="minutes" bindinput="onInput" maxlength="2" disabled="{{status === 'running' || status === 'paused'}}" aria-label="倒计时分钟，0到59"/><text>分</text></view>
+      <view class="timer-field"><input type="number" value="{{seconds}}" data-key="seconds" bindinput="onInput" maxlength="2" disabled="{{status === 'running' || status === 'paused'}}" aria-label="倒计时秒钟，0到59"/><text>秒</text></view>
+    </view>
+    <text wx:if="{{status === 'running' || status === 'paused'}}" class="timer-hint">本次时长已锁定，重置后可修改。</text>
+    <view class="timer-presets"><button wx:for="{{presets}}" wx:key="seconds" class="timer-preset {{selected === item.seconds ? 'active' : ''}}" data-seconds="{{item.seconds}}" bindtap="preset">{{item.title}}</button></view>
+    <text class="timer-hint">预设仅作快捷时长，按实际场景调整。</text>
+  </view>
+  <view class="card timer-panel">
+    <view class="timer-head"><text class="timer-heading">到点提醒</text><button class="timer-audio-test" bindtap="testSound">试听铃声</button></view>
+    <view class="timer-option"><text>响铃提醒</text><switch checked="{{sound}}" data-key="sound" bindchange="toggleOption" color="#2F80ED" aria-label="响铃提醒"/></view>
+    <view class="timer-option"><text>手机振动</text><switch checked="{{vibration}}" data-key="vibration" bindchange="toggleOption" color="#2F80ED" aria-label="手机振动"/></view>
+    <view class="timer-option"><text>计时中保持屏幕常亮</text><switch checked="{{screenOn}}" data-key="screenOn" bindchange="toggleOption" color="#2F80ED" aria-label="计时中保持屏幕常亮"/></view>
+    <text class="timer-hint">到点显示“时间到”，铃声最多持续 8 秒，可手动停止。请先试听，声音受设备音量与静音设置影响。</text>
+    <text wx:if="{{audioNote}}" class="timer-error">{{audioNote}}</text><text wx:if="{{vibrationNote}}" class="timer-error">{{vibrationNote}}</text>
+  </view>
+  <view class="timer-notes"><text>后台计时说明</text><text>切后台或锁屏后，返回会按结束时间自动校正；后台无法保证准时响铃或振动，返回时若已到点会立即提醒。重要事项请同时设置系统闹钟。</text><text>退出此工具页面后计时结束，不保留任务；手动修改设备时间会影响倒计时。</text></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地计时，设置与结果不上传服务器</text></view></view>
+</view>

@@ -46,7 +46,7 @@ button::after { border: 0; }
 .mini-icon { width: 54rpx; height: 54rpx; border-radius: 16rpx; display: flex; align-items: center; justify-content: center; color: #fff; background: #4F95F1; flex: 0 0 54rpx; }
 .mini-icon.green { background: #48C98A; }.mini-icon.purple { background: #8178E6; }.mini-icon.orange { background: #F2A04F; }.mini-icon.gray { background: #94A3B8; }.mini-icon.blue { background: #4F95F1; }
 
-.tool-page .page-head { margin-bottom: 16rpx; }.tool-page .tool-title { margin-left: 0; }
+.tool-page .page-head { gap: 18rpx; margin-bottom: 16rpx; }.tool-page .tool-title { min-width: 0; margin-left: 0; }.tool-page .tool-icon { flex: 0 0 auto; }
 .back { width: 64rpx; height: 64rpx; border-radius: 18rpx; background: #fff; border: 1rpx solid var(--jt-border); display: flex; align-items: center; justify-content: center; font-size: 38rpx; color: var(--jt-navy); }
 .back image { width: 34rpx; height: 34rpx; display: block; }
 .tool-title { flex: 1; margin-left: 18rpx; }
@@ -89,10 +89,10 @@ button::after { border: 0; }
 .text-result { padding: 24rpx; background: #F8FAFD; border-radius: 16rpx; color: var(--jt-navy); font-size: 27rpx; line-height: 1.8; text-align: left; min-height: 250rpx; }
 .tips { margin: 24rpx 4rpx 0; color: var(--jt-muted); font-size: 22rpx; line-height: 1.6; }
 .page-foot-tip { display: flex; flex-direction: column; align-items: center; gap: 4rpx; margin: 32rpx 8rpx 18rpx; color: #8A99AB; font-size: 20rpx; line-height: 32rpx; text-align: center; }
-.privacy-line { display: flex; align-items: flex-start; justify-content: center; gap: 8rpx; max-width: 100%; }
-.privacy-copy { display: block; min-width: 0; text-align: left; overflow-wrap: break-word; }
+.privacy-line { display: flex; align-items: center; justify-content: center; gap: 8rpx; max-width: 100%; }
+.privacy-copy { display: block; min-width: 0; text-align: center; overflow-wrap: break-word; }
 .privacy-detail { display: block; max-width: 100%; color: #98A5B5; overflow-wrap: break-word; }
-.privacy-icon { width: 24rpx; height: 24rpx; margin-top: 4rpx; display: block; flex: 0 0 24rpx; opacity: .72; }
+.privacy-icon { width: 24rpx; height: 24rpx; display: block; flex: 0 0 24rpx; opacity: .72; }
 .brand-icon { width: 64rpx; height: 64rpx; display: block; }
 .hero-shape { width: 150rpx; height: 150rpx; display: block; }
 .arrow-icon { width: 30rpx; height: 30rpx; display: block; flex: 0 0 30rpx; }

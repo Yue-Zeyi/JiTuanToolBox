@@ -5,6 +5,7 @@ const { requestConsent } = require('../../utils/privacy');
 const { checkSelectedImages } = require('../../utils/content-security');
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 Page({
   data: {
@@ -57,6 +58,7 @@ Page({
         ...item,
         id: item.id || `${record.id}-${index}`,
         outputPath: item.outputPath || item.path,
+        outputName: item.outputName || outputName(`jituan-compress-${index + 1}`, item.outputFormat || item.type || 'jpg'),
         originalBytes,
         compressedBytes,
         originalText: item.sizeText || formatBytes(originalBytes),
@@ -255,9 +257,9 @@ Page({
       if (this._unloaded) return;
       const totalOriginal = results.reduce((sum, item) => sum + item.originalBytes, 0);
       const totalCompressed = results.reduce((sum, item) => sum + item.compressedBytes, 0);
-      const displayResults = results.map(item => ({ ...item, originalText: formatBytes(item.originalBytes), compressedText: formatBytes(item.compressedBytes), savedPercent: Math.max(0, Math.round((1 - item.compressedBytes / item.originalBytes) * 100)) }));
+      const displayResults = results.map((item, index) => ({ ...item, outputName: outputName(`jituan-compress-${index + 1}`, item.outputFormat || item.type || 'jpg'), originalText: formatBytes(item.originalBytes), compressedText: formatBytes(item.compressedBytes), savedPercent: Math.max(0, Math.round((1 - item.compressedBytes / item.originalBytes) * 100)) }));
       this.setData({ state: 'success', progress: 100, results: displayResults, totalOriginalText: formatBytes(totalOriginal), totalCompressedText: formatBytes(totalCompressed), totalSavedPercent: Math.max(0, Math.round((1 - totalCompressed / totalOriginal) * 100)) });
-      app.recordOperation({ key: 'compress', title: '图片压缩', desc: '压小图片体积，方便发送和上传', icon: 'compress', tone: 'blue', page: '/pages/compress/compress', modeLabel, detailText: `${results.length} 张图片 · ${formatBytes(totalOriginal)} → ${formatBytes(totalCompressed)}`, files: results.map(item => ({ path: item.path, outputPath: item.outputPath, name: item.name, size: item.originalBytes, sizeText: formatBytes(item.originalBytes), outputSize: item.compressedBytes, outputSizeText: formatBytes(item.compressedBytes), targetBytes: item.targetBytes || 0, targetMet: !!item.targetMet, keptOriginal: !!item.keptOriginal, resized: !!item.resized, width: item.width || 0, height: item.height || 0, outputFormat: item.outputFormat || '', savedPercent: Math.max(0, Math.round((1 - item.compressedBytes / item.originalBytes) * 100)) })) }).catch(() => {});
+      app.recordOperation({ key: 'compress', title: '图片压缩', desc: '压小图片体积，方便发送和上传', icon: 'compress', tone: 'blue', page: '/pages/compress/compress', modeLabel, detailText: `${results.length} 张图片 · ${formatBytes(totalOriginal)} → ${formatBytes(totalCompressed)}`, files: displayResults.map(item => ({ path: item.path, outputPath: item.outputPath, outputName: item.outputName, name: item.name, size: item.originalBytes, sizeText: formatBytes(item.originalBytes), outputSize: item.compressedBytes, outputSizeText: formatBytes(item.compressedBytes), targetBytes: item.targetBytes || 0, targetMet: !!item.targetMet, keptOriginal: !!item.keptOriginal, resized: !!item.resized, width: item.width || 0, height: item.height || 0, outputFormat: item.outputFormat || '', savedPercent: Math.max(0, Math.round((1 - item.compressedBytes / item.originalBytes) * 100)) })) }).catch(() => {});
       track('tool_success', { tool: 'compress', count: results.length });
     }).catch(error => {
       if (this._unloaded) return;
@@ -268,8 +270,8 @@ Page({
     });
   },
 
-  saveOne(item) {
-    return new Promise((resolve, reject) => wx.saveImageToPhotosAlbum({ filePath: item.outputPath, success: resolve, fail: reject }));
+  saveOne(item, index = 0) {
+    return saveNamedImageToAlbum(item.outputPath, `jituan-compress-${index + 1}`, item.outputFormat || item.type || 'jpg', item.outputName);
   },
 
   previewResult(event) {
@@ -280,13 +282,13 @@ Page({
   saveResult(event) {
     const item = this.data.results[event.currentTarget.dataset.index];
     if (!item || !item.outputPath) return wx.showToast({ title: '当前结果没有可保存的文件', icon: 'none' });
-    this.saveOne(item).then(() => { track('result_save', { tool: 'compress' }); wx.showToast({ title: '已保存到相册' }); }).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
+    this.saveOne(item, Number(event.currentTarget.dataset.index)).then(() => { track('result_save', { tool: 'compress' }); wx.showToast({ title: '已保存到相册' }); }).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
   },
 
   saveAll() {
     const items = this.data.results.filter(item => item.outputPath);
     if (!items.length) return wx.showToast({ title: '当前没有可保存的结果', icon: 'none' });
-    Promise.all(items.map(item => this.saveOne(item))).then(() => { track('result_save_all', { tool: 'compress', count: items.length }); wx.showToast({ title: `已保存 ${items.length} 张图片` }); }).catch(() => wx.showModal({ title: '保存失败', content: '部分图片保存失败，请检查相册权限后重试。', showCancel: false }));
+    Promise.all(items.map((item, index) => this.saveOne(item, index))).then(() => { track('result_save_all', { tool: 'compress', count: items.length }); wx.showToast({ title: `已保存 ${items.length} 张图片` }); }).catch(() => wx.showModal({ title: '保存失败', content: '部分图片保存失败，请检查相册权限后重试。', showCancel: false }));
   },
 
   retry() { this.startCompress(); },

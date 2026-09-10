@@ -8,12 +8,20 @@
     "pages/watermark/watermark",
     "pages/split/split",
     "pages/stitch/stitch",
+    "pages/image-format/image-format",
+    "pages/image-transform/image-transform",
+    "pages/base64/base64",
+    "pages/url-codec/url-codec",
+    "pages/image-exif/image-exif",
+    "pages/image-picker/image-picker",
+    "pages/regex-test/regex-test",
+    "pages/color-query/color-query",
+    "pages/plate-query/plate-query",
     "pages/word-count/word-count",
     "pages/text-clean/text-clean",
     "pages/fancy-font/fancy-font",
     "pages/text-compare/text-compare",
     "pages/password/password",
-    "pages/zodiac/zodiac",
     "pages/qrcode/qrcode",
     "pages/ip-query/ip-query",
     "pages/decision/decision",
@@ -25,19 +33,48 @@
     "pages/unit-converter/unit-converter",
     "pages/scientific-calculator/scientific-calculator",
     "pages/percentage/percentage",
+    "pages/mortgage/mortgage",
+    "pages/json-format/json-format",
+    "pages/bmi/bmi",
     "pages/date-calculator/date-calculator",
     "pages/world-clock/world-clock",
     "pages/constellation/constellation",
     "pages/age-query/age-query",
     "pages/date-info/date-info",
     "pages/stopwatch/stopwatch",
-    "pages/ocr/ocr",
+    "pages/countdown/countdown",
     "pages/history/history",
     "pages/profile/profile",
     "pages/legal/legal"
   ],
   "subPackages": [
-    { "root": "package-text", "pages": ["pages/chinese-convert/chinese-convert"] }
+    { "root": "package-text", "pages": ["pages/chinese-convert/chinese-convert"] },
+    {
+      "root": "package-calendar",
+      "pages": [
+        "pages/lunar-convert/lunar-convert",
+        "pages/zodiac/zodiac"
+      ]
+    },
+    {
+      "root": "package-calc",
+      "pages": ["pages/tax-calculator/tax-calculator"]
+    },
+    {
+      "root": "package-query",
+      "pages": [
+        "pages/user-agent/user-agent",
+        "pages/http-status/http-status",
+        "pages/unicode-query/unicode-query"
+      ]
+    },
+    {
+      "root": "package-life",
+      "pages": [
+        "pages/marquee/marquee",
+        "pages/metronome/metronome"
+      ]
+    }
   ],
   "window": {
     "navigationBarTitleText": "极团工具箱",

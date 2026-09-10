@@ -1,0 +1,51 @@
+.json-page { padding-bottom: 90rpx; }
+.json-page .tool-title { min-width: 0; padding-right: 12rpx; }
+.json-page .tool-icon { flex-shrink: 0; }
+.json-panel { padding: 24rpx; }
+.json-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; min-height: 58rpx; }
+.json-heading { color: var(--jt-navy); font-size: 27rpx; font-weight: 600; }
+.json-link { display: flex; align-items: center; justify-content: center; gap: 6rpx; min-height: 58rpx; padding: 0 4rpx; flex-shrink: 0; color: #2F80ED; font-size: 22rpx; }
+.json-link image { width: 26rpx; height: 26rpx; }
+.json-editor-wrap { margin-top: 16rpx; padding: 18rpx; border: 1px solid #D5E1EE; border-radius: 12rpx; background: #FFFFFF; overflow: hidden; }
+.json-editor { box-sizing: border-box; display: block; width: 100%; min-width: 0; height: 360rpx; padding: 0; background: #FFFFFF; color: #234666; font-family: Consolas, Menlo, monospace; font-size: 24rpx; line-height: 1.65; }
+.json-editor-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8rpx; margin-top: 14rpx; color: #8191A4; font-size: 20rpx; line-height: 1.6; }
+.json-options { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 22rpx; padding-top: 20rpx; border-top: 1rpx solid #E8EEF7; font-size: 24rpx; color: #64768D; }
+.json-comment-option { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 20rpx; min-height: 64rpx; color: #64768D; font-size: 24rpx; }
+.json-comment-option switch { flex-shrink: 0; }
+.json-segments, .json-views { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12rpx; }
+.json-segments { width: 320rpx; max-width: 65%; }
+.json-choice { box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 68rpx; padding: 12rpx 8rpx; border: 1px solid #D5E1EE; border-radius: 12rpx; color: #64768D; background: #FFFFFF; font-size: 23rpx; }
+.json-choice.active { color: #1768C5; border-color: #79ADF0; background: #EDF5FF; box-shadow: inset 0 0 0 1px #D5E6FA; font-weight: 600; }
+.json-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16rpx; margin-top: 22rpx; }
+.json-actions button { width: 100%; min-width: 0; height: 88rpx; font-size: 26rpx; border-radius: 16rpx; }
+.json-error { margin-top: 20rpx; padding: 16rpx 20rpx; border: 1px solid #F2D4D4; border-radius: 16rpx; background: #FFF7F7; color: #B33D3D; font-size: 23rpx; line-height: 1.65; }
+.json-error > text { display: block; }
+.json-error-title { font-weight: 600; }
+.json-result { margin-top: 24rpx; }
+.json-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12rpx; margin-top: 14rpx; color: #8191A4; font-size: 21rpx; }
+.json-valid { padding: 5rpx 12rpx; border-radius: 8rpx; color: #228454; background: #EFF9F3; }
+.json-views { margin-top: 20rpx; }
+.json-output { margin-top: 18rpx; height: 500rpx; border: 1px solid #E1E9F3; border-radius: 12rpx; background: #F8FAFD; }
+.json-code { display: block; padding: 18rpx; color: #234666; font-family: Consolas, Menlo, monospace; font-size: 23rpx; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-all; }
+.json-tree-actions { display: flex; gap: 24rpx; justify-content: flex-end; margin: 8rpx 0; }
+.json-tree { height: 500rpx; border-top: 1rpx solid #E8EEF7; border-bottom: 1rpx solid #E8EEF7; }
+.json-tree-row { display: flex; align-items: flex-start; min-height: 76rpx; padding: 14rpx 0; border-bottom: 1rpx solid #EEF2F8; }
+.json-node-mark { flex: 0 0 36rpx; height: 34rpx; display: flex; align-items: center; justify-content: center; }
+.json-node-mark image { width: 24rpx; height: 24rpx; }
+.json-node-dot { width: 6rpx; height: 6rpx; background: #B5C4D6; border-radius: 50%; }
+.json-node-copy { flex: 1; min-width: 0; padding-right: 6rpx; font-family: Consolas, Menlo, monospace; font-size: 23rpx; line-height: 1.5; }
+.json-node-copy-btn { display: flex; align-items: center; justify-content: center; flex: 0 0 64rpx; width: 64rpx; height: 64rpx; margin-left: 8rpx; align-self: center; border-radius: 12rpx; background: #F0F6FF; }
+.json-node-copy-btn image { display: block; width: 28rpx; height: 28rpx; }
+.json-node-copy-pressed { background: #DFECFF; }
+.json-node-key, .json-node-value { display: block; overflow-wrap: anywhere; word-break: break-all; }
+.json-node-key { color: #234666; }
+.json-depth { color: #8191A4; font-size: 20rpx; }
+.json-node-value { color: #718096; margin-top: 4rpx; }
+.json-type-number { color: #1768C5; }
+.json-type-string { color: #25845C; }
+.json-type-boolean, .json-type-null { color: #7D60AC; }
+.json-tree-paging { display: flex; align-items: center; justify-content: center; gap: 28rpx; margin-top: 12rpx; color: #8191A4; font-size: 21rpx; }
+.json-hint { display: block; margin-top: 14rpx; color: #8191A4; font-size: 21rpx; line-height: 1.65; }
+.json-warning { color: #936426; }
+.json-bottom { margin-top: 24rpx; }
+.json-notes { padding: 0 4rpx; margin-top: 20rpx; }

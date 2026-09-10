@@ -1,6 +1,7 @@
 const app = getApp();
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 const MAX_TEXT_LENGTH = 100000;
 const DIFF_CELL_LIMIT = 1200000;
@@ -327,6 +328,7 @@ Page({
     if (this.data.exporting) return;
     if (typeof wx.createSelectorQuery !== 'function' || typeof wx.canvasToTempFilePath !== 'function' || typeof wx.saveImageToPhotosAlbum !== 'function') return wx.showToast({ title: '当前微信版本暂不支持导出图片', icon: 'none' });
     this.setData({ exporting: true });
+    const resultName = outputName('jituan-text-compare', 'png');
     const query = wx.createSelectorQuery();
     query.select('#compareCanvas').node().exec(result => {
       const canvas = result && result[0] && result[0].node;
@@ -336,8 +338,7 @@ Page({
       }
       const rendered = drawCompareCanvas(canvas, this.data.visibleSegments, this.data.stats, this.data.mode, this.data.onlyDiffs);
       wx.canvasToTempFilePath({ canvas, x: 0, y: 0, width: rendered.width, height: rendered.height, destWidth: rendered.width, destHeight: rendered.height, fileType: 'png', success: file => {
-        wx.saveImageToPhotosAlbum({ filePath: file.tempFilePath, success: () => { track('result_export', { tool: 'text-compare' }); wx.showToast({ title: '对比图已保存' }); }, fail: () => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }) });
-        this.setData({ exporting: false });
+        saveNamedImageToAlbum(file.tempFilePath, 'jituan-text-compare', 'png', resultName).then(() => { track('result_export', { tool: 'text-compare' }); wx.showToast({ title: '对比图已保存' }); }).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false })).then(() => this.setData({ exporting: false }));
       }, fail: () => {
         this.setData({ exporting: false });
         wx.showToast({ title: '对比图生成失败，请重试', icon: 'none' });

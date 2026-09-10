@@ -43,6 +43,7 @@
 .choice.active { color: var(--jt-primary); border-color: #8DBAF5; background: #EEF5FF; font-weight: 600; }
 .choice-sub { display: block; margin-top: 5rpx; color: #92A1B6; font-size: 19rpx; font-weight: 400; }
 .result-preview { width: 100%; height: 360rpx; margin: 6rpx 0 16rpx; border-radius: 16rpx; background: #F5F8FC; display: block; }
+.result-output-name { display: block; max-width: 100%; margin: -4rpx 0 8rpx; overflow: hidden; color: #71839A; font-size: 20rpx; line-height: 1.45; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .result-text-value { max-width: 400rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .result-card .primary-btn, .result-card .secondary-btn { height: 82rpx; }
 .canvas-hidden { position: fixed; left: -10000rpx; top: -10000rpx; width: 2px; height: 2px; opacity: 0; pointer-events: none; }

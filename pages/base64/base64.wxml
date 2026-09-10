@@ -1,0 +1,11 @@
+<view class="page tool-page base64-page">
+  <view class="page-head"><view class="tool-title"><text class="title">Base64 编解码</text><text class="desc">UTF-8 文字与 Base64 双向转换</text></view><view class="tool-icon purple"><image src="/assets/icons/base64.svg" mode="aspectFit"/></view></view>
+  <view class="base64-tabs"><button class="{{mode === 'encode' ? 'active' : ''}}" data-mode="encode" bindtap="selectMode">编码</button><button class="{{mode === 'decode' ? 'active' : ''}}" data-mode="decode" bindtap="selectMode">解码</button></view>
+  <view class="card base64-panel"><view class="base64-head"><text>{{mode === 'encode' ? '原始文字' : 'Base64 内容'}}</text><text>{{inputCount}} / {{maxLength}}</text></view><textarea class="base64-input" value="{{input}}" bindinput="onInput" maxlength="{{maxLength}}" placeholder="{{mode === 'encode' ? '输入需要编码的文字，支持中文和 Emoji' : '粘贴需要解码的 Base64 内容'}}" disable-default-padding="{{true}}" show-confirm-bar="{{false}}" cursor-spacing="24"></textarea></view>
+  <button class="primary-btn base64-main" bindtap="convert">{{mode === 'encode' ? '开始编码' : '开始解码'}}</button>
+  <text wx:if="{{error}}" class="base64-error">{{error}}</text>
+  <view class="card base64-panel base64-result"><view class="base64-head"><text>转换结果</text><text>{{outputCount}} 个字符</text></view><scroll-view class="base64-output" scroll-y="{{true}}"><text selectable="{{true}}">{{output || '完成转换后，结果会显示在这里'}}</text></scroll-view><view class="base64-actions"><button class="secondary-btn" bindtap="copyResult"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button><button class="secondary-btn" bindtap="useAsInput"><image src="/assets/icons/arrow-right.svg" mode="aspectFit"/><text>反向转换</text></button></view></view>
+  <view class="base64-bottom"><button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}">{{saved ? '已保存记录' : '保存记录'}}</button><button class="primary-btn" bindtap="clear">清空内容</button></view>
+  <text class="base64-note">最多输入 100000 个字符；仅点击“保存记录”后保留本次内容。</text>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，输入内容不上传服务器</text></view></view>
+</view>

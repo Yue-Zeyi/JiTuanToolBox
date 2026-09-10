@@ -1,0 +1,33 @@
+<view class="page tool-page format-page">
+  <view class="page-head"><view class="tool-title"><text class="title">图片格式转换</text><text class="desc">JPG、PNG 图片格式本地互转</text></view><view class="tool-icon blue"><image src="/assets/icons/image-format.svg" mode="aspectFit"/></view></view>
+
+  <view class="card format-upload">
+    <view wx:if="{{file}}" class="format-file">
+      <image class="format-thumb" src="{{file.path}}" mode="aspectFill" bindtap="previewSource"/>
+      <view class="format-file-copy"><text class="format-file-name">{{file.name}}</text><text class="format-file-meta">{{file.width}} × {{file.height}} px · {{file.sizeText}}</text></view>
+      <button class="ghost-btn format-change" bindtap="chooseImage">更换</button>
+    </view>
+    <button wx:else class="format-empty" bindtap="chooseImage"><image src="/assets/icons/add.svg" mode="aspectFit"/><text class="format-empty-title">选择图片</text><text class="format-empty-tip">支持常见图片格式，单张不超过 20MB</text></button>
+  </view>
+
+  <view class="card format-settings">
+    <view class="format-heading"><text class="format-label">输出格式</text><text class="format-caption">选择转换后的图片格式</text></view>
+    <view class="format-options"><button class="format-option {{format === 'jpg' ? 'active' : ''}}" data-format="jpg" bindtap="selectFormat"><text>JPG</text><text>体积更小，适合分享</text></button><button class="format-option {{format === 'png' ? 'active' : ''}}" data-format="png" bindtap="selectFormat"><text>PNG</text><text>支持透明背景</text></button></view>
+    <view wx:if="{{format === 'jpg'}}" class="format-quality"><view class="format-heading"><text class="format-label">图片质量</text><text class="format-value">{{quality}}%</text></view><slider min="40" max="100" value="{{quality}}" activeColor="#2F80ED" backgroundColor="#DFE8F5" block-size="22" bindchanging="changeQuality"/></view>
+  </view>
+
+  <button class="primary-btn format-main" bindtap="convert" loading="{{state === 'processing'}}" disabled="{{state === 'processing'}}">{{state === 'processing' ? '正在转换' : (result ? '重新转换' : '开始转换')}}</button>
+  <text wx:if="{{error}}" class="format-error">{{error}}</text>
+
+  <view wx:if="{{result}}" class="card format-result">
+    <view class="format-heading"><text class="format-label">转换结果</text><text class="format-done">已完成</text></view>
+    <image class="format-result-image" src="{{result.outputPath}}" mode="aspectFit" bindtap="previewResult"/>
+    <text class="format-result-name">{{result.outputName}}</text>
+    <text class="format-result-meta">{{result.width}} × {{result.height}} px · {{result.formatLabel}} · {{result.sizeText}}</text>
+    <view class="format-actions"><button class="primary-btn" bindtap="saveResult">保存图片</button><button class="secondary-btn" bindtap="reset">处理新图片</button></view>
+  </view>
+
+  <canvas id="formatCanvas" type="2d" class="hidden-canvas"></canvas>
+  <canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+</view>

@@ -5,6 +5,7 @@ const { requestConsent } = require('../../utils/privacy');
 const { checkSelectedImages } = require('../../utils/content-security');
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 const MAX_FILES = service.MAX_STITCH_IMAGES || 20;
 const LAYOUT_OPTIONS = [
@@ -142,6 +143,7 @@ Page({
       error: '',
       result: {
         outputPath,
+        outputName: first.outputName || record.outputName || outputName('jituan-stitch', outputFormat),
         outputFormat,
         formatLabel: outputFormat.toUpperCase(),
         width: Number(record.outputWidth) || Number(first.outputWidth) || Number(first.width) || 0,
@@ -350,6 +352,7 @@ Page({
       const outputFormat = result.outputFormat || 'jpg';
       const resultView = {
         ...result,
+        outputName: outputName('jituan-stitch', outputFormat),
         formatLabel: outputFormat.toUpperCase(),
         originalText: formatBytes(result.originalBytes),
         sizeText: formatBytes(result.compressedBytes),
@@ -374,6 +377,7 @@ Page({
         gapLabel: gapLabel(options.gap),
         background: options.background,
         backgroundLabel: backgroundLabel(options.background),
+        outputName: resultView.outputName,
         outputFormat,
         outputWidth: result.width,
         outputHeight: result.height,
@@ -383,6 +387,7 @@ Page({
         files: this.data.files.map(file => ({
           path: file.path,
           outputPath: result.outputPath,
+          outputName: resultView.outputName,
           name: file.name,
           size: file.size,
           sizeText: file.sizeText,
@@ -411,11 +416,7 @@ Page({
   saveResult() {
     const result = this.data.result;
     if (!result || !result.outputPath) return wx.showToast({ title: '当前没有可保存的结果', icon: 'none' });
-    wx.saveImageToPhotosAlbum({
-      filePath: result.outputPath,
-      success: () => { track('result_save', { tool: 'stitch' }); wx.showToast({ title: '已保存到相册' }); },
-      fail: () => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false })
-    });
+    saveNamedImageToAlbum(result.outputPath, 'jituan-stitch', result.outputFormat, result.outputName).then(() => { track('result_save', { tool: 'stitch' }); wx.showToast({ title: '已保存到相册' }); }).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
   },
 
   chooseAgain() {

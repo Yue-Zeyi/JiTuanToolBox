@@ -1,0 +1,18 @@
+<view class="page tool-page tax-page">
+  <view class="page-head"><view class="tool-title"><text class="title">个税计算器</text><text class="desc">工资预扣 · 年度汇算 · 税后收入</text></view><view class="tool-icon blue"><image src="/assets/icons/tax-calculator.svg" mode="aspectFit"/></view></view>
+  <view class="tax-tabs"><button wx:for="{{modes}}" wx:key="key" class="tax-tab {{mode === item.key ? 'active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">{{item.title}}</button></view>
+  <view class="card tax-panel">
+    <view wx:if="{{mode === 'monthly'}}" class="tax-field"><text>税前月收入</text><view class="tax-input"><text>¥</text><input type="digit" data-field="salary" value="{{salary}}" bindinput="onInput" placeholder="例如 15000" maxlength="12"/></view></view>
+    <view wx:else class="tax-field"><text>年度综合收入</text><view class="tax-input"><text>¥</text><input type="digit" data-field="income" value="{{income}}" bindinput="onInput" placeholder="例如 180000" maxlength="14"/></view></view>
+    <view wx:if="{{mode === 'monthly'}}" class="tax-field"><text>计税月份</text><picker mode="selector" range="{{months}}" value="{{month - 1}}" bindchange="changeMonth"><view class="tax-picker"><text>第 {{month}} 月</text><image src="/assets/icons/chevron-down.svg" mode="aspectFit"/></view></picker></view>
+    <view class="tax-field"><text>{{mode === 'monthly' ? '本月五险一金' : '年度五险一金'}}</text><view class="tax-input"><text>¥</text><input type="digit" data-field="socialFund" value="{{socialFund}}" bindinput="onInput" placeholder="没有可填 0" maxlength="12"/></view></view>
+    <view class="tax-field"><text>{{mode === 'monthly' ? '本月专项附加扣除' : '年度专项附加扣除'}}</text><view class="tax-input"><text>¥</text><input type="digit" data-field="special" value="{{special}}" bindinput="onInput" placeholder="没有可填 0" maxlength="12"/></view></view>
+    <view class="tax-field"><text>其他税前扣除</text><view class="tax-input"><text>¥</text><input type="digit" data-field="other" value="{{other}}" bindinput="onInput" placeholder="没有可填 0" maxlength="12"/></view></view>
+    <view wx:if="{{mode === 'annual'}}" class="tax-field"><text>年度已预缴个税</text><view class="tax-input"><text>¥</text><input type="digit" data-field="prepaid" value="{{prepaid}}" bindinput="onInput" placeholder="用于估算应补或可退税额" maxlength="12"/></view></view>
+    <text wx:if="{{mode === 'monthly'}}" class="tax-assumption">月度预扣按截至所选月份的收入与扣除项均保持不变进行估算。</text>
+    <text wx:if="{{error}}" class="tax-error">{{error}}</text>
+  </view>
+  <button class="primary-btn tax-main" bindtap="calculate">开始计算</button>
+  <view class="card tax-result"><view class="tax-result-head"><text>计算结果</text><button bindtap="copyResult" disabled="{{!hasResult}}"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制</text></button></view><text class="tax-result-text" selectable="{{true}}">{{hasResult ? resultText : '填写收入与扣除项后点击计算'}}</text><button class="tax-clear" bindtap="clearAll">清空输入</button></view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地测算，输入与结果不上传服务器</text></view><text class="privacy-detail">按中国大陆综合所得预扣规则估算，不替代正式申报</text></view>
+</view>

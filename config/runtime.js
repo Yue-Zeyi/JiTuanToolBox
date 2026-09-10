@@ -1,10 +1,8 @@
-// 联调前把 useMockServices 改成 false，并填写 apiBaseUrl。
 // 生产环境建议通过构建脚本注入，不要把带权限的密钥放进小程序包。
 module.exports = {
-  useMockServices: true,
-  apiBaseUrl: '',
   analyticsEnabled: false,
   cloudEnvId: 'cloud1-d2gzwmpwtfed214d2',
+  popularityFunctionName: 'tool-popularity',
   securityFunctionName: 'media-security',
   securityPollIntervalMs: 1500,
   securityTimeoutMs: 120000,

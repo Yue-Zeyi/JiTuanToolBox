@@ -1,6 +1,19 @@
 const MAX_BYTES = 20 * 1024 * 1024;
 const MAX_SIDE = 4096;
 
+function imageFormat(file, outputPath) {
+  const sources = [outputPath, file && file.type, file && file.name, file && file.path].filter(Boolean);
+  for (let index = 0; index < sources.length; index += 1) {
+    const value = String(sources[index]).toLowerCase();
+    const typeMatch = value.match(/^image\/([a-z0-9]+)/);
+    const extensionMatch = value.match(/\.([a-z0-9]+)(?:[?#].*)?$/);
+    const format = (typeMatch && typeMatch[1]) || (extensionMatch && extensionMatch[1]) || '';
+    if (format === 'jpeg' || format === 'jpe' || format === 'jfif') return 'jpg';
+    if (['jpg', 'png', 'bmp', 'webp'].includes(format)) return format;
+  }
+  return 'jpg';
+}
+
 function checkCancelled(isCancelled) {
   if (isCancelled && isCancelled()) throw new Error('已取消图片压缩');
 }
@@ -143,7 +156,7 @@ async function compressFile(file, config, index, api, isCancelled) {
   if (originalBytes > MAX_BYTES) throw new Error('单张图片不能超过 20MB');
   checkCancelled(isCancelled);
   const base = { ...file, id: `${Date.now()}-${index}`, originalBytes, targetBytes };
-  if (targetBytes && originalBytes <= targetBytes) return { ...base, outputPath: file.path, compressedBytes: originalBytes, keptOriginal: true, targetMet: true };
+  if (targetBytes && originalBytes <= targetBytes) return { ...base, outputPath: file.path, outputFormat: imageFormat(file, file.path), compressedBytes: originalBytes, keptOriginal: true, targetMet: true };
   const generated = new Set();
   let keptPath = '';
   let encoder;
@@ -160,8 +173,8 @@ async function compressFile(file, config, index, api, isCancelled) {
       const output = await nativeTask(callbacks => api.compressImage({ src: file.path, quality, ...callbacks }), '图片压缩', result => discardCompressionResults([{ path: file.path, outputPath: result && result.tempFilePath }], api));
       if (!output || !output.tempFilePath) throw new Error('压缩结果路径为空');
       if (output.tempFilePath !== file.path) generated.add(output.tempFilePath);
-      result = { outputPath: output.tempFilePath, compressedBytes: await readBytes(api, output.tempFilePath), requestedQuality: quality };
-      if (result.compressedBytes >= originalBytes) result = { outputPath: file.path, compressedBytes: originalBytes, keptOriginal: true };
+      result = { outputPath: output.tempFilePath, outputFormat: imageFormat(file, output.tempFilePath), compressedBytes: await readBytes(api, output.tempFilePath), requestedQuality: quality };
+      if (result.compressedBytes >= originalBytes) result = { outputPath: file.path, outputFormat: imageFormat(file, file.path), compressedBytes: originalBytes, keptOriginal: true };
     }
     checkCancelled(isCancelled);
     keptPath = result.outputPath;

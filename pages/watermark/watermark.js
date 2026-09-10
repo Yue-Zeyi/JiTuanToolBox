@@ -5,6 +5,7 @@ const { requestConsent } = require('../../utils/privacy');
 const { checkSelectedImages } = require('../../utils/content-security');
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 const COLORS = [
   { key: '#FFFFFF', title: '白色' }, { key: '#15233B', title: '深蓝' },
@@ -115,7 +116,7 @@ Page({
     if (!outputPath) return;
     this.restoredHistoryRecordId = recordId;
     const savedColor = record.watermarkColor || '#FFFFFF';
-    this.setData({ file: file ? { ...file, path: file.path || '', sizeText: file.sizeText || formatBytes(file.size || 0) } : null, text: record.watermarkText || '极团工具箱', color: savedColor, ...pickerStateFromColor(savedColor), colorError: '', position: record.watermarkPosition || 'bottom-right', outputFormat: record.outputFormat || 'jpg', state: 'success', result: { outputPath, outputFormat: record.outputFormat || 'jpg', width: record.outputWidth || 0, height: record.outputHeight || 0, size: record.outputSize || 0, sizeText: formatBytes(record.outputSize || 0), text: record.watermarkText || '极团工具箱' }, error: '' });
+    this.setData({ file: file ? { ...file, path: file.path || '', sizeText: file.sizeText || formatBytes(file.size || 0) } : null, text: record.watermarkText || '极团工具箱', color: savedColor, ...pickerStateFromColor(savedColor), colorError: '', position: record.watermarkPosition || 'bottom-right', outputFormat: record.outputFormat || 'jpg', state: 'success', result: { outputPath, outputName: file && file.outputName || record.outputName || outputName('jituan-watermark', record.outputFormat || 'jpg'), outputFormat: record.outputFormat || 'jpg', width: record.outputWidth || 0, height: record.outputHeight || 0, size: record.outputSize || 0, sizeText: formatBytes(record.outputSize || 0), text: record.watermarkText || '极团工具箱' }, error: '' });
   },
 
   async chooseImage() {
@@ -203,9 +204,9 @@ Page({
     track('tool_start', { tool: 'watermark' });
     app.recordRecent({ key: 'watermark', title: '图片加水印', desc: '添加文字水印保护图片', icon: 'watermark', tone: 'purple', page: '/pages/watermark/watermark' });
     service.watermarkImage(this.data.file, options, this).then(result => {
-      const resultView = { ...result, sizeText: formatBytes(result.compressedBytes), outputPath: result.outputPath };
+      const resultView = { ...result, outputName: outputName('jituan-watermark', result.outputFormat), sizeText: formatBytes(result.compressedBytes), outputPath: result.outputPath };
       this.setData({ state: 'success', result: resultView });
-      app.recordOperation({ key: 'watermark', title: '图片加水印', desc: '添加文字水印保护图片', icon: 'watermark', tone: 'purple', page: '/pages/watermark/watermark', watermarkText: options.text, watermarkColor: options.color, watermarkPosition: options.position, outputFormat: result.outputFormat, outputWidth: result.width, outputHeight: result.height, outputSize: result.compressedBytes, modeLabel: `${options.text} · ${result.outputFormat.toUpperCase()}`, detailText: `${result.width} × ${result.height} px · ${resultView.sizeText}`, files: [{ ...this.data.file, outputPath: result.outputPath, outputSize: result.compressedBytes, outputFormat: result.outputFormat }] }).catch(() => {});
+      app.recordOperation({ key: 'watermark', title: '图片加水印', desc: '添加文字水印保护图片', icon: 'watermark', tone: 'purple', page: '/pages/watermark/watermark', watermarkText: options.text, watermarkColor: options.color, watermarkPosition: options.position, outputName: resultView.outputName, outputFormat: result.outputFormat, outputWidth: result.width, outputHeight: result.height, outputSize: result.compressedBytes, modeLabel: `${options.text} · ${result.outputFormat.toUpperCase()}`, detailText: `${result.width} × ${result.height} px · ${resultView.sizeText}`, files: [{ ...this.data.file, outputPath: result.outputPath, outputName: resultView.outputName, outputSize: result.compressedBytes, outputFormat: result.outputFormat }] }).catch(() => {});
       track('tool_success', { tool: 'watermark' });
     }).catch(error => { track('tool_error', { tool: 'watermark', reason: 'local_error' }); this.setData({ state: 'error', error: error && error.message ? error.message : '水印处理失败，请重新选择图片后重试' }); });
   },
@@ -214,7 +215,7 @@ Page({
   saveResult() {
     const result = this.data.result;
     if (!result || !result.outputPath) return wx.showToast({ title: '当前没有可保存的结果', icon: 'none' });
-    wx.saveImageToPhotosAlbum({ filePath: result.outputPath, success: () => { track('result_save', { tool: 'watermark' }); wx.showToast({ title: '已保存到相册' }); }, fail: () => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }) });
+    saveNamedImageToAlbum(result.outputPath, 'jituan-watermark', result.outputFormat, result.outputName).then(() => { track('result_save', { tool: 'watermark' }); wx.showToast({ title: '已保存到相册' }); }).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
   },
   chooseAgain() { this.historyRecordId = ''; this.restoredHistoryRecordId = ''; this.setData({ file: null, state: 'empty', result: null, error: '' }); this.chooseImage(); },
   retry() { this.startWatermark(); }

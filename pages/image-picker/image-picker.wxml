@@ -1,0 +1,17 @@
+<view class="page tool-page picker-page">
+  <view class="page-head"><view class="tool-title"><text class="title">图片取色器</text><text class="desc">点击图片，读取像素颜色</text></view><view class="tool-icon purple"><image src="/assets/icons/image-picker.svg" mode="aspectFit"/></view></view>
+  <view class="card picker-workspace">
+    <view wx:if="{{file}}" class="picker-canvas-wrap"><canvas type="2d" id="pickerCanvas" class="picker-canvas" bindtap="pickColor"></canvas><view wx:if="{{crosshairStyle}}" class="picker-crosshair" style="{{crosshairStyle}}"><view></view></view><view wx:if="{{rendering}}" class="picker-loading">正在绘制图片</view></view>
+    <button wx:else class="picker-empty" bindtap="chooseImage"><image src="/assets/icons/add.svg" mode="aspectFit"/><text>选择图片</text><text>支持常见图片格式，单张不超过 20MB</text></button>
+    <view wx:if="{{file}}" class="picker-file"><view><text>{{file.name}}</text><text>{{file.width}} × {{file.height}} px · {{file.sizeText}}</text></view><button class="ghost-btn" bindtap="chooseImage">更换</button></view>
+  </view>
+  <view class="card picker-result">
+    <view class="picker-head"><text>当前颜色</text><text>点击数值可复制</text></view>
+    <view wx:if="{{color}}" class="picker-color"><view class="picker-swatch" style="background:{{color.rgba}}"></view><view class="picker-values"><button data-key="hex" bindtap="copyValue"><text>HEX</text><text>{{color.hex}}</text></button><button data-key="rgba" bindtap="copyValue"><text>RGBA</text><text>{{color.rgba}}</text></button><button data-key="hsl" bindtap="copyValue"><text>HSL</text><text>{{color.hsl}}</text></button><button data-key="alpha" bindtap="copyValue"><text>透明度</text><text>{{color.alpha}}</text></button></view></view>
+    <view wx:else class="picker-no-color">选择图片后，点击画面中的位置取色</view>
+    <view wx:if="{{recentColors.length}}" class="picker-recent"><text>最近取色</text><view><button wx:for="{{recentColors}}" wx:key="rgba" data-index="{{index}}" bindtap="chooseRecent" style="background:{{item.rgba}}" aria-label="{{item.rgba}}"></button></view></view>
+  </view>
+  <view class="picker-actions"><button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}">{{saved ? '已保存记录' : '保存记录'}}</button><button class="primary-btn" bindtap="reset">清空图片</button></view>
+  <canvas id="securityCanvas" type="2d" class="security-canvas"></canvas>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地取色，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+</view>

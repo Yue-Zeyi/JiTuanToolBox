@@ -29,6 +29,7 @@
       <image wx:elif="{{imagePath}}" class="qr-image" src="{{imagePath}}" mode="aspectFit" bindtap="previewImage"/>
       <view wx:else class="qr-empty"><image src="/assets/icons/qrcode.svg" mode="aspectFit"/><text>{{rendering ? '正在绘制二维码' : '生成后可预览和保存图片'}}</text></view>
     </view>
+    <text wx:if="{{hasResult}}" class="qr-result-name">{{outputName}}</text>
     <view wx:if="{{hasResult}}" class="qr-encoded"><text class="qr-setting-label">实际编码内容</text><scroll-view scroll-y="{{true}}" class="qr-encoded-content"><text selectable="{{true}}">{{encodedText}}</text></scroll-view></view>
     <view class="qr-actions">
       <button class="secondary-btn" bindtap="previewImage" disabled="{{!hasResult}}"><image src="/assets/icons/search.svg" mode="aspectFit"/><text>查看大图</text></button>

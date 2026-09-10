@@ -1,0 +1,36 @@
+<view class="page tool-page json-page">
+  <view class="page-head"><view class="tool-title"><text class="title">JSON 格式化</text><text class="desc">整理缩进 · 校验语法 · 查看结构</text></view><view class="tool-icon blue"><image src="/assets/icons/json-format.svg" mode="aspectFit"/></view></view>
+  <view class="card json-panel">
+    <view class="json-head"><text class="json-heading">输入 JSON</text><button class="json-link" bindtap="paste"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>粘贴内容</text></button></view>
+    <view class="json-editor-wrap"><textarea class="json-editor" value="{{text}}" bindinput="onInput" bindblur="onBlur" focus="{{editorFocus}}" selection-start="{{selectionStart}}" selection-end="{{selectionEnd}}" placeholder="输入或粘贴 JSON 内容" maxlength="100000" cursor-spacing="24" show-confirm-bar="{{false}}" disable-default-padding="{{true}}" aria-label="JSON 输入内容"></textarea></view>
+    <view class="json-editor-foot"><text>{{allowComments ? '支持带注释的 JSONC' : '严格 JSON 校验'}}</text><text>{{count}} / 100000</text></view>
+    <view class="json-options"><text>缩进空格</text><view class="json-segments"><button wx:for="{{indents}}" wx:key="*this" class="json-choice {{indent === item ? 'active' : ''}}" data-indent="{{item}}" bindtap="selectIndent">{{item}} 空格</button></view></view>
+    <view class="json-comment-option"><text>允许注释</text><switch checked="{{allowComments}}" bindchange="toggleComments" color="#2F80ED" aria-label="允许 JSON 注释"/></view>
+    <text class="json-hint">{{allowComments ? '支持 // 单行和 /* … */ 块注释，输出时移除注释。' : '不接受注释；开启后可处理接口文档中的带注释示例。'}}</text>
+  </view>
+  <view wx:if="{{error}}" class="json-error"><view class="json-head"><text class="json-error-title">{{errorLine ? '第 ' + errorLine + ' 行 · 第 ' + errorColumn + ' 列' : '暂时无法处理'}}</text><button wx:if="{{errorLine}}" class="json-link" bindtap="locateError">定位错误</button></view><text>{{error}}</text></view>
+  <view class="json-actions"><button class="primary-btn" bindtap="format">格式化 JSON</button><button class="secondary-btn" bindtap="minify">压缩 JSON</button></view>
+  <view wx:if="{{hasResult}}" class="card json-panel json-result">
+    <view class="json-head"><text class="json-heading">{{mode === 'minify' ? '压缩结果' : '格式化结果'}}</text><button class="json-link" bindtap="copyResult"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/><text>复制结果</text></button></view>
+    <view class="json-meta"><text class="json-valid">校验通过</text><text>{{outputCount}} 字符 · {{nodeCount}} 节点</text></view>
+    <text wx:if="{{comments}}" class="json-hint">已移除 {{comments}} 处注释，输出为标准 JSON；输入原文保持不变。</text>
+    <view class="json-views"><button class="json-choice {{view === 'text' ? 'active' : ''}}" data-view="text" bindtap="selectView">文本视图</button><button class="json-choice {{view === 'tree' ? 'active' : ''}}" data-view="tree" bindtap="selectView">树形视图</button></view>
+    <block wx:if="{{view === 'text'}}"><scroll-view class="json-output" scroll-y="{{true}}"><text class="json-code" selectable="{{true}}">{{preview}}</text></scroll-view><text wx:if="{{truncated}}" class="json-hint">预览仅展示前 12000 字符，复制结果可获取完整内容。</text></block>
+    <block wx:else>
+      <view class="json-tree-actions"><button class="json-link" bindtap="expandAll">展开全部</button><button class="json-link" bindtap="collapseAll">折叠全部</button></view>
+      <scroll-view class="json-tree" scroll-y="{{true}}" scroll-top="{{treeScrollTop}}">
+        <view wx:for="{{rows}}" wx:key="id" class="json-tree-row" style="padding-left: {{item.padding}}rpx;" data-id="{{item.id}}" bindtap="toggleNode" role="{{item.branch ? 'button' : 'text'}}" aria-label="{{item.branch ? (item.open ? '折叠 ' : '展开 ') + item.label : item.label}}">
+          <view class="json-node-mark"><image wx:if="{{item.branch}}" src="{{item.open ? '/assets/icons/chevron-down.svg' : '/assets/icons/arrow-right.svg'}}" mode="aspectFit"/><view wx:else class="json-node-dot"></view></view>
+          <view class="json-node-copy"><text class="json-node-key">{{item.label}}<text wx:if="{{item.deep}}" class="json-depth"> · 第 {{item.deep}} 层</text></text><text class="json-node-value json-type-{{item.type}}">{{item.preview}}</text></view>
+          <button class="json-node-copy-btn" data-id="{{item.id}}" catchtap="copyNode" aria-label="{{'复制 ' + item.label}}" hover-class="json-node-copy-pressed"><image src="/assets/icons/password-copy.svg" mode="aspectFit"/></button>
+        </view>
+      </scroll-view>
+      <view wx:if="{{more || treeOffset}}" class="json-tree-paging"><button wx:if="{{treeOffset}}" class="json-link" bindtap="previousRows">上一页</button><text>第 {{treeOffset / 200 + 1}} 页</text><button wx:if="{{more}}" class="json-link" bindtap="nextRows">下一页</button></view>
+      <text class="json-hint">点击对象或数组展开，每页最多 200 节点。右侧图标可复制完整值，对象字段还可复制键值对；字符串值复制为实际文字。</text>
+    </block>
+    <text wx:if="{{duplicates}}" class="json-hint json-warning">发现 {{duplicates}} 个重复键，已原样保留；其他软件读取时可能覆盖同名值。</text>
+  </view>
+  <view class="json-actions json-bottom"><button class="secondary-btn" bindtap="saveRecord" loading="{{saving}}">保存记录</button><button class="primary-btn" bindtap="clear">清空内容</button></view>
+  <text class="json-hint json-notes">保留大整数、小数精度及字段顺序。最多支持 128 层嵌套；仅点击“保存记录”后保留本次内容。</text>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，JSON 内容不上传服务器</text></view></view>
+</view>

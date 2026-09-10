@@ -51,6 +51,7 @@
   <view wx:if="{{state === 'success'}}" class="card result-card stitch-result">
     <view class="stitch-result-heading"><view><view class="eyebrow">处理完成</view><text class="stitch-result-title">图片拼接完成</text></view><view class="stitch-result-count"><text>{{result.fileCount}}</text><text>张</text></view></view>
     <view class="stitch-result-preview" bindtap="previewResult"><image src="{{result.outputPath}}" mode="aspectFit"/><view class="stitch-result-preview-tip">点击查看大图</view></view>
+    <text class="stitch-result-name">{{result.outputName}}</text>
     <view class="stitch-result-summary"><view class="stitch-summary-main"><text class="stitch-summary-number">{{result.width}} × {{result.height}}</text><text class="stitch-summary-label">px</text></view><view class="stitch-summary-meta"><text>{{result.layoutLabel}} · {{result.gapLabel}}</text><text>{{result.formatLabel}} · {{result.sizeText}}</text></view></view>
     <view class="stitch-result-actions"><button class="primary-btn stitch-save" bindtap="saveResult">保存图片</button><view class="stitch-secondary-actions"><button class="secondary-btn" bindtap="chooseAgain">再次拼接</button><button class="secondary-btn" bindtap="goHome">返回首页</button></view></view>
   </view>

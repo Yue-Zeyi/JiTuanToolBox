@@ -1,5 +1,6 @@
 .hero { position: relative; display: flex; align-items: center; overflow: hidden; padding: 24rpx 28rpx 20rpx; min-height: 156rpx; background: linear-gradient(135deg, #2F80ED 0%, #4B93F4 58%, #5BA3FF 100%); color: #fff; border: 0; box-shadow: 0 14rpx 28rpx rgba(47, 128, 237, .18); }
 .brand-line { display: flex; align-items: baseline; gap: 14rpx; }
+.home-page .brand-icon { width: 80rpx; height: 80rpx; flex-shrink: 0; margin-left: 16rpx; }
 .brand-count { color: #8A99AB; font-size: 20rpx; font-weight: 500; line-height: 1.3; white-space: nowrap; }
 .hero-copy { position: relative; z-index: 2; width: 78%; transform: translateY(3rpx); }
 .hero-title { display: block; font-size: 34rpx; font-weight: 700; line-height: 1.35; letter-spacing: -.4rpx; }

@@ -5,6 +5,7 @@ const { requestConsent } = require('../../utils/privacy');
 const { checkSelectedImages } = require('../../utils/content-security');
 const { track } = require('../../utils/analytics');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
+const { outputName, saveNamedImageToAlbum } = require('../../utils/image-output');
 
 const GRID_PRESETS = [
   { key: '2x2', rows: 2, cols: 2, title: '2 × 2', desc: '4 块' },
@@ -72,7 +73,7 @@ Page({
       outputFormat: item.outputFormat || 'jpg',
       compressedBytes: Number(item.outputSize) || Number(item.compressedBytes) || 0,
       compressedText: item.outputSizeText || formatBytes(Number(item.outputSize) || Number(item.compressedBytes) || 0),
-      name: item.name || `${fileBaseName(first.name)}-${pad(index + 1)}.jpg`
+      name: item.outputName || outputName(`${fileBaseName(first.name)}-${pad(index + 1)}`, item.outputFormat || 'jpg')
     }));
     this.restoredHistoryRecordId = recordId;
     this.setData({
@@ -210,13 +211,13 @@ Page({
       const baseName = fileBaseName(this.data.file.name);
       const displayResults = results.map((item, index) => ({
         ...item,
-        name: `${baseName}-${pad(item.tileIndex || index + 1)}.${item.outputFormat || 'jpg'}`,
+        name: outputName(`${baseName}-${pad(item.tileIndex || index + 1)}`, item.outputFormat || 'jpg'),
         sizeText: formatBytes(item.compressedBytes)
       }));
       const totalBytes = displayResults.reduce((sum, item) => sum + (Number(item.compressedBytes) || 0), 0);
       const gridLabel = `${grid.rows} × ${grid.cols}${grid.rows * grid.cols === 9 ? ' · 九宫格' : ''}`;
       this.setData({ state: 'success', progress: 100, currentPart: '', results: displayResults, resultCount: displayResults.length, gridLabel });
-      app.recordOperation({ key: 'split', title: '图片拆块', desc: '九宫格拆分，发布更有趣', icon: 'split', tone: 'purple', page: '/pages/split/split', modeLabel: gridLabel, detailText: `${displayResults.length} 块 · ${formatBytes(totalBytes)}`, rows: grid.rows, cols: grid.cols, gridLabel, sourceWidth: this.data.file.width, sourceHeight: this.data.file.height, files: displayResults.map(item => ({ path: this.data.file.path, outputPath: item.outputPath, name: item.name, size: this.data.file.size, sizeText: this.data.file.sizeText, outputSize: item.compressedBytes, outputSizeText: formatBytes(item.compressedBytes), outputFormat: item.outputFormat, tileIndex: item.tileIndex, row: item.row, column: item.column, rows: item.rows, cols: item.cols, width: item.width, height: item.height })) }).catch(() => {});
+      app.recordOperation({ key: 'split', title: '图片拆块', desc: '九宫格拆分，发布更有趣', icon: 'split', tone: 'purple', page: '/pages/split/split', modeLabel: gridLabel, detailText: `${displayResults.length} 块 · ${formatBytes(totalBytes)}`, rows: grid.rows, cols: grid.cols, gridLabel, sourceWidth: this.data.file.width, sourceHeight: this.data.file.height, files: displayResults.map(item => ({ path: this.data.file.path, outputPath: item.outputPath, outputName: item.name, name: item.name, size: this.data.file.size, sizeText: this.data.file.sizeText, outputSize: item.compressedBytes, outputSizeText: formatBytes(item.compressedBytes), outputFormat: item.outputFormat, tileIndex: item.tileIndex, row: item.row, column: item.column, rows: item.rows, cols: item.cols, width: item.width, height: item.height })) }).catch(() => {});
       track('tool_success', { tool: 'split', count: displayResults.length });
     }).catch(error => {
       track('tool_error', { tool: 'split', reason: 'service_error' });
@@ -231,20 +232,20 @@ Page({
     wx.previewImage({ current: current.outputPath, urls });
   },
 
-  saveOne(item) {
-    return new Promise((resolve, reject) => wx.saveImageToPhotosAlbum({ filePath: item.outputPath, success: resolve, fail: reject }));
+  saveOne(item, index = 0) {
+    return saveNamedImageToAlbum(item.outputPath, `jituan-split-${String(item.tileIndex || index + 1).padStart(2, '0')}`, item.outputFormat || 'jpg', item.name);
   },
 
   saveResult(event) {
     const item = this.data.results[event.currentTarget.dataset.index];
     if (!item || !item.outputPath) return wx.showToast({ title: '当前结果没有可保存的文件', icon: 'none' });
-    this.saveOne(item).then(() => wx.showToast({ title: '已保存到相册' })).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
+    this.saveOne(item, Number(event.currentTarget.dataset.index)).then(() => wx.showToast({ title: '已保存到相册' })).catch(() => wx.showModal({ title: '需要相册权限', content: '请在设置中允许保存图片到相册。', showCancel: false }));
   },
 
   saveAll() {
     const items = this.data.results.filter(item => item.outputPath);
     if (!items.length) return wx.showToast({ title: '当前没有可保存的结果', icon: 'none' });
-    Promise.all(items.map(item => this.saveOne(item))).then(() => wx.showToast({ title: `已保存 ${items.length} 张图片` })).catch(() => wx.showModal({ title: '保存失败', content: '部分图片保存失败，请检查相册权限后重试。', showCancel: false }));
+    Promise.all(items.map((item, index) => this.saveOne(item, index))).then(() => wx.showToast({ title: `已保存 ${items.length} 张图片` })).catch(() => wx.showModal({ title: '保存失败', content: '部分图片保存失败，请检查相册权限后重试。', showCancel: false }));
   },
 
   chooseAgain() {

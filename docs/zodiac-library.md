@@ -7,9 +7,9 @@
 - npm source: https://registry.npmjs.org/lunar-javascript/-/lunar-javascript-1.7.7.tgz
 - Retrieved with `npm pack lunar-javascript@1.7.7` on 2026-09-08.
 - Tarball SHA-1 reported by npm: `2c7a359f2ffc414ce2b0214f59148ff7a823851f`.
-- Vendored file: `utils/vendor/lunar-javascript.js`, the unmodified package `lunar.js` renamed for clarity; 435942 bytes.
+- Vendored file: `package-calendar/utils/vendor/lunar-javascript.js`, the unmodified package `lunar.js` renamed for clarity; 435942 bytes.
 - Vendored SHA-256: `9750324bfe1aa63c146f8c72b1143df924466c11c8a5277d7d9225c541a18aaa`.
-- License: MIT, Copyright (c) 2018 6tail; exact license in `utils/vendor/LICENSE-lunar-javascript`.
+- License: MIT, Copyright (c) 2018 6tail; exact license in `package-calendar/utils/vendor/LICENSE-lunar-javascript`.
 
 The dependency has no runtime network requests or package dependencies. Its CommonJS export works with the mini program's local `require`. The application only exposes cultural calendar information: calendar years, zodiac animals, stem elements and na yin. The upstream package also contains other traditional-calendar APIs, which this tool does not expose or call for predictions.
 
@@ -29,7 +29,7 @@ Birthday benmingnian compares the birth animal to the current animal using the s
 
 ## Public interface
 
-`utils/zodiac.js` exports `ANIMALS`, `getToday(options)`, `getYearResult(year, options)`, `getBirthdayResult(dateString, timeString, options)` and `findZodiacYears(animal, startYear, endYear, options)`. Options are optional and currently contain only `now`. Invalid inputs throw a Chinese-language `Error` suitable for a form message. Returned values are serializable plain objects and arrays.
+`package-calendar/utils/zodiac.js` exports `ANIMALS`, `getToday(options)`, `getYearResult(year, options)`, `getBirthdayResult(dateString, timeString, options)` and `findZodiacYears(animal, startYear, endYear, options)`. Options are optional and currently contain only `now`. Invalid inputs throw a Chinese-language `Error` suitable for a form message. Returned values are serializable plain objects and arrays.
 
 Each year record has `year`, `yearLabel`, `animal`, `ganZhi`, `stemElement`, `naYin`, `cnyDate`, `liChunAt`, `isBenMingNian` and `benMingNianText`. Year-only records add `ageMin`, `ageMax`, `ageText`, `isApproximate` and `boundaryNote`.
 
@@ -37,8 +37,6 @@ Birthday results add `date`, `time`, `timePrecision`, `cny`, `lichun`, `lichunOp
 
 Reverse lookup returns inclusive matches in ascending order, or an empty array. Rows use the year-only shape. No calendar library objects leak through the interface.
 
-## Verification
+## Verification policy
 
-Run `node --test tests/zodiac.test.js`. Coverage includes the two possible CNY/LiChun orderings (2024 and 2025), midnight and second-level boundaries, unknown/minute birth times, 1900/2100 bounds, lunar year 1899, leap-day ages, current convention changes, future input rejection, reverse lookup ordering, and separate processes in UTC, America/Los_Angeles and Asia/Shanghai.
-
-The source fixtures include CNY 2024-02-10 and LiChun 2024-02-04 16:27:07, plus CNY 2025-01-29 and LiChun 2025-02-03 22:10:28. Future upgrades should be deliberate and re-run these checks; changes to solar-term timestamps require review.
+Future dependency upgrades must recheck the two possible CNY/LiChun orderings, midnight and second-level boundaries, unknown/minute birth times, 1900/2100 bounds, leap-day ages, future input rejection and reverse lookup ordering. Changes to solar-term timestamps require review.
