@@ -1,19 +1,8 @@
 const app = getApp();
-const { catalogTools, toolCategories, getTool, getToolGroups } = require('../../utils/tool-catalog');
+const { toolCategories, getTool, getToolGroups } = require('../../utils/tool-catalog');
 const { track } = require('../../utils/analytics');
 const { reportToolClick } = require('../../utils/tool-popularity');
 const { getShareAppMessage, getShareTimeline } = require('../../utils/share');
-
-function createRandomOrder() {
-  const order = {};
-  const keys = catalogTools.map(tool => tool.key);
-  for (let index = keys.length - 1; index > 0; index--) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [keys[index], keys[swapIndex]] = [keys[swapIndex], keys[index]];
-  }
-  keys.forEach((key, index) => { order[key] = index; });
-  return order;
-}
 
 Page({
   data: {
@@ -33,7 +22,6 @@ Page({
     this._browseScrollTop = 0;
     this._searching = false;
     this._viewRevision = 0;
-    this._randomOrder = createRandomOrder();
     this.updateView('', 'all', 0);
   },
 
@@ -46,10 +34,7 @@ Page({
   },
 
   updateView(query, activeCategory, scrollTop = 0) {
-    const groups = getToolGroups(activeCategory, query).map(group => ({
-      ...group,
-      tools: group.tools.slice().sort((left, right) => this._randomOrder[left.key] - this._randomOrder[right.key])
-    }));
+    const groups = getToolGroups(activeCategory, query);
     const isSearching = Boolean(query.trim());
     const hasTools = groups.some(group => group.tools.length);
     const revision = ++this._viewRevision;
