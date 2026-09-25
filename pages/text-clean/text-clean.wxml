@@ -19,7 +19,7 @@
   </view>
 
   <view class="card clean-options-card">
-    <view class="clean-options-head"><view><text class="clean-options-title">清洗选项</text><text class="clean-options-subtitle">常用规则可多选，大小写转换三选一</text></view><button class="clean-reset-btn" bindtap="resetOptions">恢复默认</button></view>
+    <view class="clean-options-head"><view><text class="clean-options-title">清洗选项</text><text class="clean-options-subtitle">格式整理、列表去重与排序可多选</text></view><button class="clean-reset-btn" bindtap="resetOptions">恢复默认</button></view>
     <view class="clean-option-grid">
       <block wx:for="{{options}}" wx:key="key">
         <button class="clean-option {{item.active ? 'active' : ''}}" data-key="{{item.key}}" bindtap="toggleOption"><view class="clean-option-check"><image wx:if="{{item.active}}" src="/assets/icons/success.svg" mode="aspectFit"/></view><view class="clean-option-copy"><text class="clean-option-title">{{item.title}}</text><text class="clean-option-desc">{{item.desc}}</text></view></button>

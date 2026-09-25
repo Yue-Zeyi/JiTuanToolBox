@@ -21,6 +21,11 @@ function resolvePopularTools(keys = []) {
   return result;
 }
 
+function markFavorites(tools, favoriteKeys) {
+  const favoriteSet = new Set(favoriteKeys);
+  return tools.map(tool => ({ ...tool, favorite: favoriteSet.has(tool.key) }));
+}
+
 function pickRecommendations(previousKeys = []) {
   const available = catalogTools.filter(tool => !tool.comingSoon);
   const previous = new Set(previousKeys);
@@ -34,7 +39,7 @@ function pickRecommendations(previousKeys = []) {
 }
 
 Page({
-  data: { tools: defaultTools, toolCount, recent: [], recommendations: [] },
+  data: { tools: defaultTools, toolCount, recent: [], favorites: [], recommendations: [], favoriteKeys: [] },
 
   onLoad() {
     this.setData({ recommendations: pickRecommendations() });
@@ -44,7 +49,9 @@ Page({
     const tabBar = this.getTabBar();
     if (tabBar) { tabBar.setData({ visible: true }); tabBar.syncSelected(); }
     const recent = wx.getStorageSync(app.globalData.recentKey) || [];
-    this.setData({ recent: Array.isArray(recent) ? recent.slice(0, 6) : [] });
+    const favoriteKeys = app.getFavoriteKeys();
+    const favorites = favoriteKeys.map(key => getTool(key)).filter(Boolean).slice(0, 6);
+    this.setData({ recent: Array.isArray(recent) ? recent.slice(0, 6) : [], favoriteKeys, favorites, tools: markFavorites(this.data.tools, favoriteKeys) });
     this.loadPopularTools();
   },
 
@@ -53,7 +60,7 @@ Page({
     this._popularityRevision = revision;
     const keys = await fetchPopularToolKeys(6);
     if (revision !== this._popularityRevision || !keys.length) return;
-    this.setData({ tools: resolvePopularTools(keys) });
+    this.setData({ tools: markFavorites(resolvePopularTools(keys), app.getFavoriteKeys()) });
   },
 
   onShareAppMessage() {
@@ -78,6 +85,19 @@ Page({
 
   openRecommendation(event) {
     this.openTool(event);
+  },
+
+  openFavorite(event) {
+    this.openTool(event);
+  },
+
+  toggleFavorite(event) {
+    const key = event.currentTarget.dataset.key;
+    if (!key) return;
+    app.toggleFavorite(key);
+    const favoriteKeys = app.getFavoriteKeys();
+    this.setData({ favoriteKeys, favorites: favoriteKeys.map(item => getTool(item)).filter(Boolean).slice(0, 6), tools: markFavorites(this.data.tools, favoriteKeys) });
+    wx.showToast({ title: favoriteKeys.includes(key) ? '已收藏' : '已取消收藏', icon: 'none' });
   },
 
   refreshRecommendations() {

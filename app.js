@@ -32,6 +32,7 @@ App({
   globalData: {
     brand: '极团工具箱',
     recentKey: 'jituan_recent_tools',
+    favoriteKey: 'jituan_favorite_tools',
     historyKey: 'jituan_operation_history',
     privacyVersion: runtime.privacyVersion
   },
@@ -57,6 +58,8 @@ App({
     }
     const history = wx.getStorageSync(this.globalData.historyKey);
     if (!Array.isArray(history)) wx.setStorageSync(this.globalData.historyKey, []);
+    const favorites = wx.getStorageSync(this.globalData.favoriteKey);
+    if (!Array.isArray(favorites)) wx.setStorageSync(this.globalData.favoriteKey, []);
   },
 
   recordRecent(tool) {
@@ -66,6 +69,26 @@ App({
     const normalizedTool = { ...tool, icon: iconMap[tool.icon] || tool.icon, page: this.normalizeToolPage(tool.page) };
     const next = [normalizedTool, ...recent.filter(item => item.key !== normalizedTool.key)].slice(0, 6);
     wx.setStorageSync(key, next);
+  },
+
+  getFavoriteKeys() {
+    const favorites = wx.getStorageSync(this.globalData.favoriteKey);
+    return Array.isArray(favorites) ? favorites.filter(item => typeof item === 'string') : [];
+  },
+
+  isFavorite(toolKey) {
+    return this.getFavoriteKeys().includes(String(toolKey || ''));
+  },
+
+  toggleFavorite(toolKey) {
+    const key = String(toolKey || '');
+    if (!key) return false;
+    const favorites = this.getFavoriteKeys();
+    const index = favorites.indexOf(key);
+    if (index >= 0) favorites.splice(index, 1);
+    else favorites.unshift(key);
+    wx.setStorageSync(this.globalData.favoriteKey, favorites.slice(0, 30));
+    return index < 0;
   },
 
   getOperationHistory() {

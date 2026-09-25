@@ -9,8 +9,13 @@
 .hero-shape { position: absolute; z-index: 1; right: 28rpx; top: 50%; width: 110rpx; height: 110rpx; opacity: .46; transform: translateY(-50%) rotate(8deg); }
 @keyframes hero-sweep { 0%, 12% { left: -54%; opacity: 0; } 22% { opacity: 1; } 46% { left: 118%; opacity: .84; } 58%, 100% { left: 118%; opacity: 0; } }
 .tool-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18rpx 0; }
-.tool-card { width: 48.5%; text-align: left; padding: 22rpx; min-height: 214rpx; }
+.tool-card { width: 48.5%; text-align: left; padding: 22rpx; min-height: 214rpx; color: var(--jt-navy); }
+.tool-card-hover { background: #F8FBFF; border-color: #C9DCF7; }
 .tool-card-top { display: flex; align-items: center; justify-content: space-between; }
+.tool-card-tools { display: flex; align-items: center; gap: 4rpx; }
+.favorite-chip, .favorite-remove { width: 72rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; color: #A7B4C5; }
+.favorite-chip image, .favorite-remove image { width: 26rpx; height: 26rpx; display: block; }
+.favorite-chip.is-favorite, .favorite-remove { color: #F0A33A; }
 .tool-card-badge { padding: 5rpx 9rpx; border-radius: 9rpx; color: #7B8BA2; background: #F1F4F8; font-size: 18rpx; line-height: 1.2; }
 .tool-card-title { display: block; font-size: 29rpx; font-weight: 700; margin-top: 24rpx; }
 .tool-card-desc { display: block; color: var(--jt-muted); font-size: 22rpx; line-height: 1.45; margin-top: 7rpx; }
@@ -26,4 +31,8 @@
 .recent-item { width: 100%; min-width: 0; min-height: 108rpx; display: flex; align-items: center; padding: 18rpx; text-align: left; color: var(--jt-navy); }
 .recent-title { flex: 1; min-width: 0; margin-left: 14rpx; overflow: hidden; color: var(--jt-navy); font-size: 24rpx; font-weight: 600; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
 .recent-arrow { width: 24rpx; height: 24rpx; display: block; flex: 0 0 24rpx; margin-left: 6rpx; opacity: .7; }
+.favorite-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16rpx; }
+.favorite-item { position: relative; width: 100%; min-width: 0; min-height: 100rpx; display: flex; align-items: center; padding: 18rpx; text-align: left; color: var(--jt-navy); font-size: 24rpx; font-weight: 600; }
+.favorite-item > text { flex: 1; min-width: 0; margin-left: 14rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.favorite-remove { flex: 0 0 72rpx; margin-right: -12rpx; }
 .empty-recent { padding: 28rpx; text-align: center; color: var(--jt-muted); font-size: 23rpx; }.foot-note { color: #A0AEC0; text-align: center; font-size: 21rpx; margin: 22rpx 0; }

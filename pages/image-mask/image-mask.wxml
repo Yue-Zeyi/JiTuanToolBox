@@ -1,0 +1,16 @@
+<view class="page tool-page mask-page">
+  <view class="page-head"><view class="tool-title"><text class="title">图片隐私遮挡</text><text class="desc">点击敏感位置，快速打码或遮住信息</text></view><view class="tool-icon gray"><image src="/assets/icons/image-mask.svg" mode="aspectFit"/></view></view>
+  <view wx:if="{{!file && !resultPath}}" class="card mask-upload" bindtap="chooseImage"><image src="/assets/icons/upload.svg" mode="aspectFit"/><text>选择需要处理的图片</text><text>支持 JPG、PNG，单张不超过 20MB</text></view>
+  <view wx:if="{{!file && resultPath}}" class="card mask-restored"><text class="panel-title">已打开历史结果</text><text class="panel-subtitle">结果文件保存在本机，可重新保存到相册</text><image class="mask-restored-image" src="{{resultPath}}" mode="aspectFit" bindtap="previewResult"/><button class="secondary-btn" bindtap="saveResult">保存到相册</button><button class="mask-rechoose" bindtap="chooseImage">重新选择图片</button></view>
+  <view wx:if="{{file}}" class="card mask-workspace">
+    <view class="mask-workspace-head"><view><text class="panel-title">点击图片添加遮挡</text><text class="panel-subtitle">建议遮住姓名、地址、订单号等敏感信息</text></view><button class="mask-rechoose" bindtap="chooseImage">重新选择</button></view>
+    <canvas id="maskCanvas" type="2d" class="mask-canvas" style="width:{{displayWidth}}px;height:{{displayHeight}}px" bindtap="addMask" bindlongtap="addMask"></canvas>
+    <view class="mask-mode-row"><text>遮挡样式</text><view class="mask-mode-options"><button class="mask-mode {{maskMode === 'solid' ? 'active' : ''}}" data-mode="solid" bindtap="selectMode">纯色遮挡</button><button class="mask-mode {{maskMode === 'mosaic' ? 'active' : ''}}" data-mode="mosaic" bindtap="selectMode">马赛克</button></view></view>
+    <view class="mask-help">每次点击会添加一个遮挡块，可连续点击多个位置</view>
+    <view class="mask-actions"><button class="secondary-btn" bindtap="undoMask" disabled="{{!masks.length}}">撤销上一步</button><button class="secondary-btn" bindtap="clearMasks" disabled="{{!masks.length}}">清空遮挡</button></view>
+    <button class="primary-btn mask-export" bindtap="exportResult">导出遮挡后的图片</button>
+    <view wx:if="{{resultPath}}" class="mask-result"><text class="panel-title">处理结果</text><text class="panel-subtitle">点击图片查看大图</text><image src="{{resultPath}}" mode="aspectFit" bindtap="previewResult"/><button class="secondary-btn" bindtap="saveResult">保存到相册</button></view>
+  </view>
+  <view wx:if="{{error}}" class="mask-error">{{error}}</view>
+  <view class="page-foot-tip"><view class="privacy-line"><image class="privacy-icon" src="/assets/icons/success.svg" mode="aspectFit"/><text class="privacy-copy">本地处理，图片临时上传微信安检</text></view><text class="privacy-detail">检测后删除云端临时文件</text></view>
+</view>

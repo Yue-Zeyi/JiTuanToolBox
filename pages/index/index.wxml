@@ -28,11 +28,11 @@
   </view>
   <view class="tool-grid">
     <block wx:for="{{tools}}" wx:key="key">
-      <button class="tool-card card" data-key="{{item.key}}" bindtap="openTool">
-        <view class="tool-card-top"><view class="tool-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text wx:if="{{item.comingSoon}}" class="tool-card-badge">即将上线</text><image wx:else class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></view>
+      <view class="tool-card card" data-key="{{item.key}}" bindtap="openTool" hover-class="tool-card-hover" role="button">
+        <view class="tool-card-top"><view class="tool-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><view class="tool-card-tools"><view class="favorite-chip {{item.favorite ? 'is-favorite' : ''}}" data-key="{{item.key}}" catchtap="toggleFavorite" aria-label="{{item.favorite ? '取消收藏' : '收藏'}}" role="button"><image wx:if="{{item.favorite}}" src="/assets/icons/favorite-filled.svg" mode="aspectFit"/><image wx:else src="/assets/icons/favorite.svg" mode="aspectFit"/></view><text wx:if="{{item.comingSoon}}" class="tool-card-badge">即将上线</text><image wx:else class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></view></view>
         <text class="tool-card-title">{{item.title}}</text>
         <text class="tool-card-desc">{{item.desc}}</text>
-      </button>
+      </view>
     </block>
   </view>
 
@@ -50,12 +50,19 @@
     </button>
   </view>
 
+  <view wx:if="{{favorites.length}}" class="section-title"><text>我的收藏</text><text class="section-link">{{favorites.length}} 个工具</text></view>
+  <view wx:if="{{favorites.length}}" class="favorite-grid">
+    <view wx:for="{{favorites}}" wx:key="key" class="favorite-item card" data-key="{{item.key}}" bindtap="openFavorite" hover-class="tool-card-hover" role="button">
+      <view class="mini-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text>{{item.title}}</text><view class="favorite-remove" data-key="{{item.key}}" catchtap="toggleFavorite" aria-label="取消收藏" role="button"><image src="/assets/icons/favorite-filled.svg" mode="aspectFit"/></view>
+    </view>
+  </view>
+
   <view class="section-title"><text>最近使用</text><text class="section-link" wx:if="{{recent.length}}" bindtap="onNav" data-target="history">操作记录</text></view>
   <view class="recent" wx:if="{{recent.length}}">
     <block wx:for="{{recent}}" wx:key="key" wx:for-index="index">
-      <button class="recent-item card" data-index="{{index}}" bindtap="openRecent">
+      <view class="recent-item card" data-index="{{index}}" bindtap="openRecent" hover-class="tool-card-hover" role="button">
         <view class="mini-icon {{item.tone}}"><image src="/assets/icons/{{item.icon}}.svg" mode="aspectFit"/></view><text class="recent-title">{{item.title}}</text><image class="recent-arrow" src="/assets/icons/arrow-right.svg" mode="aspectFit"/>
-      </button>
+      </view>
     </block>
   </view>
   <view class="empty-recent card" wx:else><text>还没有使用记录，先试试图片压缩吧</text></view>

@@ -18,6 +18,13 @@ const OPTION_DEFINITIONS = [
   { key: 'remove-html', title: '去除 HTML 标签', desc: '保留文字，移除标签' },
   { key: 'remove-numbers', title: '去除数字', desc: '删除半角和全角数字' },
   { key: 'remove-punctuation', title: '去除标点符号', desc: '移除中英文标点' },
+  { key: 'remove-duplicate-lines', title: '按行去重', desc: '保留每行第一次出现', group: 'line' },
+  { key: 'duplicate-lines-only', title: '只保留重复行', desc: '找出出现多次的行', group: 'line' },
+  { key: 'sort-lines-asc', title: '按行升序', desc: '按文字顺序排列', group: 'line-sort' },
+  { key: 'sort-lines-desc', title: '按行降序', desc: '按文字倒序排列', group: 'line-sort' },
+  { key: 'add-line-numbers', title: '添加行号', desc: '为每行添加序号' },
+  { key: 'comma-to-lines', title: '分隔符转换为换行', desc: '逗号分号拆成多行', group: 'delimiter' },
+  { key: 'lines-to-comma', title: '换行转换为逗号', desc: '多行合并为一行', group: 'delimiter' },
   { key: 'lowercase', title: '转换为小写', desc: '英文统一转换为小写', group: 'case' },
   { key: 'uppercase', title: '转换为大写', desc: '英文统一转换为大写', group: 'case' },
   { key: 'title-case', title: '转换为标题大小写', desc: '英文单词首字母大写', group: 'case' }
@@ -94,6 +101,22 @@ function cleanText(value, options) {
     const separator = result.match(/\r\n|\r|\n/);
     const lineSeparator = separator ? separator[0] : '\n';
     result = result.split(/\r\n|\r|\n/).filter(line => line.trim()).join(lineSeparator);
+  }
+  if (active.has('comma-to-lines')) result = result.replace(/[，,；;]+/g, '\n');
+  if (active.has('lines-to-comma')) result = result.split(/\r\n|\r|\n/).map(line => line.trim()).filter(Boolean).join('，');
+  if (active.has('remove-duplicate-lines') || active.has('duplicate-lines-only') || active.has('sort-lines-asc') || active.has('sort-lines-desc') || active.has('add-line-numbers')) {
+    const separator = result.match(/\r\n|\r|\n/);
+    const lineSeparator = separator ? separator[0] : '\n';
+    let lines = result.split(/\r\n|\r|\n/);
+    if (active.has('duplicate-lines-only')) {
+      const counts = lines.reduce((map, line) => map.set(line, (map.get(line) || 0) + 1), new Map());
+      lines = lines.filter(line => (counts.get(line) || 0) > 1);
+    }
+    if (active.has('remove-duplicate-lines')) lines = Array.from(new Set(lines));
+    if (active.has('sort-lines-asc')) lines = lines.slice().sort((a, b) => a.localeCompare(b, 'zh-Hans'));
+    if (active.has('sort-lines-desc')) lines = lines.slice().sort((a, b) => b.localeCompare(a, 'zh-Hans'));
+    if (active.has('add-line-numbers')) lines = lines.map((line, index) => `${index + 1}. ${line}`);
+    result = lines.join(lineSeparator);
   }
   if (active.has('lowercase')) result = result.toLowerCase();
   if (active.has('uppercase')) result = result.toUpperCase();
@@ -205,8 +228,9 @@ Page({
 
   toggleOption(event) {
     const key = event.currentTarget.dataset.key;
+    const selected = this.data.options.find(item => item.key === key);
     const options = this.data.options.map(item => {
-      if (item.group === 'case' && item.key !== key && item.active) return { ...item, active: false };
+      if (selected && selected.group && item.group === selected.group && item.key !== key && item.active) return { ...item, active: false };
       return item.key === key ? { ...item, active: !item.active } : item;
     });
     this.updateResult(this.data.text, options);

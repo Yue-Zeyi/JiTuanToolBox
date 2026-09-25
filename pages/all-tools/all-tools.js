@@ -13,7 +13,8 @@ Page({
     groups: getToolGroups(),
     emptyKind: '',
     scrollTop: 0,
-    keyboardHeight: 0
+    keyboardHeight: 0,
+    favoriteKeys: []
   },
 
   onLoad() {
@@ -27,6 +28,7 @@ Page({
 
   onShow() {
     this._opening = false;
+    this.setData({ favoriteKeys: app.getFavoriteKeys() });
   },
 
   onListScroll(event) {
@@ -34,7 +36,8 @@ Page({
   },
 
   updateView(query, activeCategory, scrollTop = 0) {
-    const groups = getToolGroups(activeCategory, query);
+    const favoriteSet = new Set(app.getFavoriteKeys());
+    const groups = getToolGroups(activeCategory, query).map(group => ({ ...group, tools: group.tools.map(tool => ({ ...tool, favorite: favoriteSet.has(tool.key) })) }));
     const isSearching = Boolean(query.trim());
     const hasTools = groups.some(group => group.tools.length);
     const revision = ++this._viewRevision;
@@ -99,6 +102,16 @@ Page({
         wx.showToast({ title: '暂时无法打开，请稍后重试', icon: 'none' });
       }
     });
+  },
+
+  toggleFavorite(event) {
+    const key = event.currentTarget.dataset.key;
+    if (!key) return;
+    const added = app.toggleFavorite(key);
+    const favoriteKeys = app.getFavoriteKeys();
+    this.setData({ favoriteKeys });
+    this.updateView(this.data.query, this._activeCategory, this._scrollTop);
+    wx.showToast({ title: added ? '已收藏' : '已取消收藏', icon: 'none' });
   },
 
   onShareAppMessage() {

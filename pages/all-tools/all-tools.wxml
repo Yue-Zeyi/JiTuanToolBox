@@ -18,14 +18,14 @@
       <view wx:for="{{groups}}" wx:for-item="group" wx:key="key" class="directory-group">
         <view class="directory-group-head"><text class="directory-group-title">{{group.title}}</text><text class="directory-group-count">{{group.tools.length}} 个工具</text></view>
         <view class="directory-grid">
-          <button wx:for="{{group.tools}}" wx:for-item="tool" wx:key="key" class="directory-tool card" data-key="{{tool.key}}" catchtap="openTool" hover-class="directory-tool-hover" aria-label="{{tool.title}}，{{tool.directoryDesc}}">
+          <view wx:for="{{group.tools}}" wx:for-item="tool" wx:key="key" class="directory-tool card" data-key="{{tool.key}}" bindtap="openTool" hover-class="directory-tool-hover" aria-label="{{tool.title}}，{{tool.directoryDesc}}" role="button">
             <view class="directory-tool-top">
               <view class="tool-icon {{tool.tone}}"><image src="/assets/icons/{{tool.icon}}.svg" mode="aspectFit"/></view>
-              <image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/>
+              <view class="directory-tool-actions"><view class="directory-favorite {{tool.favorite ? 'is-favorite' : ''}}" data-key="{{tool.key}}" catchtap="toggleFavorite" aria-label="{{tool.favorite ? '取消收藏' : '收藏'}}" role="button"><image wx:if="{{tool.favorite}}" src="/assets/icons/favorite-filled.svg" mode="aspectFit"/><image wx:else src="/assets/icons/favorite.svg" mode="aspectFit"/></view><image class="arrow-icon" src="/assets/icons/arrow-right.svg" mode="aspectFit"/></view>
             </view>
             <text class="directory-tool-title">{{tool.title}}</text>
             <text class="directory-tool-desc">{{tool.directoryDesc}}</text>
-          </button>
+          </view>
         </view>
       </view>
       <view wx:if="{{emptyKind}}" class="directory-empty">

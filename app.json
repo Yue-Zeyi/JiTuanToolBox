@@ -14,6 +14,7 @@
     "pages/url-codec/url-codec",
     "pages/image-exif/image-exif",
     "pages/image-picker/image-picker",
+    "pages/image-mask/image-mask",
     "pages/regex-test/regex-test",
     "pages/color-query/color-query",
     "pages/plate-query/plate-query",
@@ -43,6 +44,7 @@
     "pages/date-info/date-info",
     "pages/stopwatch/stopwatch",
     "pages/countdown/countdown",
+    "pages/expense-split/expense-split",
     "pages/history/history",
     "pages/profile/profile",
     "pages/legal/legal"

@@ -1,11 +1,11 @@
 const APP_ID = 'wxc4716148be4731f9';
 const TOOL_KEYS = new Set([
   'tax-calculator', 'json-format', 'mortgage', 'bmi', 'compress', 'resize', 'pdf', 'watermark', 'split', 'stitch',
-  'image-format', 'image-transform', 'base64', 'url-codec', 'image-exif', 'image-picker', 'regex-test', 'color-query',
+  'image-format', 'image-transform', 'base64', 'url-codec', 'image-exif', 'image-picker', 'image-mask', 'regex-test', 'color-query',
   'user-agent', 'http-status', 'unicode-query', 'lunar-convert', 'plate-query', 'word-count', 'text-clean', 'text-compare',
   'fancy-font', 'password', 'zodiac', 'chinese-convert', 'qrcode', 'ip-query', 'decision', 'coin', 'reaction', 'breathing',
   'marquee', 'metronome', 'movie-ticket', 'food-group-deal', 'meituan-coupon', 'taobao-flash-coupon', 'ride-discount',
-  'hotel-discount', 'shopping-coupon', 'brand-dining', 'timestamp', 'radix', 'unit-converter', 'scientific-calculator', 'percentage', 'date-calculator',
+  'hotel-discount', 'shopping-coupon', 'brand-dining', 'timestamp', 'radix', 'unit-converter', 'scientific-calculator', 'percentage', 'expense-split', 'date-calculator',
   'world-clock', 'constellation', 'age-query', 'date-info', 'stopwatch', 'countdown'
 ]);
 

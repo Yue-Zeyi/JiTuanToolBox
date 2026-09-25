@@ -19,9 +19,13 @@
 .directory-group-title { color: #15233B; font-size: 14px; line-height: 20px; font-weight: 700; }
 .directory-group-count { color: #8A99AB; font-size: 11px; white-space: nowrap; }
 .directory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18rpx; }
-.directory-tool { min-width: 0; min-height: 214rpx; padding: 22rpx; text-align: left; }
+.directory-tool { min-width: 0; min-height: 214rpx; padding: 22rpx; text-align: left; color: #15233B; }
 .directory-tool-hover { background: #F8FBFF; border-color: #C9DCF7; box-shadow: 0 12rpx 36rpx rgba(24, 51, 92, .08); }
 .directory-tool-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18rpx; }
+.directory-tool-actions { display: flex; align-items: center; gap: 4rpx; }
+.directory-favorite { width: 72rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; color: #A7B4C5; }
+.directory-favorite.is-favorite { color: #F0A33A; }
+.directory-favorite image { width: 25rpx; height: 25rpx; display: block; }
 .directory-tool-title { display: block; color: #15233B; font-size: 29rpx; line-height: 1.35; font-weight: 700; overflow-wrap: anywhere; }
 .directory-tool-desc { display: block; margin-top: 7rpx; color: #718096; font-size: 22rpx; line-height: 1.55; overflow-wrap: anywhere; }
 .directory-empty { display: flex; flex-direction: column; align-items: center; padding: 110px 10px 20px; text-align: center; }
